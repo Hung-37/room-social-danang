@@ -1,0 +1,16 @@
+/* Design tokens are kept separate so pages can share one visual system. */
+:root {
+  --surface-subtle: #f5f7fb;
+  --focus-ring: 0 0 0 3px rgba(35, 91, 180, .18);
+  --radius-control: 12px;
+  --brand: #235bb4;
+  --brand-2: #174582;
+  --text: #17243a;
+  --muted: #65748b;
+  --line: #e3e9f2;
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --shadow: 0 12px 32px rgba(24, 42, 72, .07);
+}
+
+:focus-visible { outline: none; box-shadow: var(--focus-ring); }

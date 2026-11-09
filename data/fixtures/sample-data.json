@@ -1,0 +1,92 @@
+[
+  {
+    "id": "dn-001",
+    "title": "Phòng trọ gần ĐH Bách khoa, có máy lạnh, wifi miễn phí",
+    "price": 2500000,
+    "area": 20,
+    "address": "Hòa Khánh, Liên Chiểu, Đà Nẵng",
+    "description": "Phòng trọ rộng 20m², có máy lạnh, wifi miễn phí, gần ĐH Bách khoa chỉ 500m. Giá 2.5 triệu/tháng, bao gồm điện nước. An ninh tốt, chủ nhà thân thiện.",
+    "url": "https://example.com/room/dn-001"
+  },
+  {
+    "id": "dn-002", 
+    "title": "Tìm bạn ở ghép phòng 2 giường tại Hòa Khánh",
+    "price": 1800000,
+    "area": 25,
+    "address": "Hòa Khánh, Đà Nẵng",
+    "description": "Cần tìm bạn ở ghép phòng 2 giường tại khu vực Hòa Khánh. Phòng rộng 25m², có giường tủ, bếp riêng. Giá 1.8 triệu/người, bao gồm wifi. Gần các trường đại học.",
+    "url": "https://example.com/room/dn-002"
+  },
+  {
+    "id": "dn-003",
+    "title": "Chính chủ cho thuê phòng trọ tại Mỹ An, full nội thất",
+    "price": 3200000,
+    "area": 30,
+    "address": "Mỹ An, Ngũ Hành Sơn, Đà Nẵng",
+    "description": "Chính chủ cho thuê phòng trọ tại Mỹ An, full nội thất: giường, tủ, bàn học, điều hòa, nóng lạnh. Diện tích 30m², giá 3.2 triệu/tháng. An ninh tốt, gần chợ, tiện ích đầy đủ.",
+    "url": "https://example.com/room/dn-003"
+  },
+  {
+    "id": "dn-004",
+    "title": "Phòng trọ sinh viên tại khu đô thị đại học, giá sinh viên",
+    "price": 1500000,
+    "area": 18,
+    "address": "Khu đô thị đại học, Nam Đà Nẵng",
+    "description": "Cho thuê phòng trọ sinh viên tại khu đô thị đại học, giá chỉ 1.5 triệu/tháng. Phòng 18m², có giường tủ, wifi miễn phí. Gần VKU, ĐH Y Dược. Phù hợp sinh viên.",
+    "url": "https://example.com/room/dn-004"
+  },
+  {
+    "id": "dn-005",
+    "title": "Nhà nguyên căn cho thuê tại Hải Châu, 3 phòng ngủ",
+    "price": 8000000,
+    "area": 80,
+    "address": "Hải Châu, Đà Nẵng",
+    "description": "Cho thuê nhà nguyên căn tại Hải Châu, 3 phòng ngủ, 2 WC, đầy đủ nội thất. Diện tích 80m², giá 8 triệu/tháng. Gần trung tâm, tiện ích đầy đủ, an ninh tốt.",
+    "url": "https://example.com/room/dn-005"
+  },
+  {
+    "id": "dn-006",
+    "title": "Phòng trọ giá rẻ tại Liên Chiểu, gần chợ",
+    "price": 1200000,
+    "area": 15,
+    "address": "Liên Chiểu, Đà Nẵng",
+    "description": "Phòng trọ giá rẻ tại Liên Chiểu, 15m², có giường tủ cơ bản. Gần chợ và các tiện ích thiết yếu. Giá 1.2 triệu/tháng, không bao gồm điện nước. Phù hợp sinh viên.",
+    "url": "https://example.com/room/dn-006"
+  },
+  {
+    "id": "dn-007",
+    "title": "Phòng trọ cao cấp tại Ngũ Hành Sơn, view biển",
+    "price": 4500000,
+    "area": 35,
+    "address": "Ngũ Hành Sơn, Đà Nẵng",
+    "description": "Phòng trọ cao cấp tại Ngũ Hành Sơn, view biển, 35m². Full nội thất cao cấp: điều hòa, tủ lạnh, máy giặt, wifi tốc độ cao. Giá 4.5 triệu/tháng, bao gồm điện nước.",
+    "url": "https://example.com/room/dn-007"
+  },
+  {
+    "id": "dn-008",
+    "title": "Tìm phòng trọ cho 2 bạn sinh viên nam tại Khu đô thị đại học",
+    "price": 2000000,
+    "area": 22,
+    "address": "Khu đô thị đại học, Nam Đà Nẵng",
+    "description": "Tìm phòng trọ cho 2 bạn sinh viên nam tại khu đô thị đại học. Cần phòng rộng khoảng 20-25m², có wifi, giá khoảng 2 triệu/người. Ưu tiên gần VKU.",
+    "url": "https://example.com/room/dn-008"
+  },
+  {
+    "id": "dn-009",
+    "title": "Phòng trọ bà con cho thuê, giá thương lượng",
+    "price": 1600000,
+    "area": 18,
+    "address": "Hòa Cường, Đà Nẵng",
+    "description": "Bà con cho thuê phòng trọ tại Hòa Cường, 18m², có giường tủ, bếp共用. Giá 1.6 triệu/tháng, có thể thương lượng. Gần ĐH Đông Á, an ninh tốt.",
+    "url": "https://example.com/room/dn-009"
+  },
+  {
+    "id": "dn-010",
+    "title": "Chung cư mini cho thuê tại trung tâm Đà Nẵng",
+    "price": 3500000,
+    "area": 28,
+    "address": "Trung tâm, Hải Châu, Đà Nẵng",
+    "description": "Chung cư mini cho thuê tại trung tâm Đà Nẵng, 28m², full nội thất hiện đại. Có thang máy, an ninh 24/7, gần chợ, trường học. Giá 3.5 triệu/tháng.",
+    "url": "https://example.com/room/dn-010"
+  }
+]

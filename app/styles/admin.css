@@ -1,0 +1,4 @@
+/* Admin-only interaction states. */
+.admin-main [aria-busy='true'] { cursor: wait; opacity: .72; }
+.admin-main button:disabled { cursor: not-allowed; opacity: .6; }
+.admin-main .admin-message[role='alert'] { color: #fca5a5; }

@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.env*
+!.env.example
+data/*.json
+database/mysql-data/
+*.log
+*.tsbuildinfo
+.devin/config.local.json

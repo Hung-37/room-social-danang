@@ -1,0 +1,1 @@
+console.log('Automatic collection on startup is disabled.');

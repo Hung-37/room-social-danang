@@ -1,0 +1,122 @@
+[
+  {
+    "id": "dn-more-001",
+    "title": "Phòng trọ sinh viên gần VKU, máy lạnh, gác lửng",
+    "price": 2200000,
+    "area": 22,
+    "address": "Nam Đà Nẵng, Đà Nẵng",
+    "description": "Cho thuê phòng trọ gần VKU, máy lạnh, gác lửng, phòng sạch sẽ, khu an ninh, có chỗ để xe. Phù hợp sinh viên năm nhất và năm hai.",
+    "url": "https://example.com/room/dn-more-001",
+    "imageUrl": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-002",
+    "title": "Phòng trọ cao cấp tại Hòa Khánh, full nội thất",
+    "price": 3500000,
+    "area": 32,
+    "address": "Hòa Khánh, Liên Chiểu, Đà Nẵng",
+    "description": "Phòng cao cấp tại Hòa Khánh, full nội thất, máy giặt, điều hòa, nóng lạnh, tủ lạnh, giường, bàn học. Gần trường ĐH Bách Khoa.",
+    "url": "https://example.com/room/dn-more-002",
+    "imageUrl": "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-003",
+    "title": "Phòng cho thuê gần biển Mỹ An, view đẹp",
+    "price": 4000000,
+    "area": 35,
+    "address": "Mỹ An, Ngũ Hành Sơn, Đà Nẵng",
+    "description": "Phòng cho thuê gần biển Mỹ An, view đẹp, ban công lớn, tường ốp gỗ, điều hòa, máy giặt, wifi nhanh. Dành cho sinh viên và người đi làm.",
+    "url": "https://example.com/room/dn-more-003",
+    "imageUrl": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-004",
+    "title": "Chính chủ cho thuê phòng trọ Hòa Cường, giá sinh viên",
+    "price": 1600000,
+    "area": 18,
+    "address": "Hòa Cường, Đà Nẵng",
+    "description": "Phòng trọ giá sinh viên tại Hòa Cường, giá 1.6 triệu, có phòng tắm khép kín, giường, tủ, máy giặt chung, an ninh tốt, gần trường Đông Á.",
+    "url": "https://example.com/room/dn-more-004",
+    "imageUrl": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-005",
+    "title": "Phòng trọ giá rẻ Liên Chiểu, gần chợ và trường học",
+    "price": 1400000,
+    "area": 16,
+    "address": "Liên Chiểu, Đà Nẵng",
+    "description": "Phòng trọ giá rẻ tại Liên Chiểu, gần chợ, bến xe và trường học. Nội thất tối thiểu, sạch sẽ, có wifi, phù hợp sinh viên.",
+    "url": "https://example.com/room/dn-more-005",
+    "imageUrl": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-006",
+    "title": "Phòng trọ gần ĐH Y Dược, có bếp riêng, cổng khóa vân tay",
+    "price": 2800000,
+    "area": 24,
+    "address": "Khu đô thị đại học, Nam Đà Nẵng",
+    "description": "Phòng trọ gần ĐH Y Dược, có bếp riêng và khu giặt là, khóa vân tay, camera an ninh, phù hợp sinh viên và người làm thêm.",
+    "url": "https://example.com/room/dn-more-006",
+    "imageUrl": "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-007",
+    "title": "Phòng 2 giường ở ghép tại Hòa Khánh, có chỗ để xe",
+    "price": 2000000,
+    "area": 26,
+    "address": "Hòa Khánh, Đà Nẵng",
+    "description": "Tìm bạn ở ghép phòng 2 giường tại Hòa Khánh, có máy lạnh, chỗ để xe, bếp riêng, wifi và hệ thống camera an ninh.",
+    "url": "https://example.com/room/dn-more-007",
+    "imageUrl": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-008",
+    "title": "Phòng trọ ở khu trung tâm Hải Châu, tiện ích xung quanh",
+    "price": 3200000,
+    "area": 29,
+    "address": "Hải Châu, Đà Nẵng",
+    "description": "Phòng trọ trung tâm Hải Châu, gần chợ, trường học và trung tâm thương mại. Có máy lạnh, tủ lạnh, giường, khu giặt là riêng.",
+    "url": "https://example.com/room/dn-more-008",
+    "imageUrl": "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-009",
+    "title": "Phòng trọ kiểu studio tại Ngũ Hành Sơn, nội thất mới",
+    "price": 3800000,
+    "area": 31,
+    "address": "Ngũ Hành Sơn, Đà Nẵng",
+    "description": "Studio tiện nghi tại Ngũ Hành Sơn, kính lớn, ban công, máy lạnh, tủ lạnh, máy giặt, giường ngủ và bếp mini. An ninh 24/7.",
+    "url": "https://example.com/room/dn-more-009",
+    "imageUrl": "https://images.unsplash.com/photo-1502672023488-70e25813eb80?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-010",
+    "title": "Phòng đơn cho thuê gần Bách Khoa, có máy lạnh",
+    "price": 2100000,
+    "area": 19,
+    "address": "Bách Khoa, Đà Nẵng",
+    "description": "Phòng đơn gần Bách Khoa, máy lạnh, giường, tủ, wifi, khu an ninh, gần quán ăn và chỗ để xe, phù hợp bạn sinh viên.",
+    "url": "https://example.com/room/dn-more-010",
+    "imageUrl": "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-011",
+    "title": "Phòng trọ cho sinh viên gần đại học Kinh tế",
+    "price": 2400000,
+    "area": 23,
+    "address": "Mỹ An, Đà Nẵng",
+    "description": "Cho thuê phòng trọ sinh viên gần ĐH Kinh tế, nội thất hiện đại, phòng riêng, máy lạnh và khu giặt, phù hợp người đi học và đi làm.",
+    "url": "https://example.com/room/dn-more-011",
+    "imageUrl": "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"
+  },
+  {
+    "id": "dn-more-012",
+    "title": "Phòng trọ gần trường Sư phạm kỹ thuật, thoải mái, giá tốt",
+    "price": 1900000,
+    "area": 20,
+    "address": "Liên Chiểu, Đà Nẵng",
+    "description": "Phòng trọ gần trường Sư phạm kỹ thuật, thoải mái, giá tốt, máy lạnh, wifi, bếp riêng, chỗ để xe, luôn sạch sẽ và dễ di chuyển.",
+    "url": "https://example.com/room/dn-more-012",
+    "imageUrl": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80"
+  }
+]

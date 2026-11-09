@@ -1,0 +1,3 @@
+ALTER TABLE listings
+  ADD COLUMN phone VARCHAR(40) NULL,
+  ADD COLUMN image_url TEXT NULL;
