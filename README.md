@@ -147,7 +147,7 @@ Dữ liệu tùy chọn, không tự nạp khi khởi động:
 
 Thư mục `data/` chứa cache/runtime của collector, lịch sử chạy, fallback file khi MySQL không khả dụng và file ảnh. Không chỉnh tay các file runtime nếu không cần khôi phục dữ liệu; dữ liệu mẫu trong `data/fixtures/` chỉ dùng cho test/import thủ công, không phải dữ liệu production. Các file runtime được bảo vệ trong `.gitignore`.
 
-`legacy/` là prototype HTML/CSS/JavaScript trước khi chuyển sang Next.js, không được dùng trong production. Giữ lại để tham khảo giao diện cũ; tính năng mới cần phát triển trong `app/`, `components/` và `lib/`. Có thể mở `legacy/index.html` trực tiếp trong trình duyệt.
+Prototype `legacy/` và bản mã trùng trong `js/` đã được gỡ khỏi nhánh hiện tại. Mã đang dùng nằm trong `app/`, `components/`, `lib/`; collector nằm trong `lib/collector/`, kiểm thử hiện hành nằm trong `tests/unit/`. Có thể xem bản cũ trong lịch sử Git.
 
 ## Cấu trúc thư mục
 
@@ -688,3 +688,8 @@ Lệnh tạo `.env.docker` với mật khẩu/secret ngẫu nhiên, dựng MySQL
 - Docker tạo database mới; không tự nhập 33 phòng từ XAMPP hoặc dữ liệu/tài khoản cá nhân. Muốn chuyển dữ liệu cần backup/restore riêng.
 
 Repository chứa mã, schema, migrations, cấu hình và script tải dịch vụ/model. Không chứa binary Ollama, model 2 GB, node_modules, database thô, ảnh người dùng hay mật khẩu. Dùng [Docker image chính thức của Ollama](https://ollama.com/blog/ollama-is-now-available-as-an-official-docker-image). Máy phát triển hiện chưa cài Docker nên cấu hình Compose chưa được chạy kiểm thử end-to-end; các kiểm thử XAMPP phía trên vẫn là kết quả đã xác minh.
+
+
+## Dọn tệp cũ trên GitHub — 12/11/2026
+
+Đã xóa prototype legacy, bản collector/policy trùng trong js, ba bộ unit test cũ ở gốc tests, giao diện FileManager đã ngừng hỗ trợ, ClusterCard và local-storage không còn được import, hai script kiểm tra/khởi động cũ. Các route files lẻ chỉ chuyển tiếp đã được gỡ; handler catch-all vẫn trả 401/410 như trước. Giữ schema, migration, fixtures, tests đang dùng, cấu hình Docker/Ollama/XAMPP và chỉ dẫn công cụ. Các đường dẫn cũ trong phần tài liệu lưu trữ chỉ mô tả lịch sử.
