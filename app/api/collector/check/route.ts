@@ -1,84 +1,107 @@
-import { NextResponse } from 'next/server';
-import { checkPublicSource } from '@/js/collector.js';
+import { load } from 'cheerio';
+import { randomUUID } from 'node:crypto';
+import { isPublicFeedUrl } from '@/lib/collector/parser.js';
 import { getAdminSessionFromRequest } from '@/lib/admin-auth';
 import { getManagedSourcesAsync, setSourceEnabledAsync } from '@/lib/collector-source-storage';
-
-export async function GET(request: Request) {
-  if (!getAdminSessionFromRequest(request)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
-  const configuredSources = (await getManagedSourcesAsync()).filter((source) => source.permission !== 'manual_review');
-  const results = await Promise.all(
-    configuredSources.map(async (source) => ({
-      id: source.id,
-      name: source.name,
-      type: source.type,
-      url: source.url,
-      permission: source.permission,
-      enabled: source.enabled,
-      note: source.note,
-      listingSelectors: source.listingSelectors,
-      result: source.permission === 'public_html' 
-        ? { ok: source.enabled, status: 'ready', note: 'HTML crawler - verify source permission' }
-        : source.permission === 'local_file'
-        ? { ok: source.enabled, status: 'ready', note: 'Local file source - auto-enabled' }
-        : await checkPublicSource(source)
-    }))
-  );
-
-  return NextResponse.json({
-    data: results,
-    meta: {
-      configured: configuredSources.length,
-      policy: 'Approved public JSON/RSS feeds, HTML sources (with permission), and local file sources are eligible.'
-    }
-  });
+import { saveCollectorSourceSetting } from '@/lib/collector-db';
+import { apiData, apiError } from '@/lib/api-response';
+import type { CollectorSource } from '@/lib/collector/parser.js';
+export async function GET(r: Request) {
+  if (!getAdminSessionFromRequest(r)) return apiError('Yêu cầu quyền Admin.', 401);
+  try {
+    const sources = await getManagedSourcesAsync();
+    return apiData(
+      sources.map((s) => ({
+        ...s,
+        result: {
+          ok: false,
+          status: s.enabled ? 'configured' : 'disabled',
+          note: 'Trạng thái cấu hình, chưa xác minh nguồn trực tiếp. Dùng Xem thử URL để kiểm tra.'
+        }
+      })),
+      { meta: { configured: sources.length } }
+    );
+  } catch {
+    return apiError('Chưa tải được cấu hình nguồn.', 503);
+  }
 }
-
-export async function POST(request: Request) {
-  if (!getAdminSessionFromRequest(request)) return NextResponse.json({ error: 'Admin authentication required.' }, { status: 401 });
-  const body = await request.json();
-  if (typeof body.sourceId === 'string' && typeof body.enabled === 'boolean') {
-    const updated = await setSourceEnabledAsync(body.sourceId, body.enabled);
-    return updated ? NextResponse.json({ success: true, sourceId: body.sourceId, enabled: body.enabled }) : NextResponse.json({ error: 'Không tìm thấy nguồn.' }, { status: 404 });
-  }
-  const { url, selectors, enabled, name } = body;
-  
-  if (!url) {
-    return NextResponse.json({ error: 'URL is required' }, { status: 400 });
-  }
-  
-  // Tạo cấu hình HTML crawler mới
-  const newSource = {
-    id: `custom-${Date.now()}`,
-    name: name || 'Custom HTML Source',
-    type: 'html',
-    url,
-    permission: 'public_html',
-    enabled: enabled || false,
-    keywords: ['phòng trọ', 'phòng cho thuê', 'tìm phòng', 'ở ghép', 'đà nẵng'],
-    listingSelectors: selectors || {
-      itemSelector: 'div.listing-item',
-      titleSelector: 'h2.title',
-      descriptionSelector: 'div.description',
-      priceSelector: 'span.price',
-      areaSelector: 'span.area',
-      addressSelector: 'div.address'
-    },
-    note: 'Nguồn HTML tùy chỉnh - cấu hình trong .env.local để persist'
-  };
-  
-  return NextResponse.json({
-    data: newSource,
-    meta: {
-      message: 'Thêm cấu hình sau vào .env.local để persist',
-      envConfig: {
-        HTML_CRAWLER_URL: url,
-        HTML_ITEM_SELECTOR: selectors?.itemSelector || 'div.listing-item',
-        HTML_TITLE_SELECTOR: selectors?.titleSelector || 'h2.title',
-        HTML_DESCRIPTION_SELECTOR: selectors?.descriptionSelector || 'div.description',
-        HTML_PRICE_SELECTOR: selectors?.priceSelector || 'span.price',
-        HTML_AREA_SELECTOR: selectors?.areaSelector || 'span.area',
-        HTML_ADDRESS_SELECTOR: selectors?.addressSelector || 'div.address'
+export async function POST(r: Request) {
+  const admin = getAdminSessionFromRequest(r);
+  if (!admin) return apiError('Yêu cầu quyền Admin.', 401);
+  const b = await r.json().catch(() => null);
+  if (!b || typeof b !== 'object') return apiError('JSON cấu hình không hợp lệ.', 400);
+  try {
+    if (typeof b.sourceId === 'string' && typeof b.enabled === 'boolean' && !('url' in b)) {
+      const selected=(await getManagedSourcesAsync()).find(s=>s.id===b.sourceId);
+      if(b.enabled&&selected?.permission==='manual_review')return apiError('Nguồn này chưa được cho phép thu thập tự động.',400);
+      if(b.enabled&&b.sourceId==='data-template'&&process.env.NODE_ENV==='production'&&process.env.COLLECTOR_INCLUDE_DEMO!=='true')return apiError('Nguồn mẫu đang bị khóa ở máy chủ production. Hãy dùng dữ liệu SQL mẫu riêng.',400);
+      const ok = await setSourceEnabledAsync(b.sourceId, b.enabled, admin.email);
+      return ok
+        ? apiData({ success: true, sourceId: b.sourceId, enabled: b.enabled })
+        : apiError('Không tìm thấy nguồn.', 404);
+    }
+    const name = typeof b.name === 'string' ? b.name.trim() : '';
+    const url = typeof b.url === 'string' ? b.url.trim() : '';
+    if (
+      name.length < 2 ||
+      name.length > 100 ||
+      !isPublicFeedUrl(url) ||
+      url.length > 2000 ||
+      typeof b.enabled !== 'boolean'
+    )
+      return apiError(
+        'Nhập tên nguồn (2–100 ký tự), URL HTTPS công khai và trạng thái hợp lệ.',
+        400
+      );
+    const permission = b.permission === 'public_feed' ? 'public_feed' : 'public_html';
+    const selectors = b.selectors ?? {};
+    if (typeof selectors !== 'object' || Array.isArray(selectors))
+      return apiError('Bộ chọn HTML không hợp lệ.', 400);
+    const listingSelectors: Record<string, string> = {};
+    for (const key of [
+      'itemSelector',
+      'titleSelector',
+      'descriptionSelector',
+      'priceSelector',
+      'areaSelector',
+      'addressSelector'
+    ]) {
+      if (selectors[key] !== undefined) {
+        if (typeof selectors[key] !== 'string' || selectors[key].length > 200)
+          return apiError('Mỗi bộ chọn tối đa 200 ký tự.', 400);
+        try {
+          if (selectors[key].trim()) load('')(selectors[key]);
+        } catch {
+          return apiError('Bộ chọn HTML không hợp lệ: ' + key, 400);
+        }
+        listingSelectors[key] = selectors[key];
       }
     }
-  });
+    const sources = await getManagedSourcesAsync();
+    let id = 'custom-' + randomUUID();
+    if (b.sourceId) {
+      const original = sources.find((s) => s.id === b.sourceId);
+      if (!original) return apiError('Không tìm thấy nguồn.', 404);
+      if (original.permission === 'local_file' || original.permission === 'manual_review')
+        return apiError('Không chỉnh sửa loại nguồn này.', 400);
+      id = original.id;
+    }
+    const source = {
+      id,
+      name,
+      url,
+      type: permission === 'public_html' ? 'html' : 'json_or_rss',
+      permission,
+      enabled: b.enabled,
+      keywords: ['phòng trọ', 'phòng cho thuê', 'tìm phòng', 'ở ghép', 'room for rent'],
+      listingSelectors,
+      note: 'Nguồn cấu hình bởi Admin. Dữ liệu mới cần được duyệt.'
+    } as CollectorSource;
+    await saveCollectorSourceSetting(source, b.enabled, admin.email);
+    return apiData(source, {
+      meta: { message: 'Đã lưu nguồn vào MySQL. Cấu hình được giữ sau khi khởi động lại.' }
+    });
+  } catch {
+    return apiError('Chưa lưu được nguồn. Kiểm tra database.', 503);
+  }
 }

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "dn-test-001",
+    "title": "Phòng trọ gần ĐH Bách khoa, có máy lạnh, wifi miễn phí",
+    "price": 2500000,
+    "area": 20,
+    "address": "Hòa Khánh, Liên Chiểu, Đà Nẵng",
+    "description": "Phòng trọ rộng 20m², có máy lạnh, wifi miễn phí, gần ĐH Bách khoa chỉ 500m. Giá 2.5 triệu/tháng, bao gồm điện nước. An ninh tốt, chủ nhà thân thiện.",
+    "url": ""
+  },
+  {
+    "id": "dn-test-002",
+    "title": "Tìm bạn ở ghép phòng 2 giường tại Hòa Khánh",
+    "price": 1800000,
+    "area": 25,
+    "address": "Hòa Khánh, Đà Nẵng",
+    "description": "Cần tìm bạn ở ghép phòng 2 giường tại khu vực Hòa Khánh. Phòng rộng 25m², có giường tủ, bếp riêng. Giá 1.8 triệu/người, bao gồm wifi. Gần các trường đại học.",
+    "url": ""
+  },
+  {
+    "id": "dn-test-003",
+    "title": "Chính chủ cho thuê phòng trọ tại Mỹ An, full nội thất",
+    "price": 3200000,
+    "area": 30,
+    "address": "Mỹ An, Ngũ Hành Sơn, Đà Nẵng",
+    "description": "Chính chủ cho thuê phòng trọ tại Mỹ An, full nội thất: giường, tủ, bàn học, điều hòa, nóng lạnh. Diện tích 30m², giá 3.2 triệu/tháng. An ninh tốt, gần chợ, tiện ích đầy đủ.",
+    "url": ""
+  },
+  {
+    "id": "dn-test-004",
+    "title": "Phòng trọ giá rẻ tại Hải Châu, gần chợ",
+    "price": 1500000,
+    "area": 18,
+    "address": "Hải Châu, Đà Nẵng",
+    "description": "Phòng trọ giá rẻ tại Hải Châu, gần chợ, tiện ích đầy đủ. Diện tích 18m², giá 1.5 triệu/tháng. Có giường, tủ, bàn học. An ninh tốt.",
+    "url": ""
+  },
+  {
+    "id": "dn-test-005",
+    "title": "Phòng trọ cao cấp tại Ngũ Hành Sơn, view biển",
+    "price": 4500000,
+    "area": 35,
+    "address": "Mỹ Khê, Ngũ Hành Sơn, Đà Nẵng",
+    "description": "Phòng trọ cao cấp tại Ngũ Hành Sơn, view biển. Diện tích 35m², full nội thất cao cấp: điều hòa, nóng lạnh, tủ lạnh, máy giặt. Giá 4.5 triệu/tháng. Gần biển Mỹ Khê.",
+    "url": ""
+  }
+]

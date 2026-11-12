@@ -3,7 +3,7 @@ import { dirname, join } from 'path';
 import type { RoomPost } from '@/lib/data';
 import { clusters, UNASSIGNED_CLUSTER_ID } from '@/lib/data';
 import { readScrapedListings } from '@/lib/file-storage';
-import type { CommunityComment } from '@/lib/community-storage';
+import type { CommunityComment } from '@/lib/types';
 
 type CommunityThread = {
   post: RoomPost;
@@ -17,15 +17,16 @@ function readThreads(): CommunityThread[] {
   try {
     const value = JSON.parse(readFileSync(COMMUNITY_FILE, 'utf8')) as unknown;
     if (!Array.isArray(value)) return [];
-    return value.filter((entry): entry is CommunityThread => (
-      entry !== null
-      && typeof entry === 'object'
-      && 'post' in entry
-      && typeof entry.post === 'object'
-      && entry.post !== null
-      && typeof entry.post.id === 'string'
-      && Array.isArray(entry.comments)
-    ));
+    return value.filter(
+      (entry): entry is CommunityThread =>
+        entry !== null &&
+        typeof entry === 'object' &&
+        'post' in entry &&
+        typeof entry.post === 'object' &&
+        entry.post !== null &&
+        typeof entry.post.id === 'string' &&
+        Array.isArray(entry.comments)
+    );
   } catch {
     return [];
   }
@@ -40,16 +41,19 @@ function ensureThread(threads: CommunityThread[], postId: string) {
   let thread = threads.find((entry) => entry.post.id === postId);
   if (thread) return thread;
 
-  const listing = readScrapedListings({ includeStale: false }).find((entry) => (
-    entry && typeof entry === 'object'
-    && String((entry as { externalId?: unknown }).externalId) === postId
-    && (entry as { verificationStatus?: string }).verificationStatus === 'verified'
-  )) as Record<string, unknown> | undefined;
+  const listing = readScrapedListings({ includeStale: false }).find(
+    (entry) =>
+      entry &&
+      typeof entry === 'object' &&
+      String((entry as { externalId?: unknown }).externalId) === postId &&
+      (entry as { verificationStatus?: string }).verificationStatus === 'verified'
+  ) as Record<string, unknown> | undefined;
   if (!listing) return null;
 
   const clusterId = String(listing.clusterId || UNASSIGNED_CLUSTER_ID);
   const cluster = clusters.find((item) => item.id === clusterId);
-  const price = typeof listing.price === 'number' ? `${listing.price.toLocaleString('vi-VN')}đ/tháng` : '';
+  const price =
+    typeof listing.price === 'number' ? `${listing.price.toLocaleString('vi-VN')}đ/tháng` : '';
   const area = typeof listing.area === 'number' ? `${listing.area}m²` : '';
   const post: RoomPost = {
     id: postId,
@@ -75,8 +79,18 @@ function ensureThread(threads: CommunityThread[], postId: string) {
 }
 
 export function listCommunityPosts(includePending = false) {
+  const listingIds = new Set(
+    readScrapedListings({ includeStale: true })
+      .filter(
+        (value): value is Record<string, unknown> => Boolean(value) && typeof value === 'object'
+      )
+      .map((value) => String(value.externalId))
+  );
   return readThreads()
-    .filter(({ post }) => includePending || post.status === 'Còn phòng')
+    .filter(
+      ({ post }) =>
+        !post.price && !listingIds.has(post.id) && (includePending || post.status === 'Còn phòng')
+    )
     .map(({ post, comments }) => ({ ...post, comments: comments.length }));
 }
 
@@ -107,7 +121,6 @@ export function createCommunityComment(postId: string, comment: CommunityComment
   const thread = ensureThread(threads, postId);
   if (!thread) return null;
   thread.comments.push(comment);
-  thread.comments = thread.comments.slice(-100);
   thread.post.comments = thread.comments.length;
   writeThreads(threads);
   return thread.comments;

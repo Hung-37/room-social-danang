@@ -77,6 +77,29 @@ test('namespaces identical upstream IDs by source', () => {
   assert.notEqual(first.externalId, second.externalId);
 });
 
+test('assigns the cluster from the address before conflicting title or description text', () => {
+  const listing = normalizeListing({
+    id: 'address-cluster',
+    title: 'Phòng trọ khu Hòa Cường',
+    description: 'Gần các trường ở Hải Châu',
+    address: '12 Nguyễn Lương Bằng, Liên Chiểu, Đà Nẵng',
+    price: '2 triệu'
+  }, tromoiSource);
+
+  assert.equal(listing.clusterId, 'bach-khoa-su-pham');
+});
+
+test('prefers a specific neighborhood over its broader district', () => {
+  const listing = normalizeListing({
+    id: 'specific-neighborhood',
+    title: 'Phòng trọ sinh viên',
+    address: 'Hòa Quý, Ngũ Hành Sơn, Đà Nẵng',
+    price: '2 triệu'
+  }, tromoiSource);
+
+  assert.equal(listing.clusterId, 'nam-da-nang');
+});
+
 test('uses public JSON-LD description and address without collecting contact details', async () => {
   const url = 'https://tromoi.com/phong-tro/hai-chau-124';
   const html = `

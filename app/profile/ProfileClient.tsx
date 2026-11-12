@@ -1,291 +1,281 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { isLoggedIn, getCurrentUser, logout, type User } from '@/lib/auth';
-import { useRouter } from 'next/navigation';
-
-type ProfileTab = 'overview' | 'activity' | 'settings';
-
+"use client";
+import { useEffect, useState, type FormEvent } from "react";
+import Link from "next/link";
+import {
+  notifySessionChanged,
+  signOut as endSession,
+} from "@/lib/client-session";
+import type { User } from "@/lib/types";
+import { useRouter } from "next/navigation";
+type Saved = {
+  id: string;
+  title: string | null;
+  imageUrl: string | null;
+  available: number;
+};
+type Profile = {
+  user: User & { createdAt: string };
+  stats: { comments: number; reactions: number };
+};
 export default function ProfileClient() {
   const router = useRouter();
-  const [authenticated, setAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [savedPosts, setSavedPosts] = useState<string[]>([]);
-  const [likedPosts, setLikedPosts] = useState<string[]>([]);
-  const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
-  const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState('');
-  const [joinDate, setJoinDate] = useState<string>('');
-
+  const [data, setData] = useState<Profile | null>(null),
+    [saved, setSaved] = useState<Saved[]>([]),
+    [name, setName] = useState(""),
+    [editing, setEditing] = useState(false),
+    [loading, setLoading] = useState(true),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState(""),
+    [notice, setNotice] = useState(""),
+    [unauthorized, setUnauthorized] = useState(false);
+  async function load() {
+    setLoading(true);
+    setError("");
+    try {
+      const r = await fetch("/api/profile", { cache: "no-store" });
+      const p = await r.json();
+      if (r.status === 401) setUnauthorized(true);
+      if (!r.ok) throw new Error(p.error);
+      setUnauthorized(false);
+      setData(p.data);
+      setName(p.data.user.name);
+      const f = await fetch("/api/favorites", { cache: "no-store" });
+      const list = await f.json();
+      if (!f.ok) throw new Error(list.error);
+      setSaved(list.data);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Chưa tải được hồ sơ.");
+    } finally {
+      setLoading(false);
+    }
+  }
   useEffect(() => {
-    setAuthenticated(isLoggedIn());
-    const user = getCurrentUser();
-    setCurrentUser(user);
-    if (user) {
-      setEditName(user.name);
-      // Simulate join date (in real app, this would come from user data)
-      const storedJoinDate = localStorage.getItem('room-danang-join-date');
-      if (storedJoinDate) {
-        setJoinDate(storedJoinDate);
-      } else {
-        const now = new Date().toISOString();
-        localStorage.setItem('room-danang-join-date', now);
-        setJoinDate(now);
-      }
-    }
-
-    // Load saved and liked posts from localStorage
-    const saved = localStorage.getItem('room-danang-saved');
-    const liked = localStorage.getItem('room-danang-liked');
-    if (saved) setSavedPosts(JSON.parse(saved));
-    if (liked) setLikedPosts(JSON.parse(liked));
+    void load();
   }, []);
-
-  function handleLogout() {
-    logout();
-    router.push('/');
-  }
-
-  function handleSaveProfile() {
-    if (!currentUser) return;
-
-    if (editName.trim().length < 2) {
-      alert('Tên phải có ít nhất 2 ký tự');
-      return;
+  async function save(e: FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const r = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      const p = await r.json();
+      if (!r.ok) throw new Error(p.error);
+      setData((current) =>
+        current
+          ? { ...current, user: { ...current.user, ...p.data } }
+          : current,
+      );
+      notifySessionChanged();
+      setEditing(false);
+      setNotice("Đã lưu hồ sơ vào tài khoản.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Chưa thể lưu hồ sơ.");
+    } finally {
+      setBusy(false);
     }
-
-    const updatedUser: User = {
-      ...currentUser,
-      name: editName.trim()
-    };
-
-    localStorage.setItem('room-danang-user', JSON.stringify(updatedUser));
-    setCurrentUser(updatedUser);
-    setIsEditing(false);
-    alert('Đã cập nhật hồ sơ!');
   }
-
-  function handleCancelEdit() {
-    setEditName(currentUser?.name || '');
-    setIsEditing(false);
+  async function remove(id: string) {
+    setBusy(true);
+    setError("");
+    try {
+      const r = await fetch("/api/favorites", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, saved: false }),
+      });
+      const p = await r.json();
+      if (!r.ok) throw new Error(p.error);
+      setSaved((current) => current.filter((s) => s.id !== id));
+      window.dispatchEvent(new Event("favorites-updated"));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Chưa thể bỏ lưu.");
+    } finally {
+      setBusy(false);
+    }
   }
-
-  if (!authenticated) {
-    return (
-      <section className="auth-page">
-        <div className="container">
-          <div className="empty-feed">
-            <strong>Bạn chưa đăng nhập</strong>
-            <span>Vui lòng <Link href="/dang-nhap" className="primary-btn">đăng nhập</Link> để xem hồ sơ của bạn.</span>
-          </div>
-        </div>
-      </section>
-    );
+  async function signOut() {
+    setBusy(true);
+    try {
+      await endSession();
+      router.push("/");
+      router.refresh();
+    } catch {
+      setError("Chưa thể đăng xuất. Hãy thử lại.");
+    } finally {
+      setBusy(false);
+    }
   }
-
-  const formattedJoinDate = joinDate ? new Date(joinDate).toLocaleDateString('vi-VN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }) : 'Gần đây';
-
   return (
-    <section className="profile-page">
-      <div className="container">
-        <div className="profile-header">
-          <div className="profile-avatar">
-            <span>{currentUser?.name?.charAt(0).toUpperCase() || 'U'}</span>
+    <section className="content-shell profile-v8">
+      <span className="section-eyebrow">Không gian của bạn</span>
+      <h1>Hồ sơ & phòng đã lưu</h1>
+      {error && (
+        <p className="feedback feedback-error" role="alert">
+          {error}
+        </p>
+      )}
+      {notice && (
+        <p className="feedback" role="status">
+          {notice}
+        </p>
+      )}
+      {loading ? (
+        <p role="status">Đang tải hồ sơ...</p>
+      ) : unauthorized ? (
+        <Link className="primary-btn" href="/dang-nhap?next=%2Fprofile">
+          Đăng nhập để xem hồ sơ
+        </Link>
+      ) : !data ? (
+        <button className="primary-btn" onClick={load}>
+          Thử tải lại
+        </button>
+      ) : (
+        <>
+          <div className="account-panel">
+            <div className="account-avatar" aria-hidden="true">
+              {data.user.name.slice(0, 1).toUpperCase()}
+            </div>
+            <div>
+              <h2>{data.user.name}</h2>
+              <p>{data.user.email}</p>
+              <p>
+                {data.user.role === "landlord" ? "Chủ trọ" : "Thành viên"} ·
+                Tham gia{" "}
+                {new Date(data.user.createdAt).toLocaleDateString("vi-VN")}
+              </p>
+            </div>
+            <button
+              className="secondary-btn"
+              disabled={busy}
+              onClick={() => {
+                setEditing(!editing);
+                setName(data.user.name);
+              }}
+            >
+              {" "}
+              {editing ? "Hủy chỉnh sửa" : "Chỉnh sửa hồ sơ"}
+            </button>
           </div>
-          <div className="profile-info">
-            {isEditing ? (
-              <div className="profile-edit-form">
-                <input
-                  type="text"
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  placeholder="Tên hiển thị"
-                  className="profile-name-input"
-                />
-                <div className="profile-edit-actions">
-                  <button className="secondary-btn" onClick={handleCancelEdit}>Hủy</button>
-                  <button className="primary-btn" onClick={handleSaveProfile}>Lưu</button>
-                </div>
-              </div>
-            ) : (
-              <>
-                <h1>{currentUser?.name || 'Người dùng'}</h1>
-                <p>{currentUser?.email || ''}</p>
-                <span className="profile-role">
-                  {currentUser?.role === 'landlord' ? '🏠 Chủ trọ' : '🎓 Sinh viên'}
-                </span>
-                {currentUser?.role === 'landlord' && (
-                  <Link href="/dang-phong" className="primary-btn">Đăng tin phòng →</Link>
-                )}
-                <span className="profile-join-date">Tham gia: {formattedJoinDate}</span>
-              </>
-            )}
-          </div>
-          <div className="profile-actions">
-            {!isEditing && (
-              <button className="secondary-btn" onClick={() => setIsEditing(true)}>
-                ✏️ Chỉnh sửa
+          {editing && (
+            <form className="account-panel account-form" onSubmit={save}>
+              <label htmlFor="profile-name">Tên hiển thị</label>
+              <input
+                id="profile-name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                minLength={2}
+                maxLength={80}
+                required
+                autoComplete="name"
+              />
+              <button className="primary-btn" disabled={busy}>
+                {busy ? "Đang lưu..." : "Lưu hồ sơ"}
               </button>
+            </form>
+          )}
+          <div className="account-stats">
+            <div>
+              <strong>{saved.length}</strong>
+              <span>Bài đã lưu</span>
+            </div>
+            <div>
+              <strong>{data.stats.comments}</strong>
+              <span>Bình luận đã gửi</span>
+            </div>
+            <div>
+              <strong>{data.stats.reactions}</strong>
+              <span>Bài đã tương tác</span>
+            </div>
+          </div>
+          <div className="account-links">
+            <Link className="secondary-btn" href="/bai-viet-cua-toi">
+              Bài viết của tôi
+            </Link>
+            <Link className="secondary-btn" href="/lich-xem-phong">
+              Lịch xem phòng
+            </Link>
+            <Link className="secondary-btn" href="/tin-nhan">
+              Tin nhắn riêng
+            </Link>
+            <Link className="secondary-btn" href="/thong-bao">
+              Thông báo
+            </Link>
+            {data.user.role === "landlord" && (
+              <Link className="primary-btn" href="/quan-ly-phong">
+                Quản lý phòng
+              </Link>
             )}
-            <button className="secondary-btn" onClick={handleLogout}>
+            <button className="text-button" disabled={busy} onClick={signOut}>
               Đăng xuất
             </button>
           </div>
-        </div>
-
-        <div className="profile-tabs">
-          <button
-            className={`profile-tab ${activeTab === 'overview' ? 'is-active' : ''}`}
-            onClick={() => setActiveTab('overview')}
-          >
-            Tổng quan
-          </button>
-          <button
-            className={`profile-tab ${activeTab === 'activity' ? 'is-active' : ''}`}
-            onClick={() => setActiveTab('activity')}
-          >
-            Hoạt động
-          </button>
-          <button
-            className={`profile-tab ${activeTab === 'settings' ? 'is-active' : ''}`}
-            onClick={() => setActiveTab('settings')}
-          >
-            Cài đặt
-          </button>
-        </div>
-
-        <div className="profile-content">
-          {activeTab === 'overview' && (
-            <>
-              <div className="profile-stats">
-                <div className="stat-card">
-                  <b>{savedPosts.length}</b>
-                  <span>Bài đã lưu</span>
-                </div>
-                <div className="stat-card">
-                  <b>{likedPosts.length}</b>
-                  <span>Bài đã thích</span>
-                </div>
-                <div className="stat-card">
-                  <b>0</b>
-                  <span>Bình luận</span>
-                </div>
-              </div>
-
-              <div className="profile-sections">
-                <div className="profile-section">
-                  <h2>Bài đã lưu</h2>
-                  {savedPosts.length === 0 ? (
-                    <p className="empty-state">Chưa có bài nào được lưu.</p>
-                  ) : (
-                    <div className="saved-posts-list">
-                      {savedPosts.map((postId) => (
-                        <Link key={postId} href={`/bai/${postId}`} className="saved-post-item">
-                          <span>Bài #{postId}</span>
-                          <span>→</span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {currentUser?.role === 'landlord' && (
-                  <div className="profile-section">
-                    <h2>Khu vực chủ trọ</h2>
-                    <p>Đăng phòng, chờ kiểm duyệt và theo dõi trạng thái tin đăng.</p>
-                    <Link href="/dang-phong" className="primary-btn">Đăng tin phòng mới</Link>
-                  </div>
-                )}
-
-                <div className="profile-section">
-                  <h2>Bài đã thích</h2>
-                  {likedPosts.length === 0 ? (
-                    <p className="empty-state">Chưa có bài nào được thích.</p>
-                  ) : (
-                    <div className="liked-posts-list">
-                      {likedPosts.map((postId) => (
-                        <Link key={postId} href={`/bai/${postId}`} className="liked-post-item">
-                          <span>Bài #{postId}</span>
-                          <span>→</span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-
-          {activeTab === 'activity' && (
-            <div className="profile-section">
-              <h2>Lịch sử hoạt động</h2>
-              <div className="activity-list">
-                <div className="activity-item">
-                  <span className="activity-icon">💬</span>
-                  <div className="activity-content">
-                    <strong>Đã đăng bài thảo luận</strong>
-                    <span className="activity-time">Hôm nay</span>
-                  </div>
-                </div>
-                <div className="activity-item">
-                  <span className="activity-icon">🔖</span>
-                  <div className="activity-content">
-                    <strong>Đã lưu bài đăng</strong>
-                    <span className="activity-time">Hôm qua</span>
-                  </div>
-                </div>
-                <div className="activity-item">
-                  <span className="activity-icon">👍</span>
-                  <div className="activity-content">
-                    <strong>Đã thích bài đăng</strong>
-                    <span className="activity-time">2 ngày trước</span>
-                  </div>
-                </div>
-                {savedPosts.length === 0 && likedPosts.length === 0 && (
-                  <p className="empty-state">Chưa có hoạt động nào được ghi nhận.</p>
-                )}
-              </div>
+          <section className="account-saved">
+            <div className="section-heading">
+              <h2>Danh sách đã lưu</h2>
+              <Link className="text-link" href="/bang-tin">
+                Tìm thêm phòng →
+              </Link>
             </div>
-          )}
-
-          {activeTab === 'settings' && (
-            <div className="profile-section">
-              <h2>Cài đặt tài khoản</h2>
-              <div className="settings-list">
-                <div className="setting-item">
-                  <span>📧 Email</span>
-                  <span className="setting-value">{currentUser?.email}</span>
-                </div>
-                <div className="setting-item">
-                  <span>👤 Vai trò</span>
-                  <span className="setting-value">
-                    {currentUser?.role === 'landlord' ? 'Chủ trọ' : 'Sinh viên'}
-                  </span>
-                </div>
-                <div className="setting-item">
-                  <span>📅 Ngày tham gia</span>
-                  <span className="setting-value">{formattedJoinDate}</span>
-                </div>
-                {currentUser?.role === 'admin' && (
-                  <Link href="/admin" className="setting-item">
-                    <span>⚙️ Quản trị hệ thống</span>
-                    <span>→</span>
-                  </Link>
-                )}
-                <button className="setting-item danger" onClick={handleLogout}>
-                  <span>🚪 Đăng xuất</span>
-                  <span>→</span>
-                </button>
+            <p>
+              Danh sách gắn với tài khoản, có thể mở trên thiết bị khác sau khi
+              đăng nhập.
+            </p>
+            {!saved.length ? (
+              <div className="route-feedback">
+                Bạn chưa lưu bài nào. Nhấn biểu tượng lưu ở thẻ phòng hoặc thảo
+                luận để tìm lại tại đây.
               </div>
-            </div>
-          )}
-        </div>
-      </div>
+            ) : (
+              <div className="saved-grid">
+                {saved.map((p) => (
+                  <article className="saved-card" key={p.id}>
+                    {p.available ? (
+                      <>
+                        {p.imageUrl && (
+                          <img src={p.imageUrl} alt="" loading="lazy" />
+                        )}
+                        <h3>
+                          <Link href={"/bai/" + encodeURIComponent(p.id)}>
+                            {p.title}
+                          </Link>
+                        </h3>
+                        <Link
+                          className="text-link"
+                          href={"/bai/" + encodeURIComponent(p.id)}
+                        >
+                          Xem chi tiết →
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <h3>Tin không còn công khai</h3>
+                        <p>
+                          Phòng có thể đã hết, bị ẩn hoặc đang chờ duyệt lại.
+                        </p>
+                      </>
+                    )}
+                    <button
+                      className="secondary-btn"
+                      disabled={busy}
+                      onClick={() => remove(p.id)}
+                      aria-label={
+                        "Bỏ lưu: " + (p.title || "Tin không còn công khai")
+                      }
+                    >
+                      Bỏ lưu
+                    </button>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </>
+      )}
     </section>
   );
 }

@@ -1,6 +1,13 @@
+import FavoritesProvider from '@/components/FavoritesProvider';
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import './globals.css';
+import './styles/redesign.css';
+import './styles/experience.css';
+import './styles/management.css';
+import './styles/appointments.css';
+import './styles/admin-controls.css';
+import './styles/room-photos.css';
 
 export const metadata: Metadata = {
   title: 'Room Đà Nẵng | Cộng đồng phòng trọ sinh viên',
@@ -11,17 +18,13 @@ export const metadata: Metadata = {
     title: 'Room Đà Nẵng | Cộng đồng phòng trọ sinh viên',
     description: 'Tổng hợp phòng trọ, thảo luận và cảnh báo cho sinh viên Đà Nẵng.',
     type: 'website',
-    locale: 'vi_VN',
-  },
+    locale: 'vi_VN'
+  }
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="vi">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
       <Script
         id="service-worker"
         strategy="afterInteractive"
@@ -32,10 +35,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 navigator.serviceWorker.register('/sw.js').catch(() => {});
               });
             }
-          `,
+          `
         }}
       />
-      <body>{children}</body>
+      <body>
+        <a className="skip-link" href="#main-content">
+          Bỏ qua điều hướng
+        </a>
+        <FavoritesProvider>{children}</FavoritesProvider>
+      </body>
     </html>
   );
 }

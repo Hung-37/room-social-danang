@@ -1,0 +1,261 @@
+/* Photo frames reserve their space before loading and never stretch the source. */
+.room-card {
+  display: flex;
+  flex-direction: column;
+}
+.room-card .card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.room-card .card-toolbar {
+  margin-top: auto;
+}
+.room-cover {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  flex: none;
+  isolation: isolate;
+}
+.room-cover > .room-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.room-photo-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  background: #edf4ef;
+  color: #405b50;
+  font-size: 13px;
+  text-align: center;
+  padding: 20px;
+}
+.room-photo-empty svg {
+  width: 36px;
+  height: 36px;
+  opacity: 0.8;
+}
+.room-media {
+  --photo-gutter: 32px;
+  min-width: 0;
+  padding: 0;
+}
+.room-media .detail-cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  max-height: 560px;
+  padding: 16px;
+  margin: 0;
+  border: 0;
+  position: relative;
+  overflow: hidden;
+  background: #edf2ee;
+}
+.room-media .detail-cover > .room-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+.photo-open {
+  cursor: zoom-in;
+}
+.photo-open-hint,
+.photo-number {
+  position: absolute;
+  bottom: 16px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #173b32;
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  pointer-events: none;
+}
+.photo-open-hint {
+  left: 16px;
+}
+.photo-number {
+  right: 16px;
+  font-variant-numeric: tabular-nums;
+}
+.room-media .room-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  width: min(100%, 544px);
+  padding: 16px var(--photo-gutter) 0;
+  margin: 0;
+  overflow: visible;
+}
+.room-media .room-gallery button {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  padding: 3px;
+  border: 2px solid #d4e1d9;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  cursor: pointer;
+}
+.room-media .room-gallery button[aria-pressed="true"] {
+  border-color: #08766c;
+  box-shadow: 0 0 0 1px #08766c;
+}
+.room-media .room-gallery .room-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.room-media .room-gallery .room-photo-empty {
+  padding: 4px;
+}
+.room-media .room-gallery .room-photo-empty span {
+  display: none;
+}
+.photo-thumb-number {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  min-width: 20px;
+  padding: 1px 4px;
+  background: #173b32;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 11px;
+}
+.photo-dialog {
+  width: min(1100px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 32px);
+  padding: 20px;
+  border: 1px solid #d4e1d9;
+  border-radius: 18px;
+  background: #fff;
+  color: #193c36;
+}
+.photo-dialog::backdrop {
+  background: rgb(11 25 22 / 80%);
+}
+.photo-dialog[open] {
+  display: grid;
+  gap: 16px;
+}
+.photo-dialog-heading,
+.photo-dialog-footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+}
+.photo-dialog-heading h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.photo-dialog-heading > button {
+  flex: none;
+}
+.photo-dialog-image {
+  height: min(65dvh, 700px);
+  min-height: 120px;
+  background: #edf2ee;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.photo-dialog-image > .room-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.photo-dialog-footer {
+  font-size: 13px;
+}
+.photo-dialog-footer .secondary-btn {
+  min-height: 44px;
+  padding: 10px 14px;
+}
+.photo-dialog-footer > span {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.photo-upload + [role="status"] {
+  margin-top: 12px;
+}
+.photo-grid img {
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.photo-grid figcaption {
+  flex-wrap: wrap;
+}
+.photo-grid figcaption > span {
+  flex-basis: 100%;
+  font-weight: 600;
+}
+.review-photo-grid > a {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #edf2ee;
+}
+.review-photo-grid img {
+  height: 100%;
+  object-fit: contain;
+}
+@media (max-width: 600px) {
+  .room-media {
+    --photo-gutter: 20px;
+  }
+  .room-media .detail-cover {
+    padding: 10px;
+  }
+  .room-media .room-gallery {
+    gap: 8px;
+  }
+  .photo-dialog {
+    width: calc(100vw - 20px);
+    max-height: calc(100dvh - 20px);
+    padding: 12px;
+    border-radius: 12px;
+  }
+  .photo-dialog-heading h2 {
+    font-size: 15px;
+  }
+  .photo-dialog-image {
+    height: 58dvh;
+  }
+  .photo-dialog-footer {
+    gap: 6px;
+    font-size: 12px;
+  }
+  .photo-dialog-footer .secondary-btn {
+    padding: 9px;
+    font-size: 12px;
+  }
+}

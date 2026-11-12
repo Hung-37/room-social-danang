@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
-import { getUserSessionFromRequest } from '@/lib/user-auth';
+import { resolveRequestUser } from '@/lib/user-auth';
 import { createCommunityReport, hasCommunityDatabase } from '@/lib/community-db';
 
 const allowedReasons = ['spam', 'scam', 'harassment', 'wrong_information', 'other'] as const;
 
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  const user = getUserSessionFromRequest(request);
+  const sessionResult = await resolveRequestUser(request);
+  if (sessionResult.error) return sessionResult.error;
+  const user = sessionResult.user;
   if (!user) return NextResponse.json({ error: 'Bạn cần đăng nhập để báo cáo.' }, { status: 401 });
   if (!hasCommunityDatabase()) return NextResponse.json({ error: 'Tính năng báo cáo cần database.' }, { status: 503 });
   const { id: postId } = await params;

@@ -3,7 +3,7 @@ import { getListingById, hasDatabaseConfig } from '@/lib/db';
 import { readScrapedListings } from '@/lib/file-storage';
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
@@ -16,7 +16,8 @@ export async function GET(
         meta: { configured: true, found: Boolean(listing), storage: 'database' }
       }, { status: listing ? 200 : 404 });
     } catch (error) {
-      console.warn('MySQL unavailable; reading listing cache.', error);
+      console.warn('Không thể đọc tin từ MySQL.', error);
+      return NextResponse.json({ error: 'Chưa thể tải tin phòng. Vui lòng thử lại.' }, { status: 503 });
     }
   }
 

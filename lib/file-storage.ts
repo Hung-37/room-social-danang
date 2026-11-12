@@ -1,10 +1,9 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
-import { deduplicateListings, isPlaceholderListingUrl, sanitizeListingSummary } from '@/js/collector.js';
+import { deduplicateListings, isPlaceholderListingUrl, sanitizeListingSummary } from '@/lib/collector/parser.js';
 
 export const SCRAPED_DATA_FILE = join(process.cwd(), 'data', 'cached-listings.json');
-const FILE_SETTINGS_FILE = join(process.cwd(), 'public', 'file-settings.json');
-const TEMPLATE_DATA_FILE = join(process.cwd(), 'data-template.json');
+const TEMPLATE_DATA_FILE = join(process.cwd(), 'fixtures', 'listings.json');
 const STALE_AFTER_MS = Math.max(Number(process.env.LISTING_STALE_DAYS) || 30, 1) * 24 * 60 * 60 * 1000;
 let listingsCache: unknown[] | null = null;
 let listingsCacheMtime = -1;
@@ -55,26 +54,6 @@ export function readScrapedListings(options: { includeStale?: boolean } = {}): u
   return options.includeStale === false
     ? listingsCache.filter((item) => !item || typeof item !== 'object' || !isListingStale(item as Record<string, unknown>))
     : listingsCache;
-}
-
-export function getManagedJsonFilePath(id: string) {
-  if (id === 'data-template') return join(process.cwd(), 'data-template.json');
-  if (id === 'cached-listings') return SCRAPED_DATA_FILE;
-  if (!/^[a-zA-Z0-9_-]+$/.test(id)) return null;
-
-  return join(process.cwd(), `${id}.json`);
-}
-
-export function readFileSettings(): Record<string, boolean> {
-  if (!existsSync(FILE_SETTINGS_FILE)) return {};
-  const content = JSON.parse(readFileSync(FILE_SETTINGS_FILE, 'utf-8')) as unknown;
-  return content && typeof content === 'object' && !Array.isArray(content)
-    ? content as Record<string, boolean>
-    : {};
-}
-
-export function writeFileSetting(id: string, enabled: boolean) {
-  writeJsonAtomically(FILE_SETTINGS_FILE, { ...readFileSettings(), [id]: enabled });
 }
 
 export function writeScrapedListings(listings: StoredListing[]) {
@@ -163,6 +142,6 @@ export function writeJsonAtomically(filePath: string, value: unknown) {
 export function readTemplateListings(): unknown[] {
   if (!existsSync(TEMPLATE_DATA_FILE)) return [];
   const content = JSON.parse(readFileSync(TEMPLATE_DATA_FILE, 'utf-8')) as unknown;
-  if (!Array.isArray(content)) throw new Error('File data-template.json phải là một mảng JSON.');
+  if (!Array.isArray(content)) throw new Error('File fixtures/listings.json phải là một mảng JSON.');
   return content;
 }

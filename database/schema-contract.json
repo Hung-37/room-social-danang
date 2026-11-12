@@ -1,0 +1,215 @@
+{
+  "users": [
+    "id",
+    "external_id",
+    "name",
+    "email",
+    "password_hash",
+    "role",
+    "created_at"
+  ],
+  "landlord_verifications": [
+    "user_external_id",
+    "status",
+    "reviewed_by",
+    "updated_at"
+  ],
+  "listings": [
+    "id",
+    "external_id",
+    "title",
+    "summary",
+    "price",
+    "area_m2",
+    "address",
+    "phone",
+    "image_url",
+    "cluster_id",
+    "source_name",
+    "source_url",
+    "permission",
+    "verification_status",
+    "trust_score",
+    "owner_external_id",
+    "updated_at"
+  ],
+  "community_posts": [
+    "id",
+    "title",
+    "summary",
+    "cluster_id",
+    "cluster_name",
+    "post_kind",
+    "author_id",
+    "author_name",
+    "trust_score",
+    "status",
+    "version",
+    "deleted_at",
+    "created_at",
+    "updated_at"
+  ],
+  "community_comments": [
+    "id",
+    "post_id",
+    "author_id",
+    "author_name",
+    "body",
+    "version",
+    "deleted_at",
+    "created_at"
+  ],
+  "community_reactions": [
+    "post_id",
+    "user_id",
+    "reaction",
+    "updated_at"
+  ],
+  "notifications": [
+    "id",
+    "user_id",
+    "type",
+    "title",
+    "body",
+    "href",
+    "is_read",
+    "created_at"
+  ],
+  "community_reports": [
+    "id",
+    "post_id",
+    "reporter_id",
+    "reason",
+    "details",
+    "status",
+    "created_at",
+    "resolved_at",
+    "resolved_by"
+  ],
+  "moderation_logs": [
+    "id",
+    "entity_type",
+    "entity_id",
+    "action",
+    "actor_email",
+    "details",
+    "created_at"
+  ],
+  "collector_source_settings": [
+    "source_id",
+    "enabled",
+    "config",
+    "updated_by",
+    "updated_at"
+  ],
+  "collector_runs": [
+    "id",
+    "status",
+    "configured_sources",
+    "collected_count",
+    "duplicate_count",
+    "error_count",
+    "details",
+    "started_at",
+    "finished_at"
+  ],
+  "comment_replies": [
+    "comment_id",
+    "parent_id"
+  ],
+  "conversations": [
+    "id",
+    "listing_id",
+    "room_title",
+    "buyer_id",
+    "seller_id",
+    "blocked_by",
+    "buyer_read",
+    "seller_read",
+    "created_at",
+    "updated_at"
+  ],
+  "private_messages": [
+    "id",
+    "conversation_id",
+    "sender_id",
+    "body",
+    "created_at"
+  ],
+  "conversation_reports": [
+    "id",
+    "conversation_id",
+    "reporter_id",
+    "reason",
+    "status",
+    "created_at"
+  ],
+  "saved_posts": [
+    "user_id",
+    "post_id",
+    "created_at"
+  ],
+  "listing_images": [
+    "id",
+    "owner_id",
+    "listing_id",
+    "position",
+    "created_at"
+  ],
+  "viewing_appointments": [
+    "id",
+    "conversation_id",
+    "buyer_id",
+    "seller_id",
+    "starts_at",
+    "ends_at",
+    "status",
+    "note",
+    "version",
+    "created_at",
+    "updated_at"
+  ],
+  "site_settings": [
+    "id",
+    "value",
+    "version",
+    "updated_by",
+    "updated_at"
+  ],
+  "user_controls": [
+    "user_id",
+    "blocked",
+    "is_demo",
+    "reason",
+    "version",
+    "updated_by",
+    "updated_at"
+  ],
+  "listing_ai_analysis": [
+    "listing_id",
+    "status",
+    "model",
+    "prompt_version",
+    "content_hash",
+    "payload",
+    "error",
+    "analyzed_at"
+  ],
+  "listing_deletions": [
+    "external_id",
+    "title",
+    "reason",
+    "deleted_by",
+    "deleted_at"
+  ],
+  "mutation_requests": [
+    "user_id",
+    "scope",
+    "request_key",
+    "fingerprint",
+    "result_id",
+    "response_json",
+    "deleted",
+    "created_at"
+  ]
+}

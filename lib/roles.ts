@@ -1,4 +1,4 @@
-import type { User } from '@/lib/auth';
+import type { User } from '@/lib/types';
 
 export type Capability = 'community:post' | 'community:comment' | 'listing:create' | 'listing:moderate' | 'collector:run';
 

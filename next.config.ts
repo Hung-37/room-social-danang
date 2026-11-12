@@ -2,6 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  output: 'standalone',
   allowedDevOrigins: ['127.0.0.1'],
 
   // Performance optimizations
@@ -17,7 +18,6 @@ const nextConfig: NextConfig = {
   // Bundle size optimization
   experimental: {
     optimizePackageImports: ['react', 'react-dom'],
-    agentUpgrade: 'security',
   },
 
   // Production optimizations

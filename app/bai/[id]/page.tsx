@@ -8,7 +8,7 @@ export default async function PostPage({ params }: PageProps) {
   return (
     <>
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <PostDetailClient id={id} />
       </main>
     </>

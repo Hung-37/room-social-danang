@@ -1,0 +1,18 @@
+/* Room Đà Nẵng / Coastal editorial redesign — shared across public and admin pages. */
+:root { --brand:#087d76; --brand-2:#075c57; --text:#173b3a; --muted:#657d79; --line:#dce9e4; --bg:#f4f8f5; --card:#fffefa; --surface-subtle:#edf5f0; --shadow:0 16px 45px rgba(21,77,67,.075); --focus-ring:0 0 0 4px rgba(8,125,118,.17); }
+body { background:var(--bg); color:var(--text); font-family:Arial,"Segoe UI",sans-serif; }
+::selection {background:#bdece0;color:#063f39}
+a,button,input,select,textarea {transition:background-color .18s,border-color .18s,box-shadow .18s,transform .18s}
+:focus-visible {outline:2px solid var(--brand);outline-offset:3px;box-shadow:var(--focus-ring)}
+.topbar {background:rgba(255,254,250,.96);border-bottom:1px solid var(--line);box-shadow:0 3px 18px rgba(22,80,69,.035);backdrop-filter:blur(14px)}
+.topbar-inner {max-width:1360px;height:72px}.brand {color:var(--text);font-size:21px;letter-spacing:-.055em}.brand>span:last-child span {color:var(--brand)}
+.brand-mark {background:var(--brand);border-radius:13px;transform:rotate(-7deg);box-shadow:0 5px 0 #b8dfce}
+.nav-links {background:#eff5f1;border:1px solid #e3ede7;border-radius:999px;padding:4px;gap:2px}.nav-links a {border-radius:999px;padding:10px 15px;color:#4c6861}.nav-links a:hover,.nav-links a.active {background:#fff;color:var(--brand)}
+.profile-chip,.icon-btn {background:#e9f4ee;color:var(--brand-2);border-radius:999px;height:40px}.profile-chip:hover,.icon-btn:hover {background:#d4eae0}
+.auth-panel {border-radius:20px!important;border-color:var(--line)!important;box-shadow:var(--shadow)!important;background:var(--card)}
+.primary-btn,.auth-submit,button[type=submit] {border-radius:12px;background:var(--brand);color:#fff}.primary-btn:hover,.auth-submit:hover,button[type=submit]:hover {background:var(--brand-2)}
+.search-box,.search-input,.filter-input,.filter-select,input:not([type=checkbox]):not([type=radio]),textarea,select {border-radius:12px;border-color:var(--line)}
+.auth-page {background:#f4f8f5}.auth-intro {background:linear-gradient(155deg,#075d59,#103e42)}.auth-brand>span:last-child span {color:#bcebdd}.auth-intro-copy .eyebrow {color:#bcebdd}.auth-panel {box-shadow:none!important;background:transparent}.auth-tab.is-active {color:var(--brand-2)}
+.admin-main {max-width:1400px;margin-inline:auto}.footer {background:#eaf3ed;border-top:1px solid var(--line)}
+@media(max-width:600px){body {padding-top:64px}.topbar-inner {height:64px}.nav-links {display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}

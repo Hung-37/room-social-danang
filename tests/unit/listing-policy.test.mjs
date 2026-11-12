@@ -1,0 +1,4 @@
+import assert from 'node:assert/strict';import test from 'node:test';import {listingRejectionReason} from '../../lib/policies/listing-policy.js';
+const listing={title:'Phòng cho thuê',summary:'Phòng có cửa sổ.',price:2500000,area:25.5,address:'Hải Châu, Đà Nẵng'};
+test('city filter accepts capital Đ and Cẩm Lệ addresses without losing real Da Nang listings',()=>{for(const address of ['Đường Phạm Xuân Ẩn, Cẩm Lệ, TP Đà Nẵng','Hòa Thọ Đông, Cẩm Lệ, Đà Nẵng','HAI CHAU, DA NANG'])assert.equal(listingRejectionReason({...listing,address}), '');});
+test('city filter refuses explicit other cities and leaves configurable unknown geography to Admin',()=>{assert(listingRejectionReason({...listing,address:'Cầu Giấy, Hà Nội'}));assert(listingRejectionReason({...listing,address:null,title:'Phòng cho thuê'}));assert.equal(listingRejectionReason({...listing,address:null},false),'');});

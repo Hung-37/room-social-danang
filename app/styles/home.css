@@ -1,5 +1,1 @@
 /* Homepage/feed-specific refinements. Keep page composition out of base rules. */
-.social-post-wrap, .cluster-card, .hero-panel { contain: layout paint; }
-.social-post-wrap[aria-busy='true'] { opacity: .72; pointer-events: none; }
-.feed-status { min-height: 28px; }
-.feed-status button:disabled { cursor: wait; opacity: .65; }

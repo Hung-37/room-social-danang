@@ -1,0 +1,14 @@
+[
+  {"table":"users","name":"users_role_id","columns":["role","id"]},
+  {"table":"listings","name":"listing_owner_updated","columns":["owner_external_id","updated_at"]},
+  {"table":"listings","name":"listing_cluster_status_updated","columns":["cluster_id","verification_status","updated_at"]},
+  {"table":"listings","name":"listing_updated","columns":["updated_at"]},
+  {"table":"community_posts","name":"community_status_updated","columns":["status","updated_at"]},
+  {"table":"community_posts","name":"community_status_cluster_updated","columns":["status","cluster_id","updated_at"]},
+  {"table":"community_posts","name":"community_status_kind_updated","columns":["status","post_kind","updated_at"]},
+  {"table":"community_comments","name":"comments_post_created","columns":["post_id","created_at"]},
+  {"table":"notifications","name":"notifications_user_created","columns":["user_id","created_at"]},
+  {"table":"community_reports","name":"reports_created","columns":["created_at"]},
+  {"table":"moderation_logs","name":"moderation_created","columns":["created_at"]},
+  {"table":"collector_runs","name":"collector_started","columns":["started_at"]}
+]

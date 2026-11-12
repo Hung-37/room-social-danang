@@ -8,7 +8,7 @@ export default async function AdminPage() {
   return (
     <>
       <AdminHeader />
-      <main className="admin-main">
+      <main id="main-content" tabIndex={-1} className="admin-main">
         <AdminCollectorClient />
       </main>
     </>

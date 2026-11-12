@@ -1,0 +1,58 @@
+// Run only against an isolated test database: creates accounts and listings.
+import assert from 'node:assert/strict';
+const base = process.env.TEST_BASE_URL;
+if (!base || !process.env.TEST_ADMIN_EMAIL || !process.env.TEST_ADMIN_PASSWORD) throw new Error('Set TEST_BASE_URL, TEST_ADMIN_EMAIL and TEST_ADMIN_PASSWORD. Use an isolated test database.');
+let checks = 0;
+async function request(path, {cookie='', method='GET', body, status=200}={}) {
+  const response = await fetch(base + path, {method, redirect:'manual', headers:{...(cookie ? {Cookie:cookie}:{}), ...(body !== undefined ? {'Content-Type':'application/json'}:{})}, body:body === undefined ? undefined : JSON.stringify(body)});
+  const data = await response.json().catch(() => null);
+  assert.equal(response.status, status, `${method} ${path}: ${JSON.stringify(data)}`); checks++;
+  return {data, cookie:response.headers.getSetCookie().map(v=>v.split(';')[0]).join('; '),response};
+}
+const suffix = Date.now();
+async function register(role) {return request('/api/auth/register',{method:'POST',status:201,body:{name:'Kiểm thử '+role,email:`${role}-${suffix}-${Math.random().toString(36).slice(2)}@test.local`,password:'StrongTest123!',role}});}
+const landlord = await register('landlord');
+const student = await register('student');
+const other = await register('landlord');
+const id = landlord.data.data.id;
+const listing = {title:'Phòng kiểm thử gần Bách khoa '+suffix,summary:'Phòng sạch có cửa sổ, chỗ để xe và nhà vệ sinh riêng.',address:'Liên Chiểu, Đà Nẵng',price:2500000,area:25,clusterId:'bach-khoa-su-pham',status:'verified',ownerExternalId:other.data.data.id};
+await request('/api/admin/landlords',{status:401});
+await request('/api/listings?includePending=true',{cookie:landlord.cookie,status:401});
+await request('/api/admin/landlords',{method:'PATCH',cookie:landlord.cookie,body:{id,status:'verified'},status:401});
+await request('/api/listings/create',{method:'POST',body:listing,status:403});
+await request('/api/listings/create',{method:'POST',cookie:student.cookie,body:listing,status:403});
+await request('/api/listings/create',{method:'POST',cookie:landlord.cookie,body:listing,status:403});
+assert.equal((await request('/api/auth/me',{cookie:landlord.cookie})).data.data.capabilities.canCreateListing,false); checks++;
+const admin = await request('/api/auth/login',{method:'POST',body:{email:process.env.TEST_ADMIN_EMAIL,password:process.env.TEST_ADMIN_PASSWORD}});
+await request('/api/admin/landlords',{cookie:admin.cookie});
+await request('/api/admin/landlords',{method:'PATCH',cookie:admin.cookie,body:{id,status:'admin'},status:400});
+await request('/api/admin/landlords',{method:'PATCH',cookie:admin.cookie,body:{id:'missing',status:'verified'},status:404});
+await request('/api/admin/landlords',{method:'PATCH',cookie:admin.cookie,body:{id,status:'verified'}});
+assert.equal((await request('/api/auth/me',{cookie:landlord.cookie})).data.data.capabilities.canCreateListing,true); checks++;
+await request('/api/listings/create',{method:'POST',cookie:landlord.cookie,body:{...listing,price:null},status:400});
+await request('/api/listings/create',{method:'POST',cookie:landlord.cookie,body:null,status:400});
+const created=await request('/api/listings/create',{method:'POST',cookie:landlord.cookie,body:listing,status:201});
+const listingId=created.data.data.externalId;
+assert.equal(created.data.data.verificationStatus,'needs_review');checks++;
+let own=(await request('/api/landlord',{cookie:landlord.cookie})).data.data;
+assert(own.listings.some(l=>l.externalId===listingId));checks++;
+assert(!(await request('/api/landlord',{cookie:other.cookie})).data.data.listings.some(l=>l.externalId===listingId));checks++;
+assert(!(await request('/api/listings')).data.data.some(l=>l.externalId===listingId));checks++;
+await request(`/api/listings/${listingId}`,{status:404});
+await request(`/api/listings/${listingId}/status`,{method:'POST',cookie:landlord.cookie,body:{status:'verified'},status:401});
+await request(`/api/listings/${listingId}/status`,{method:'POST',cookie:admin.cookie,body:null,status:400});
+await request('/api/listings/missing/status',{method:'POST',cookie:admin.cookie,body:{status:'verified'},status:404});
+await request(`/api/listings/${listingId}/status`,{method:'POST',cookie:admin.cookie,body:{status:'verified'}});
+assert((await request('/api/listings')).data.data.some(l=>l.externalId===listingId));checks++;
+await request(`/api/listings/${listingId}`);
+assert((await request('/api/listings?q='+encodeURIComponent(String(suffix))+'&minPrice=2000000&maxPrice=3000000&minArea=20&sort=price_asc')).data.data.some(l=>l.externalId===listingId));checks++;
+assert(!(await request('/api/listings?maxPrice=100')).data.data.some(l=>l.externalId===listingId));checks++;
+await request('/api/admin/landlords',{method:'PATCH',cookie:admin.cookie,body:{id,status:'rejected'}});
+await request('/api/listings/create',{method:'POST',cookie:landlord.cookie,body:listing,status:403});
+await request(`/api/listings/${listingId}/status`,{method:'POST',cookie:admin.cookie,body:{status:'rejected'}});
+await request(`/api/listings/${listingId}`,{status:404});
+assert(!(await request('/api/listings')).data.data.some(l=>l.externalId===listingId));checks++;
+assert((await request('/api/admin/audit',{cookie:admin.cookie})).data);checks++;
+const logout=await request('/api/auth/logout',{method:'POST',cookie:landlord.cookie});
+await request('/api/auth/me',{cookie:logout.cookie,status:401});
+console.log(`PASS: ${checks} checks; registration → verification → submission → moderation → public visibility, ownership, revocation, filters, logout.`);

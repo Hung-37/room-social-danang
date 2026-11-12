@@ -1,0 +1,224 @@
+.inbox-filters {
+  display: grid;
+  gap: 12px;
+  padding: 0 0 20px;
+  border-bottom: 1px solid #d5e3db;
+  margin-bottom: 15px;
+}
+.inbox-filters label,
+.message-search label,
+.visit-request label,
+.visit-filter {
+  display: grid;
+  gap: 7px;
+  font-size: 0.86rem;
+  font-weight: 650;
+  color: #244c40;
+}
+.inbox-filters input,
+.inbox-filters select,
+.message-search input,
+.visit-filter select,
+.visit-request input,
+.visit-request textarea {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font: inherit;
+  color: #244c40;
+  background: #fff;
+  border: 1px solid #b5c9bf;
+  border-radius: 9px;
+  padding: 11px 12px;
+}
+.inbox-filters input:focus-visible,
+.inbox-filters select:focus-visible,
+.message-search input:focus-visible,
+.visit-filter select:focus-visible,
+.visit-request input:focus-visible,
+.visit-request textarea:focus-visible {
+  outline: 3px solid #b1d7c9;
+  outline-offset: 2px;
+}
+.message-search {
+  border-block: 1px solid #d5e3db;
+  padding: 14px 0;
+  margin: 12px 0;
+}
+.message-search summary,
+.visit-request summary {
+  cursor: pointer;
+  font-weight: 650;
+  color: #076b61;
+  padding: 4px 0;
+}
+.message-search label {
+  margin-top: 14px;
+}
+.message-results {
+  max-height: 350px;
+  overflow: auto;
+  margin-top: 12px;
+}
+.message-results article {
+  padding: 12px;
+  background: #f4f7f1;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.message-results p,
+.visit-note {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.65;
+}
+.message-results small {
+  color: #52675f;
+}
+.viewing-panel {
+  border: 1px solid #d5e3db;
+  background: #fff;
+  border-radius: 18px;
+  padding: 22px;
+  margin: 24px 0;
+}
+.viewing-panel h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+.viewing-panel .section-heading {
+  gap: 12px;
+}
+.viewing-help {
+  font-size: 0.85rem;
+  color: #52675f;
+  line-height: 1.6;
+}
+.visit-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+.visit-card {
+  border: 1px solid #d5e3db;
+  border-radius: 14px;
+  padding: 18px;
+  background: #fafbf8;
+  min-width: 0;
+}
+.visit-card h3 {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.visit-state {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 99px;
+  background: #eef1ed;
+  color: #435d50;
+}
+.visit-requested {
+  background: #fff0ce;
+  color: #76510b;
+}
+.visit-confirmed {
+  background: #def0e1;
+  color: #215e32;
+}
+.visit-time {
+  font-weight: 700;
+  color: #215548;
+  line-height: 1.65;
+}
+.visit-note {
+  font-size: 0.9rem;
+  color: #435d50;
+}
+.visit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.visit-actions button {
+  font-size: 0.85rem;
+}
+.visit-request {
+  margin-top: 18px;
+}
+.visit-request form {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+.visit-request form > p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #52675f;
+  margin: 0;
+}
+.visit-confirm {
+  padding: 18px;
+  border: 1px solid #b08b35;
+  border-radius: 12px;
+  background: #fff9e9;
+  margin: 18px 0;
+}
+.visit-confirm h3 {
+  margin-top: 0;
+}
+.visit-filter {
+  max-width: 320px;
+  margin: 18px 0;
+}
+.viewing-panel .feedback {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 600px) {
+  .viewing-panel {
+    padding: 16px;
+  }
+  .visit-card {
+    padding: 15px;
+  }
+  .visit-actions {
+    gap: 10px;
+  }
+  .visit-actions > .primary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .visit-request input[type='datetime-local'] {
+    max-width: 100%;
+    font-size: 0.85rem;
+  }
+  .inbox-list .inbox-filters {
+    padding-bottom: 14px;
+  }
+}
+.inbox-list {
+  max-height: 1000px;
+  overflow: auto;
+  align-self: start;
+}
+.inbox-filters {
+  position: sticky;
+  top: -18px;
+  z-index: 1;
+  background: #fff;
+  padding-top: 10px;
+}
+@media (max-width: 700px) {
+  .inbox-list {
+    max-height: 360px;
+  }
+}
+.chat-messages:focus-visible,
+.message-results:focus-visible {
+  outline: 3px solid #08766c;
+  outline-offset: 3px;
+  border-radius: 8px;
+}

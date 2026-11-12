@@ -1,4 +1,4 @@
-import { collectListings } from '@/js/collector.js';
+import { collectListings } from '@/lib/collector/parser.js';
 
 export async function fetchOfficialMetaFeed() {
   const pageId = process.env.META_PAGE_ID;

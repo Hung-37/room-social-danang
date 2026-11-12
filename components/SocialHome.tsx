@@ -1,496 +1,328 @@
-'use client';
-
-import { useEffect, useMemo, useState, useCallback, memo, type FormEvent } from 'react';
-import Link from 'next/link';
-import Header from '@/components/Header';
-import ClusterCard from '@/components/ClusterCard';
-import PostCard from '@/components/PostCard';
-import { clusters, type RoomPost, UNASSIGNED_CLUSTER_ID, normalizeToRoomPost } from '@/lib/data';
-import { isLoggedIn, getCurrentUser, updateUserStats, type User } from '@/lib/auth';
-import { getCommunityPosts, saveCommunityPost, saveCommunityPosts } from '@/lib/community-storage';
-
-// Custom hook for debounced value
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-
+"use client";
+import { useAccountStatus } from "./useAccountStatus";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Header from "./Header";
+import PostCard from "./PostCard";
+import Icon from "./Icons";
+import { clusters, normalizeToRoomPost, type RoomPost } from "@/lib/data";
+function useHomeFeed(kind: "rooms" | "discussions", accountRevision: number) {
+  const [items, setItems] = useState<RoomPost[]>([]),
+    [loading, setLoading] = useState(true),
+    [error, setError] = useState(false),
+    [retry, setRetry] = useState(0);
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
+    const c = new AbortController();
+    setLoading(true);
+    setError(false);
+    fetch(
+      kind === "rooms"
+        ? "/api/listings?limit=3"
+        : "/api/community/posts?limit=2",
+      { cache: "no-store", signal: c.signal },
+    )
+      .then(async (r) => {
+        const p = await r.json();
+        if (!r.ok) throw new Error();
+        if (!c.signal.aborted)
+          setItems(
+            kind === "rooms"
+              ? p.data.map((item: Record<string, unknown>) =>
+                  normalizeToRoomPost(item),
+                )
+              : p.data,
+          );
+      })
+      .catch(() => {
+        if (!c.signal.aborted) setError(true);
+      })
+      .finally(() => {
+        if (!c.signal.aborted) setLoading(false);
+      });
+    return () => c.abort();
+  }, [kind, retry, accountRevision]);
+  return { items, loading, error, retry: () => setRetry((v) => v + 1) };
 }
-
-type FeedTab = 'all' | 'rooms' | 'discussion' | 'saved';
-type PostKind = NonNullable<RoomPost['postKind']>;
-
-const CommunitySidebar = memo(function CommunitySidebar({ posts: feedPosts }: { posts: RoomPost[] }) {
-  const recentDiscussions = useMemo(() => feedPosts.filter((post) => !post.price).slice(0, 3), [feedPosts]);
-
+export default function SocialHome() {
+  const { authenticated, revision: accountRevision } = useAccountStatus();
+  const {
+    items: rooms,
+    loading: loadingRooms,
+    error: roomError,
+    retry: retryRooms,
+  } = useHomeFeed("rooms", accountRevision);
+  const {
+    items: discussions,
+    loading: loadingDiscussions,
+    error: discussionError,
+    retry: retryDiscussions,
+  } = useHomeFeed("discussions", accountRevision);
   return (
-    <aside className="social-sidebar">
-      <div className="side-card community-widget">
-        <h3>📍 Cộng đồng của bạn</h3>
-        <p>Tham gia một cụm để thấy bài viết gần trường hơn.</p>
-        {clusters.slice(0, 3).map((cluster) => (
-          <Link key={cluster.id} href={`/cum/${cluster.id}`} className="mini-community">
-            <span className={`mini-dot ${cluster.accent}`}>⌾</span>
-            <span><strong>{cluster.name}</strong><small>Thành viên: chưa có dữ liệu</small></span>
-            <b>→</b>
-          </Link>
-        ))}
-      </div>
-      <div className="side-card">
-        <h3>Thảo luận mới</h3>
-        {recentDiscussions.length > 0 ? recentDiscussions.map((post) => (
-          <Link key={post.id} href={`/bai/${post.id}`} className="discussion-item">
-            <strong>{post.title}</strong>
-            <span>{post.clusterName} · {post.comments} bình luận</span>
-          </Link>
-        )) : <p>Chưa có thảo luận mới. Hãy mở một câu hỏi cho cộng đồng.</p>}
-      </div>
-    </aside>
-  );
-});
-
-function SocialHome() {
-  const [tab, setTab] = useState<FeedTab>('all');
-  const [text, setText] = useState('');
-  const [postTitle, setPostTitle] = useState('');
-  const [postKind, setPostKind] = useState<PostKind>('question');
-  const [postClusterId, setPostClusterId] = useState(UNASSIGNED_CLUSTER_ID);
-  const [composerMessage, setComposerMessage] = useState('');
-  const [postsFromUser, setPostsFromUser] = useState<RoomPost[]>([]);
-  const [saved, setSaved] = useState<string[]>([]);
-  const [query, setQuery] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [minArea, setMinArea] = useState('');
-  const [maxArea, setMaxArea] = useState('');
-  const [sort, setSort] = useState('newest');
-  const deferredQuery = useDebounce(query, 300);
-  const [clusterFilter, setClusterFilter] = useState('all');
-  const [remotePosts, setRemotePosts] = useState<RoomPost[]>([]);
-  const [sourceOffset, setSourceOffset] = useState(0);
-  const [hasMoreSourcePosts, setHasMoreSourcePosts] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [pendingReviewCount, setPendingReviewCount] = useState(0);
-  const [syncMessage, setSyncMessage] = useState('');
-  const [authenticated, setAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [userStats, setUserStats] = useState({ postsCreated: 0, commentsMade: 0, helpfulVotes: 0, reportsSubmitted: 0 });
-
-  useEffect(() => {
-    const localLoggedIn = isLoggedIn();
-    const localUser = getCurrentUser();
-    setAuthenticated(localLoggedIn);
-    setCurrentUser(localUser);
-    setPostsFromUser(getCommunityPosts());
-
-    fetch('/api/auth/me', { cache: 'no-store' })
-      .then(async (response) => response.ok ? response.json() as Promise<{ data?: User }> : null)
-      .then((payload) => {
-        if (payload?.data) {
-          setAuthenticated(true);
-          setCurrentUser(payload.data);
-        }
-      })
-      .catch(() => undefined);
-
-    // Load saved posts from localStorage
-    const saved = localStorage.getItem('room-danang-saved');
-    if (saved) setSaved(JSON.parse(saved));
-
-    // Listen for save events from PostCard
-    const handlePostSaved = (event: Event) => {
-      const customEvent = event as CustomEvent<{ postId: string; saved: boolean }>;
-      const { postId, saved: isSaved } = customEvent.detail;
-      setSaved(prev => {
-        if (isSaved) {
-          return prev.includes(postId) ? prev : [...prev, postId];
-        } else {
-          return prev.filter(id => id !== postId);
-        }
-      });
-    };
-
-    window.addEventListener('post-saved', handlePostSaved);
-    return () => {
-      window.removeEventListener('post-saved', handlePostSaved);
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch('/api/community/posts?limit=50')
-      .then(async (response) => {
-        if (!response.ok) throw new Error('Không tải được thảo luận cộng đồng.');
-        return response.json() as Promise<{ data?: RoomPost[]; storage?: 'database' | 'file_cache' }>;
-      })
-      .then((payload) => {
-        if (cancelled) return;
-        const serverPosts = payload.data ?? [];
-        if (payload.storage === 'database') {
-          setPostsFromUser(serverPosts);
-          return;
-        }
-        const localPosts = getCommunityPosts();
-        const serverIds = new Set(serverPosts.map((post) => post.id));
-        const merged = [...localPosts.filter((post) => !serverIds.has(post.id)), ...serverPosts];
-        saveCommunityPosts(merged);
-        setPostsFromUser(merged);
-      })
-      .catch(() => undefined);
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    const controller = new AbortController();
-    const timer = window.setTimeout(async () => {
-      if (minPrice && maxPrice && Number(minPrice) > Number(maxPrice)) {
-        setSyncMessage('Khoảng giá không hợp lệ: giá từ phải nhỏ hơn giá đến.');
-        return;
-      }
-      if (minArea && maxArea && Number(minArea) > Number(maxArea)) {
-        setSyncMessage('Diện tích không hợp lệ: diện tích từ phải nhỏ hơn diện tích đến.');
-        return;
-      }
-      try {
-        setSyncMessage('Đang tải bảng tin...');
-        const params = new URLSearchParams({ limit: '20', offset: '0' });
-        if (deferredQuery.trim()) params.set('q', deferredQuery.trim());
-        if (clusterFilter !== 'all') params.set('cluster', clusterFilter);
-        if (minPrice) params.set('minPrice', String(Number(minPrice) * 1000000));
-        if (maxPrice) params.set('maxPrice', String(Number(maxPrice) * 1000000));
-        if (minArea) params.set('minArea', minArea);
-        if (maxArea) params.set('maxArea', maxArea);
-        if (sort !== 'newest') params.set('sort', sort);
-        const response = await fetch(`/api/listings?${params.toString()}`, { signal: controller.signal });
-        if (!response.ok) throw new Error('Không thể tải bảng tin.');
-        const payload = await response.json() as {
-          data?: Array<Record<string, unknown>>;
-          meta?: { pendingCount?: number; nextOffset?: number; hasMore?: boolean };
-        };
-        if (cancelled) return;
-        const pendingCount = Number(payload.meta?.pendingCount ?? 0);
-        setPendingReviewCount(pendingCount);
-        const mapped = (payload.data ?? []).map(mapListing);
-        setRemotePosts(mapped);
-        setSourceOffset(Number(payload.meta?.nextOffset ?? mapped.length));
-        setHasMoreSourcePosts(Boolean(payload.meta?.hasMore));
-        if (mapped.length > 0) {
-          setSyncMessage(`Đang xem ${mapped.length} tin${payload.meta?.hasMore ? ' đầu tiên' : ''}.`);
-        } else if (pendingCount > 0) {
-          setSyncMessage(`${pendingCount} tin đang chờ quản trị viên duyệt.`);
-        } else {
-          setSyncMessage('Chưa có tin đã duyệt. Quản trị viên có thể kiểm tra nguồn dữ liệu.');
-        }
-      } catch (error) {
-        if (cancelled) return;
-        console.error('Failed to load listings:', error);
-        setSyncMessage('Không thể tải bảng tin. Vui lòng thử lại sau.');
-      }
-    }, 180);
-    return () => {
-      cancelled = true;
-      controller.abort();
-      window.clearTimeout(timer);
-    };
-  }, [deferredQuery, clusterFilter, minPrice, maxPrice, minArea, maxArea, sort]);
-
-  const loadMoreListings = useCallback(async () => {
-    if (loadingMore || !hasMoreSourcePosts) return;
-    setLoadingMore(true);
-    setSyncMessage('Đang tải thêm tin...');
-    try {
-      const params = new URLSearchParams({ limit: '20', offset: String(sourceOffset) });
-      if (deferredQuery.trim()) params.set('q', deferredQuery.trim());
-      if (clusterFilter !== 'all') params.set('cluster', clusterFilter);
-      if (minPrice) params.set('minPrice', String(Number(minPrice) * 1000000));
-      if (maxPrice) params.set('maxPrice', String(Number(maxPrice) * 1000000));
-      if (minArea) params.set('minArea', minArea);
-      if (maxArea) params.set('maxArea', maxArea);
-      if (sort !== 'newest') params.set('sort', sort);
-      const response = await fetch(`/api/listings?${params.toString()}`);
-      if (!response.ok) throw new Error('Không thể tải thêm tin.');
-      const payload = await response.json() as {
-        data?: Array<Record<string, unknown>>;
-        meta?: { nextOffset?: number; hasMore?: boolean };
-      };
-      const mapped = (payload.data ?? []).map(mapListing);
-      setRemotePosts((current) => {
-        const existingIds = new Set(current.map((post) => post.id));
-        return [...current, ...mapped.filter((post) => !existingIds.has(post.id))];
-      });
-      setSourceOffset(Number(payload.meta?.nextOffset ?? sourceOffset + mapped.length));
-      setHasMoreSourcePosts(Boolean(payload.meta?.hasMore));
-      setSyncMessage(`Đã tải thêm ${mapped.length} tin.`);
-    } catch {
-      setSyncMessage('Không thể tải thêm tin. Vui lòng thử lại sau.');
-    } finally {
-      setLoadingMore(false);
-    }
-  }, [sourceOffset, deferredQuery, clusterFilter, minPrice, maxPrice, minArea, maxArea, sort, loadingMore, hasMoreSourcePosts]);
-
-  const feed = useMemo(() => {
-    // Only use database posts, no fallback to sample data
-    const allPosts = [...postsFromUser, ...remotePosts];
-    const normalizedQuery = deferredQuery.trim().toLowerCase();
-
-    return allPosts.filter((post) => {
-      // Early return for tab filters
-      if (tab === 'rooms' && !post.price) return false;
-      if (tab === 'discussion' && post.price) return false;
-      if (tab === 'saved' && !saved.includes(post.id)) return false;
-      if (clusterFilter !== 'all' && post.clusterId !== clusterFilter) return false;
-
-      // Search filter
-      if (!normalizedQuery) return true;
-      const searchable = [post.title, post.summary, post.clusterName, ...post.tags].join(' ').toLowerCase();
-      return searchable.includes(normalizedQuery);
-    });
-  }, [postsFromUser, remotePosts, deferredQuery, tab, clusterFilter, saved]);
-
-  const featuredPosts = useMemo(() => {
-    const listings = feed.filter((post) => Boolean(post.price));
-    return (listings.length ? listings : feed).slice(0, 3);
-  }, [feed]);
-
-  const featuredIds = useMemo(() => new Set(featuredPosts.map((post) => post.id)), [featuredPosts]);
-  const recentPosts = useMemo(() => feed.filter((post) => !featuredIds.has(post.id)), [feed, featuredIds]);
-
-  const publish = useCallback(async (event: FormEvent) => {
-    event.preventDefault();
-    if (!postTitle.trim() || !text.trim()) {
-      setComposerMessage('Hãy nhập tiêu đề và nội dung trước khi đăng.');
-      return;
-    }
-
-    if (!authenticated) {
-      alert('Bạn cần đăng nhập để đăng bài.');
-      return;
-    }
-
-    const cluster = clusters.find((item) => item.id === postClusterId) ?? clusters[0];
-    const post: RoomPost = {
-      id: `community-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      title: postTitle.trim(),
-      price: '',
-      area: '',
-      distance: '',
-      clusterId: cluster.id,
-      clusterName: cluster.name,
-      source: 'Website',
-      trust: 20,
-      comments: 0,
-      updated: 'vừa xong',
-      status: 'Cần kiểm chứng',
-      tags: [postKind === 'question' ? 'Hỏi đáp' : postKind === 'experience' ? 'Trải nghiệm' : 'Cảnh báo'],
-      image: '💬',
-      summary: text.trim(),
-      authorName: currentUser?.name || 'Thành viên',
-      postKind
-    };
-    let sharedWithServer = false;
-    try {
-      const response = await fetch('/api/community/posts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(post)
-      });
-      if (response.ok) {
-        const payload = await response.json() as { data?: RoomPost; storage?: 'database' | 'file_cache' };
-        if (payload.data) Object.assign(post, payload.data);
-        sharedWithServer = true;
-        if (payload.storage === 'database') {
-          setPostsFromUser((items) => items.filter((item) => item.id !== post.id));
-        }
-      }
-    } catch {
-      sharedWithServer = false;
-    }
-
-    if (!sharedWithServer && !saveCommunityPost(post)) {
-      setComposerMessage('Không lưu được bài viết trên trình duyệt này.');
-      return;
-    }
-    setPostsFromUser((items) => [post, ...items]);
-    setPostTitle('');
-    setText('');
-
-    // Update user stats
-    if (currentUser) {
-      updateUserStats(currentUser.id, { postsCreated: userStats.postsCreated + 1 });
-      setUserStats(prev => ({ ...prev, postsCreated: prev.postsCreated + 1 }));
-    }
-
-    setComposerMessage(sharedWithServer
-      ? 'Bài viết đã được chia sẻ với cộng đồng.'
-      : 'Đang ngoại tuyến: bài viết chỉ được lưu trên thiết bị này.');
-  }, [postTitle, text, authenticated, currentUser, postClusterId, postKind, userStats.postsCreated]);
-
-  function toggle(id: string, setter: (update: (items: string[]) => string[]) => void, storageKey: string) {
-    setter((items) => {
-      const newItems = items.includes(id) ? items.filter((item) => item !== id) : [...items, id];
-      // Save to localStorage
-      localStorage.setItem(storageKey, JSON.stringify(newItems));
-      return newItems;
-    });
-  }
-
-  return <>
-    <Header />
-    <main className="page-main">
-      <div className="page-layout">
-        <div className="page-feed">
-          <div className="page-header">
-            <h1>🏠 RoomĐàNẵng</h1>
-            <p>Cộng đồng phòng trọ Đà Nẵng - Tìm phòng dễ hơn, sống gần nhau hơn</p>
-          </div>
-
-          {authenticated ? (
-            <form className="home-composer" onSubmit={publish}>
-              <div className="avatar">{currentUser?.name?.slice(0, 2).toUpperCase() || 'DN'}</div>
-              <div className="composer-content">
-                <textarea
-                  value={text}
-                  onChange={(event) => setText(event.target.value)}
-                  maxLength={3000}
-                  placeholder="Bạn đang nghĩ gì? Đăng bài tìm phòng hoặc chia sẻ kinh nghiệm..."
-                  rows={3}
-                  aria-label="Nội dung bài viết"
-                />
-                <div className="composer-footer">
-                  <span>{composerMessage || `${text.length}/3000`}</span>
-                  <button className="primary-btn" type="submit">Đăng</button>
+    <>
+      <Header />
+      <main id="main-content" tabIndex={-1} className="public-home">
+        <section className="home-hero content-shell">
+          <div className="hero-copy">
+            <span className="hero-kicker">
+              <span />
+              Tìm phòng, có cộng đồng bên cạnh
+            </span>
+            <h1>
+              Một căn phòng vừa ý.
+              <br />
+              <em>Một khởi đầu an tâm.</em>
+            </h1>
+            <p>
+              Tìm chỗ ở tại Đà Nẵng, hỏi kinh nghiệm người đi trước và chọn nơi
+              phù hợp với bạn.
+            </p>
+            <form className="hero-search" action="/bang-tin">
+              <label className="hero-search-query">
+                <span>Bạn muốn ở đâu?</span>
+                <div>
+                  <Icon name="search" />
+                  <input
+                    name="q"
+                    aria-label="Tìm phòng"
+                    placeholder="Tên đường, trường học, khu vực..."
+                  />
                 </div>
-              </div>
+              </label>
+              <label className="hero-search-area">
+                <span>Khu vực</span>
+                <select name="cluster" aria-label="Khu vực tìm phòng">
+                  <option value="">Tất cả khu vực</option>
+                  {clusters.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button type="submit" className="primary-btn">
+                Tìm phòng
+                <Icon name="arrow" />
+              </button>
             </form>
-          ) : (
-            <div className="home-composer composer-locked">
-              <div className="avatar">?</div>
-              <div className="composer-content">
-                <p>Đăng nhập để đăng bài</p>
-                <Link href="/dang-nhap" className="primary-btn">Đăng nhập</Link>
-              </div>
-            </div>
-          )}
-
-          <div className="feed-tabs">
-            <button className={tab === 'all' ? 'active' : ''} onClick={() => setTab('all')}>Tất cả</button>
-            <button className={tab === 'rooms' ? 'active' : ''} onClick={() => setTab('rooms')}>Phòng trọ</button>
-            <button className={tab === 'discussion' ? 'active' : ''} onClick={() => setTab('discussion')}>Thảo luận</button>
-            {authenticated && (
-              <button className={tab === 'saved' ? 'active' : ''} onClick={() => setTab('saved')}>Đã lưu</button>
-            )}
-          </div>
-
-          <div className="feed-list">
-            {recentPosts.length ? (
-              recentPosts.map((post) => (
-                <PostCard key={post.id} post={post} authenticated={authenticated} />
-              ))
-            ) : (
-              <div className="empty-state">
-                <p>
-                  {tab === 'rooms' ? 'Chưa có phòng trọ nào' :
-                   tab === 'discussion' ? 'Chưa có thảo luận nào' :
-                   tab === 'saved' ? 'Bạn chưa lưu bài nào' :
-                   'Chưa có bài nào'}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {hasMoreSourcePosts && tab !== 'discussion' && (
-            <button className="load-more" onClick={loadMoreListings} disabled={loadingMore}>
-              {loadingMore ? 'Đang tải…' : 'Tải thêm'}
-            </button>
-          )}
-        </div>
-
-        <aside className="page-sidebar">
-          <div className="sidebar-card">
-            <h3>🔗 Nhanh truy cập</h3>
-            <div className="topic-list">
-              <Link href="/bang-tin" className="topic-item">🏠 Bản tin phòng trọ</Link>
-              <Link href="/thao-luan" className="topic-item">💬 Thảo luận cộng đồng</Link>
-              <Link href="/cum" className="topic-item">📍 Khám phá khu vực</Link>
+            <div className="hero-assurance">
+              <span>
+                <Icon name="check" />
+                Tin được duyệt trước khi đăng
+              </span>
+              <span>
+                <Icon name="message" />
+                Hỏi đáp cùng cộng đồng
+              </span>
             </div>
           </div>
-
-          <div className="sidebar-card">
-            <h3>Khu vực</h3>
-            <div className="cluster-list">
-              {clusters.slice(0, 5).map((cluster) => (
-                <Link key={cluster.id} href={`/cum/${cluster.id}`} className="cluster-item">
-                  {cluster.name}
+          <div className="hero-art" aria-hidden="true">
+            <div className="hero-art-sun" />
+            <div className="hero-art-building back-building">
+              <i />
+              <i />
+              <i />
+              <i />
+            </div>
+            <div className="hero-art-building front-building">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+              <span />
+            </div>
+            <div className="hero-art-plant" />
+            <div className="hero-art-card">
+              <span>R</span>
+              <div>
+                Một nơi để trở về.<small>Đà Nẵng, thành phố của bạn</small>
+              </div>
+            </div>
+            <span className="art-dot one" />
+            <span className="art-dot two" />
+          </div>
+        </section>
+        <section
+          className="content-shell quick-paths"
+          aria-label="Bạn muốn làm gì?"
+        >
+          <Link href="/bang-tin">
+            <span className="quick-icon">
+              <Icon name="home" />
+            </span>
+            <div>
+              <strong>Mình đang tìm phòng</strong>
+              <span>Xem phòng theo khu vực và ngân sách</span>
+            </div>
+            <Icon name="arrow" />
+          </Link>
+          <Link href="/thao-luan">
+            <span className="quick-icon peach">
+              <Icon name="message" />
+            </span>
+            <div>
+              <strong>Mình muốn hỏi kinh nghiệm</strong>
+              <span>Ghé cộng đồng, cùng nhau giải đáp</span>
+            </div>
+            <Icon name="arrow" />
+          </Link>
+        </section>
+        <section className="content-shell home-section" id="cum-sinh-vien">
+          <div className="section-title-row">
+            <div>
+              <span className="section-eyebrow">Gần nơi học, tiện nơi làm</span>
+              <h2>Bắt đầu từ khu vực của bạn</h2>
+            </div>
+            <Link className="text-link" href="/khu-vuc">
+              Tất cả khu vực
+              <Icon name="arrow" />
+            </Link>
+          </div>
+          <div className="area-shortcuts">
+            {clusters
+              .filter((c) => c.id !== "chua-phan-cum")
+              .map((c, i) => (
+                <Link href={`/bang-tin?cluster=${c.id}`} key={c.id}>
+                  <span className={`area-icon area-${i}`}>
+                    <Icon name="pin" />
+                  </span>
+                  <strong>{c.name}</strong>
+                  <span>{c.schools.slice(0, 2).join(" · ") || c.short}</span>
                 </Link>
               ))}
+          </div>
+        </section>
+        <section className="content-shell home-section" id="bang-tin">
+          <div className="section-title-row">
+            <div>
+              <span className="section-eyebrow">
+                Thêm lựa chọn cho hành trình mới
+              </span>
+              <h2>Phòng mới trên bảng tin</h2>
+            </div>
+            <Link className="text-link" href="/bang-tin">
+              Xem tất cả phòng
+              <Icon name="arrow" />
+            </Link>
+          </div>
+          {loadingRooms ? (
+            <div
+              className="home-room-grid"
+              role="status"
+              aria-label="Đang tải phòng"
+            >
+              {[1, 2, 3].map((i) => (
+                <div className="skeleton skeleton-card" key={i} />
+              ))}
+            </div>
+          ) : roomError ? (
+            <div className="route-feedback" role="alert">
+              <p>Chưa thể tải bảng tin lúc này.</p>
+              <button className="secondary-btn" onClick={retryRooms}>
+                Thử tải lại phòng
+              </button>
+              <Link className="secondary-btn" href="/bang-tin">
+                Mở bảng tin để thử lại
+              </Link>
+            </div>
+          ) : rooms.length ? (
+            <div className="home-room-grid">
+              {rooms.map((post) => (
+                <PostCard
+                  key={`${accountRevision}:${post.id}`}
+                  post={post}
+                  authenticated={authenticated}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="route-feedback">
+              <h3>Những căn phòng mới đang được chuẩn bị</h3>
+              <p>
+                Tin sẽ xuất hiện sau khi được duyệt. Bạn có thể ghé cộng đồng để
+                hỏi trước về khu vực.
+              </p>
+              <Link className="text-link" href="/thao-luan">
+                Ghé thảo luận
+                <Icon name="arrow" />
+              </Link>
+            </div>
+          )}
+        </section>
+        <section className="community-home-band">
+          <div className="content-shell home-discussions">
+            <div className="community-intro">
+              <span className="section-eyebrow">
+                Chọn phòng, có thêm góc nhìn
+              </span>
+              <h2>
+                Không cần tìm
+                <br />
+                chỗ ở một mình.
+              </h2>
+              <p>
+                Từ chuyện tiền cọc, giờ giấc đến kinh nghiệm sống gần trường —
+                cùng hỏi và chia sẻ.
+              </p>
+              <Link className="primary-btn" href="/thao-luan">
+                Tham gia cộng đồng
+                <Icon name="arrow" />
+              </Link>
+            </div>
+            <div>
+              {loadingDiscussions ? (
+                <div className="skeleton skeleton-block" />
+              ) : discussionError ? (
+                <div className="route-feedback" role="alert">
+                  <p>Chưa thể tải thảo luận lúc này.</p>
+                  <button className="secondary-btn" onClick={retryDiscussions}>
+                    Thử tải lại thảo luận
+                  </button>
+                </div>
+              ) : discussions.length ? (
+                discussions.map((post) => (
+                  <PostCard
+                    key={`${accountRevision}:${post.id}`}
+                    post={post}
+                    authenticated={authenticated}
+                  />
+                ))
+              ) : (
+                <div className="community-invitation">
+                  <Icon name="message" />
+                  <h3>Câu hỏi đầu tiên có thể đến từ bạn</h3>
+                  <p>Gửi thắc mắc và cùng xây dựng một cộng đồng hữu ích.</p>
+                  <Link className="text-link" href="/thao-luan">
+                    Viết thảo luận
+                    <Icon name="arrow" />
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
-
-          <div className="sidebar-card">
-            <h3>Tìm kiếm</h3>
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Tìm phòng..."
-              className="search-input"
-            />
-            <div className="filter-row">
-              <input
-                type="number"
-                value={minPrice}
-                onChange={(event) => setMinPrice(event.target.value)}
-                placeholder="Giá từ"
-                className="filter-input"
-              />
-              <input
-                type="number"
-                value={maxPrice}
-                onChange={(event) => setMaxPrice(event.target.value)}
-                placeholder="Giá đến"
-                className="filter-input"
-              />
-            </div>
+        </section>
+        <section className="content-shell landlord-invitation">
+          <div>
+            <span className="section-eyebrow">Dành cho chủ trọ</span>
+            <h2>Bạn có một căn phòng đang chờ người ở?</h2>
+            <p>
+              Xác minh tài khoản, gửi thông tin và theo dõi tin đăng ở một nơi.
+            </p>
           </div>
-        </aside>
-      </div>
-    </main>
-    <footer className="footer">
-      <div className="container">
-        <p>© 2024 RoomĐàNẵng - Cộng đồng phòng trọ Đà Nẵng</p>
-      </div>
-    </footer>
-  </>;
+          <Link className="secondary-btn" href="/quan-ly-phong">
+            Đến khu vực chủ trọ
+            <Icon name="arrow" />
+          </Link>
+        </section>
+      </main>
+      <footer className="public-footer content-shell">
+        <Link className="footer-brand" href="/">
+          Room<span>ĐàNẵng</span>
+        </Link>
+        <p>Một nơi ở phù hợp. Một cộng đồng gần gũi.</p>
+        <span>© {new Date().getFullYear()} RoomĐàNẵng</span>
+      </footer>
+    </>
+  );
 }
-
-function mapListing(item: Record<string, unknown>): RoomPost {
-  return normalizeToRoomPost({
-    externalId: item.externalId,
-    id: item.id,
-    title: item.title,
-    price: item.price,
-    area: item.area,
-    clusterId: item.clusterId,
-    trustScore: item.trustScore,
-    verificationStatus: item.verificationStatus,
-    imageUrl: item.imageUrl,
-    address: item.address,
-    sourceUrl: item.sourceUrl,
-    summary: item.summary,
-    phone: item.phone,
-    commentCount: item.commentCount
-  });
-}
-
-export default memo(SocialHome);

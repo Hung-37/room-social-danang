@@ -1,18 +1,11 @@
 import { load } from 'cheerio';
 import { createHash } from 'node:crypto';
+import { inferClusterFromAddress, inferClusterFromText } from './cluster-rules.js';
 
 /**
  * Collector cho cac nguon cong khai/duoc cap phep.
  * Khong dung cookie, token dang nhap, CAPTCHA bypass hay scraping noi dung bi gioi han.
  */
-
-const CLUSTER_RULES = [
-  { id: 'bach-khoa-su-pham', keywords: ['bách khoa', 'bach khoa', 'sư phạm', 'su pham', 'hòa khánh', 'hoa khanh', 'liên chiểu', 'lien chieu', 'nguyễn lương bằng', 'nguyen luong bang', 'tôn đức thắng', 'ton duc thang'] },
-  { id: 'hoa-cuong', keywords: ['hòa cường', 'hoa cuong', 'núi thành', 'nui thanh', 'đông á', 'dong a', 'kiến trúc', 'kien truc', 'xô viết nghệ tĩnh', 'xo viet nghe tinh', 'cách mạng tháng tám', 'cach mang thang tam'] },
-  { id: 'hai-chau', keywords: ['hải châu', 'hai chau', 'trung tâm', 'trung tam', 'sư phạm kỹ thuật', 'su pham ky thuat', 'lê duẩn', 'le duan', 'trưng nữ vương', 'trung nu vuong', 'thanh khê', 'thanh khe', 'hoà xuân', 'hoa xuan'] },
-  { id: 'ngu-hanh-son', keywords: ['ngũ hành sơn', 'ngu hanh son', 'mỹ an', 'my an', 'mỹ khê', 'my khe', 'an thượng', 'an thuong', 'kinh tế', 'kinh te', 'fpt', 'hòa hải', 'hoa hai', 'đại học kinh tế', 'dai hoc kinh te'] },
-  { id: 'nam-da-nang', keywords: ['nam đà nẵng', 'nam da nang', 'trần đại nghĩa', 'tran dai nghi', 'vku', 'việt hàn', 'viet han', 'khu đô thị đại học', 'khu do thi dai hoc', 'hòa quý', 'hoa quy', 'đại học y', 'dai hoc y', 'đại học dược', 'dai hoc duoc'] }
-];
 
 export const DEFAULT_RELEVANCE_KEYWORDS = [
   'phòng trọ', 'phong tro', 'phòng cho thuê', 'phong cho thue',
@@ -50,15 +43,6 @@ function parsePrice(value) {
       : Number(rawNumber.replace(',', '.'));
 
   return Number.isFinite(number) ? Math.round(number) : null;
-}
-
-function inferCluster(text) {
-  const normalized = removeDiacritics(text).toLowerCase();
-  const matches = CLUSTER_RULES.flatMap((rule) => rule.keywords
-    .map((keyword) => removeDiacritics(keyword).toLowerCase())
-    .filter((keyword) => normalized.includes(keyword))
-    .map((keyword) => ({ id: rule.id, score: keyword.length })));
-  return matches.sort((left, right) => right.score - left.score)[0]?.id ?? null;
 }
 
 function resolveSourceUrl(url) {
@@ -113,6 +97,22 @@ export function isPublicFeedUrl(value) {
   } catch {
     return false;
   }
+}
+
+/** Follow redirects explicitly so a public URL cannot redirect the collector to an internal service. */
+async function fetchPublicUrl(url, fetchImpl = fetch, options = {}) {
+  let current = String(url);
+  for (let redirectCount = 0; redirectCount <= 5; redirectCount += 1) {
+    if (!isPublicFeedUrl(current)) throw new Error('Nguồn hoặc URL chuyển hướng không an toàn.');
+    const response = await fetchImpl(current, { ...options, redirect: 'manual' });
+    if (![301, 302, 303, 307, 308].includes(response.status)) return response;
+    const location = response.headers?.get?.('location');
+    if (!location) throw new Error('Chuyển hướng không có Location.');
+    const next = new URL(location, current).href;
+    if (new URL(next).origin !== new URL(url).origin) throw new Error('Không cho phép chuyển hướng sang domain khác.');
+    current = next;
+  }
+  throw new Error('Nguồn chuyển hướng quá 5 lần.');
 }
 
 export function isPlaceholderListingUrl(value) {
@@ -201,7 +201,7 @@ export function isRelevantListing(item, keywords = DEFAULT_RELEVANCE_KEYWORDS) {
 }
 
 export function normalizeListing(item, source) {
-  const text = [item.title, item.description, item.address].filter(Boolean).join(' ');
+  const text = [item.title, item.description].filter(Boolean).join(' ');
   const price = parsePrice(item.price);
   const area = firstNumber(item.area);
   const sourceBaseUrl = resolveSourceUrl(source.url);
@@ -217,7 +217,7 @@ export function normalizeListing(item, source) {
     price,
     area,
     address: item.address ?? null,
-    clusterId: inferCluster(text) ?? 'chua-phan-cum',
+    clusterId: inferClusterFromAddress(item.address) ?? inferClusterFromText(text) ?? 'chua-phan-cum',
     imageUrl: firstImageUrl(item, listingUrl ?? sourceBaseUrl ?? source.url),
     source: {
       name: source.name,
@@ -319,9 +319,8 @@ export async function checkPublicSource(source, fetchImpl = fetch) {
 
   try {
     const sourceUrl = resolveSourceUrl(source.url);
-    const response = await fetchImpl(sourceUrl, {
+    const response = await fetchPublicUrl(sourceUrl, fetchImpl, {
       method: 'HEAD',
-      redirect: 'follow',
       headers: { Accept: 'application/json, application/rss+xml, application/xml, text/xml' }
     });
 
@@ -533,13 +532,17 @@ function nextPageUrlFromBody(body, contentType, currentUrl) {
     return null;
   }
   const $ = load(body);
-  const next = $('link[rel="next"], a[rel="next"], a[aria-label*="next" i], a[aria-label*="sau" i], a.next, a.next-page, .pagination a:last-child').first().attr('href');
-  return toAbsoluteUrl(next, currentUrl);
+  const explicit = $('link[rel="next"], a[rel="next"], a[aria-label*="next" i], a[aria-label*="sau" i], a.next, a.next-page').first().attr('href');
+  if (explicit) return toAbsoluteUrl(explicit, currentUrl);
+  const active = $('.pagination [aria-current="page"], .pagination .active').first().text().trim();
+  const current = Number(active || new URL(currentUrl).searchParams.get('page') || 1);
+  const numbered = $('.pagination a').toArray().find(element => Number($(element).text().trim()) === current + 1);
+  return numbered ? toAbsoluteUrl($(numbered).attr('href'), currentUrl) : null;
 }
 
 export async function fetchGenericUrlListings(url, fetchImpl = fetch, options = {}) {
   if (!isPublicFeedUrl(url)) throw new Error('URL phải là HTTPS công khai, không chứa thông tin đăng nhập và không trỏ tới mạng nội bộ.');
-  const maxPages = Math.min(20, Math.max(1, Number(options.maxPages ?? 1) || 1));
+  const maxPages = Math.min(50, Math.max(1, Math.floor(Number(options.maxPages ?? 1) || 1)));
   const origin = new URL(url).origin;
   let currentUrl = url;
   const visited = new Set();
@@ -556,8 +559,8 @@ export async function fetchGenericUrlListings(url, fetchImpl = fetch, options = 
     if (page === 0) firstRobots = robots;
     if (robots.warning) warnings.push(`${currentUrl}: ${robots.warning}`);
     if (!robots.allowed) break;
-    const response = await fetchImpl(currentUrl, {
-      redirect: 'follow', signal: AbortSignal.timeout(20000),
+    const response = await fetchPublicUrl(currentUrl, fetchImpl, {
+      signal: AbortSignal.timeout(20000),
       headers: { Accept: 'application/json, application/rss+xml, application/xml, text/xml, text/html;q=0.9,*/*;q=0.8', 'User-Agent': 'RoomDaNangCollector/1.0 (+public-data-review)' }
     });
     if (!response.ok) throw new Error(`Nguồn trả về HTTP ${response.status} tại trang ${page + 1}.`);
@@ -694,7 +697,7 @@ export async function fetchHtmlListings(source, fetchImpl = fetch) {
   const robots = await checkRobotsAllowed(source.url, fetchImpl);
   if (!robots.allowed) throw new Error('robots.txt không cho phép truy cập nguồn này.');
 
-  const response = await fetchImpl(source.url, {
+  const response = await fetchPublicUrl(source.url, fetchImpl, {
     signal: AbortSignal.timeout(15000),
     headers: { 
       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
