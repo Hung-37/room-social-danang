@@ -375,7 +375,6 @@ try {
   };
   const importBody = {
     format: "json",
-    useAi: false,
     content: JSON.stringify([input]),
   };
   const imported = await api("/api/import/listings", {

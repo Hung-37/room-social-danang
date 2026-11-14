@@ -12,7 +12,6 @@ if (existsSync(destination)) {
     'ADMIN_PASSWORD=' + secret(),
     'ADMIN_SESSION_SECRET=' + secret(),
     'USER_SESSION_SECRET=' + secret(),
-    'OLLAMA_MODEL=llama3.2:3b',
     'WEB_PORT=3000',
     ''
   ].join('\n'), { flag: 'wx', mode: 0o600 });

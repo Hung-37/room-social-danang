@@ -28,7 +28,6 @@
     "db:upgrade-v10": "node scripts/db/upgrade-v10.mjs",
     "db:seed-demo": "node scripts/db/seed-demo.mjs",
     "db:export-data": "node scripts/db/export-seeds.mjs",
-    "test:ai-fixture": "node tests/fixtures/ollama.mjs",
     "test:recluster": "node tests/integration/recluster.mjs",
     "test:recluster:browser": "node tests/browser/recluster.cjs",
     "test:areas": "node tests/integration/areas.mjs",
@@ -60,8 +59,8 @@
     "test:landlord-pagination:browser": "node tests/browser/landlord-pagination.cjs",
     "serve": "npm run doctor && npm run build && npm start",
     "stack:setup": "node scripts/stack-setup.mjs",
-    "stack:up": "node scripts/stack-setup.mjs && docker compose --env-file .env.docker up -d --build",
-    "stack:down": "docker compose --env-file .env.docker down",
+    "stack:up": "node scripts/stack-setup.mjs && docker compose --env-file .env.docker up -d --build --remove-orphans",
+    "stack:down": "docker compose --env-file .env.docker down --remove-orphans",
     "stack:logs": "docker compose --env-file .env.docker logs -f web",
     "stack:status": "docker compose --env-file .env.docker ps"
   },

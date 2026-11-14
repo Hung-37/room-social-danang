@@ -17,7 +17,6 @@ type CollectorListing = {
   verificationStatus: 'needs_review' | 'verified' | 'rejected';
   trustScore: number;
   source: { name: string; url: string | null; permission: string };
-  aiAnalysis?: unknown;
   [key: string]: unknown;
 };
 

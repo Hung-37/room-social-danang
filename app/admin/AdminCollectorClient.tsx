@@ -33,7 +33,6 @@ type RunResponse = {
     configured: number;
     collected: number;
     persistence?: Record<string, unknown>;
-    ai?: Record<string, unknown>;
   };
 };
 
@@ -43,7 +42,6 @@ type ImportResponse = {
     price: number | null;
     area: number | null;
     address: string | null;
-    aiAnalysis?: { summary?: string; riskLevel?: string };
   }>;
   stats?: {
     received: number;
@@ -53,7 +51,6 @@ type ImportResponse = {
     needsReview: number;
   };
   saved?: number;
-  ai?: { enabled?: boolean; analyzed: number; errors: string[] };
   status?: string;
   persistence?: { databaseSaved?: number; status?: string };
   error?: string;
@@ -168,7 +165,6 @@ export default function AdminCollectorClient() {
   const [importContent, setImportContent] = useState("");
   const [importFormat, setImportFormat] = useState<"json" | "csv">("json");
   const [importFile, setImportFile] = useState<File | null>(null);
-  const [useAi, setUseAi] = useState(true);
   const [importResult, setImportResult] = useState<ImportResponse | null>(null);
   const [isImporting, setIsImporting] = useState(false);
   const [activeTab, setActiveTab] = useState<
@@ -464,7 +460,6 @@ export default function AdminCollectorClient() {
         form.append("content", importContent);
         form.append("format", importFormat);
       }
-      form.append("useAi", String(useAi));
       const response = await fetch("/api/import/listings", {
         method: "POST",
         body: form,
@@ -477,12 +472,7 @@ export default function AdminCollectorClient() {
           payload.persistence?.status === "error" ||
           payload.persistence?.status === "partial"
             ? "Chưa lưu đầy đủ dữ liệu vào MySQL. Kiểm tra kết nối rồi thử lại."
-            : payload.ai?.errors?.length
-              ? "Đã lưu dữ liệu nhưng AI chưa hoàn tất: " +
-                payload.ai.errors.join("; ")
-              : useAi && payload.ai?.enabled === false
-                ? "Đã lưu dữ liệu vào MySQL. AI đang tắt trong mục Cấu hình."
-                : `Đã lưu ${payload.saved ?? 0} tin vào MySQL${payload.ai?.analyzed ? `; AI đã phân tích ${payload.ai.analyzed} tin` : ""}.`),
+            : `Đã lưu ${payload.saved ?? 0} tin vào MySQL; tin đang chờ Admin kiểm duyệt.`),
       );
       // Reload listings after import
       loadListings();
@@ -529,7 +519,6 @@ export default function AdminCollectorClient() {
           content: JSON.stringify(data),
           format: "json",
           sourceUrl: crawlPreview?.meta?.url ?? crawlUrl,
-          useAi: false,
         }),
       });
       const payload = (await response.json()) as ImportResponse;
@@ -924,14 +913,6 @@ export default function AdminCollectorClient() {
                   <option value="json">JSON</option>
                   <option value="csv">CSV</option>
                 </select>
-                <label className="toggle-control">
-                  <input
-                    type="checkbox"
-                    checked={useAi}
-                    onChange={(event) => setUseAi(event.target.checked)}
-                  />
-                  Phân tích AI (cần bật trong Cấu hình)
-                </label>
               </div>
               {importFile ? (
                 <p className="file-name">Đã chọn: {importFile.name}</p>
@@ -1229,7 +1210,7 @@ export default function AdminCollectorClient() {
                         {item.address ?? "Chưa rõ khu vực"}
                       </small>
                     </span>
-                    <b>{item.aiAnalysis?.riskLevel ?? "needs_review"}</b>
+                    <b>Chờ duyệt</b>
                   </div>
                 ))}
               </div>

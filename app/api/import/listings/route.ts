@@ -8,7 +8,7 @@ import { rateLimit } from '@/lib/rate-limit';
 const MAX_INPUT_BYTES = 2 * 1024 * 1024;
 const MAX_LISTINGS = 500;
 
-type ImportBody = { content?: unknown; format?: unknown; useAi?: unknown; sourceUrl?: unknown };
+type ImportBody = { content?: unknown; format?: unknown; sourceUrl?: unknown };
 
 function parseCsv(content: string) {
   const rows: string[][] = [];
@@ -110,13 +110,11 @@ export async function POST(request: Request) {
         file instanceof File
           ? {
               content: await file.text(),
-              format: file.name.toLowerCase().endsWith('.csv') ? 'csv' : 'json',
-              useAi: form.get('useAi') === 'true'
+              format: file.name.toLowerCase().endsWith('.csv') ? 'csv' : 'json'
             }
           : {
               content: form.get('content'),
-              format: form.get('format'),
-              useAi: form.get('useAi') === 'true'
+              format: form.get('format')
             };
       if (file instanceof File && file.size > MAX_INPUT_BYTES) throw new Error('Tệp tối đa 2 MB.');
     } else body = (await request.json()) as ImportBody;
@@ -145,21 +143,19 @@ export async function POST(request: Request) {
         (item) =>
           (item.url && listing.source.url === item.url) ||
           String(item.title ?? '').trim() === listing.title
-      );
-      return { ...listing, phone: metadata?.phone ?? null, imageUrl: metadata?.imageUrl ?? null };
+        );
+        return { ...listing, phone: metadata?.phone ?? null, imageUrl: metadata?.imageUrl ?? null };
     }) as Array<
-      (typeof collected.listings)[number] & {
-        phone?: string | null;
-        imageUrl?: string | null;
-        aiAnalysis?: unknown;
-      }
+        (typeof collected.listings)[number] & {
+          phone?: string | null;
+          imageUrl?: string | null;
+        }
     >;
 
     processing = true;
     const result = await processListings(listings, {
-      useAi: body.useAi === true || body.useAi === 'true',
-      configured: 1,
-      duplicates: collected.stats.duplicates
+        configured: 1,
+        duplicates: collected.stats.duplicates
     });
     return NextResponse.json(
       {
@@ -169,7 +165,6 @@ export async function POST(request: Request) {
         storage: 'mysql',
         persistence: result.persistence,
         status: result.status,
-        ai: result.ai,
         rejected: result.rejected
       },
       { status: result.persistence.status === 'error' && result.listings.length ? 503 : 200 }

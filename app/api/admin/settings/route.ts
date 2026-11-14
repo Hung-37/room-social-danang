@@ -1,6 +1,5 @@
 import { getAdminSessionFromRequest } from '@/lib/admin-auth';
 import { getSiteSettings, validateSettings, defaultSettings } from '@/lib/site-settings';
-import { getAiHealth } from '@/lib/ollama';
 import { getDatabasePool } from '@/lib/mysql-pool';
 import { apiData, apiError } from '@/lib/api-response';
 import type { RowDataPacket } from 'mysql2/promise';
@@ -10,10 +9,8 @@ export async function GET(r: Request) {
     return apiData(
       {
         ...(await getSiteSettings()),
-        ai: await getAiHealth(),
         runtime: {
           cronConfigured: Boolean(process.env.CRON_SECRET || process.env.COLLECTOR_CRON_SECRET),
-          aiLocked: process.env.AI_DISABLED === 'true',
           reviewRequired: true
         }
       },

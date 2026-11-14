@@ -614,7 +614,3 @@ body { padding-top: 72px; color: var(--text); background: #f5f7fb; letter-spacin
 .admin-main .source-row strong, .admin-main .source-row small { color: #e5e7eb; }
 .admin-main .source-row > div > span, .admin-main .source-status { color: #b4c0d3; }
 .admin-main .source-link, .admin-main .source-status.is-ready { color: #71dfc8; }
-
-.admin-main .ai-review { background: #1a1f2e; border-color: #3d475e; color: #d1d5db; }
-.admin-main .ai-review p { color: #d1d5db; }
-.admin-main .ai-review strong { color: #e5e7eb; }

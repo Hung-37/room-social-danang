@@ -159,7 +159,6 @@ async function run(request: Request, mode: "cron" | "manual") {
       collected: result.listings.length,
       duplicates: result.duplicates,
       persistence: result.persistence,
-      ai: result.ai,
       status: result.status,
       rejected: result.rejected,
     },

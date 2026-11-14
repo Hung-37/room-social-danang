@@ -21,7 +21,6 @@ type StoredListing = {
   trustScore: number;
   phone?: string | null;
   imageUrl?: string | null;
-  aiAnalysis?: unknown;
 };
 
 function listingTimestamp(item: Record<string, unknown>) {
@@ -81,7 +80,6 @@ export function writeScrapedListings(listings: StoredListing[]) {
       trustScore: listing.trustScore,
       phone: listing.phone ?? null,
       imageUrl: listing.imageUrl ?? null,
-      aiAnalysis: listing.aiAnalysis,
       lastSeenAt: new Date().toISOString(),
       stale: false,
       updatedAt: new Date().toISOString()

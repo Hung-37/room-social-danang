@@ -18,7 +18,6 @@ export async function POST(r: Request) {
         meta: {
           collected: result.listings.length,
           persistence: result.persistence,
-          ai: result.ai,
           rejected: result.rejected
         }
       });

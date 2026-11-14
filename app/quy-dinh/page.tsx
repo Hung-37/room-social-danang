@@ -13,8 +13,8 @@ export default async function Page() {
         <h2>Kiểm duyệt và quyền tài khoản</h2>
         <p>
           Chủ trọ cần được xác minh trước khi đăng phòng. Tin mới và tin chỉnh
-          sửa phải được Admin duyệt trước khi công khai. Nội dung AI là gợi ý,
-          không thay thế kiểm tra phòng và hợp đồng.
+          sửa phải được Admin duyệt trước khi công khai. Người dùng cần tự kiểm
+          tra thông tin phòng, chi phí và hợp đồng trước khi giao dịch.
         </p>
         <h2>Ảnh phòng rõ ràng, đúng thực tế</h2>
         <p>

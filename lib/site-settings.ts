@@ -6,8 +6,6 @@ export type SiteSettings = {
   postingGuidelines: string;
   registrationEnabled: boolean;
   collectorEnabled: boolean;
-  aiEnabled: boolean;
-  aiMaxListings: number;
   daNangOnly: boolean;
 };
 export function defaultSettings(): SiteSettings {
@@ -18,8 +16,6 @@ export function defaultSettings(): SiteSettings {
       'Đăng thông tin phòng chính xác, ảnh thực tế và chi phí rõ ràng. Không đăng nội dung lừa đảo, thông tin cá nhân của người khác hoặc bình luận xúc phạm. Tin mới và tin chỉnh sửa phải được Admin kiểm duyệt.',
     registrationEnabled: true,
     collectorEnabled: true,
-    aiEnabled: process.env.COLLECTOR_USE_AI === 'true' || process.env.ENABLE_AI_ANALYSIS === 'true',
-    aiMaxListings: 5,
     daNangOnly: true
   };
 }
@@ -36,26 +32,17 @@ export function validateSettings(b: unknown): SiteSettings {
     typeof s.postingGuidelines !== 'string' ||
     s.postingGuidelines.trim().length < 20 ||
     s.postingGuidelines.length > 2000 ||
-    ['registrationEnabled', 'collectorEnabled', 'aiEnabled', 'daNangOnly'].some(
+    ['registrationEnabled', 'collectorEnabled', 'daNangOnly'].some(
       (k) => typeof s[k as keyof SiteSettings] !== 'boolean'
-    ) ||
-    !Number.isInteger(s.aiMaxListings) ||
-    s.aiMaxListings < 1 ||
-    s.aiMaxListings > 20
+    )
   )
-    throw new Error(
-      'Kiểm tra tên (2–60 ký tự), email, quy định (20–2000 ký tự) và giới hạn AI (1–20).'
-    );
-  if (process.env.AI_DISABLED === 'true' && s.aiEnabled)
-    throw new Error('AI đang bị tắt bởi cấu hình máy chủ.');
+    throw new Error('Kiểm tra tên (2–60 ký tự), email và quy định (20–2000 ký tự).');
   return {
     siteName: s.siteName.trim(),
     contactEmail: s.contactEmail.trim(),
     postingGuidelines: s.postingGuidelines.trim(),
     registrationEnabled: s.registrationEnabled,
     collectorEnabled: s.collectorEnabled,
-    aiEnabled: s.aiEnabled,
-    aiMaxListings: s.aiMaxListings,
     daNangOnly: s.daNangOnly
   };
 }
@@ -66,14 +53,17 @@ export async function getSiteSettings() {
     'SELECT value,version FROM site_settings WHERE id=1'
   );
   if (!rows[0]) return { settings: fallback, version: 0 };
-  const stored = typeof rows[0].value === 'string' ? JSON.parse(rows[0].value) : rows[0].value;
+  const stored = (typeof rows[0].value === 'string'
+    ? JSON.parse(rows[0].value)
+    : rows[0].value) as Record<string, unknown>;
+  const compatibleSettings = Object.fromEntries(
+    Object.entries(stored).filter(([key]) => Object.prototype.hasOwnProperty.call(fallback, key))
+  ) as Partial<SiteSettings>;
   return {
     settings: {
       ...fallback,
-      ...stored,
-      aiEnabled:
-        process.env.AI_DISABLED === 'true' ? false : (stored.aiEnabled ?? fallback.aiEnabled)
-    } as SiteSettings,
+      ...compatibleSettings
+    },
     version: Number(rows[0].version)
   };
 }

@@ -15,21 +15,8 @@ export async function GET(r: Request, { params }: { params: Promise<{ id: string
       'SELECT id FROM listing_images WHERE listing_id=? ORDER BY position,id LIMIT 4',
       [id]
     );
-    const [analyses] = await getDatabasePool().query<RowDataPacket[]>(
-      'SELECT status,model,prompt_version AS promptVersion,payload,error,analyzed_at AS analyzedAt FROM listing_ai_analysis WHERE listing_id=?',
-      [id]
-    );
-    const ai = analyses[0]
-      ? {
-          ...analyses[0],
-          payload:
-            typeof analyses[0].payload === 'string'
-              ? JSON.parse(analyses[0].payload)
-              : analyses[0].payload
-        }
-      : null;
     return apiData(
-      { ...rows[0], ai, imageUrls: images.map((i) => '/api/images/' + i.id) },
+      { ...rows[0], imageUrls: images.map((i) => '/api/images/' + i.id) },
       {},
       { headers: { 'Cache-Control': 'private, no-store' } }
     );

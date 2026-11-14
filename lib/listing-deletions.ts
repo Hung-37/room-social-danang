@@ -82,6 +82,7 @@ export async function deleteRejectedListing(
         "DELETE FROM listing_images WHERE listing_id=?",
         [id],
       );
+      // Older databases keep this table and its foreign key from V10.
       await connection.execute(
         "DELETE FROM listing_ai_analysis WHERE listing_id=?",
         [id],

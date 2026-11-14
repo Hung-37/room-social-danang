@@ -32,7 +32,6 @@ export type NormalizedListing = {
   trustScore: number;
   imageUrl?: string | null;
   phone?: string | null;
-  aiAnalysis?: unknown;
 };
 
 export type CollectorInput = {

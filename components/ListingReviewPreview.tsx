@@ -2,12 +2,6 @@
 import { useState } from 'react';
 type Preview = {
   summary: string;
-  ai?: {
-    status: string;
-    model: string;
-    error: string | null;
-    payload: { summary: string; riskLevel: string; missingInformation: string[] } | null;
-  };
   phone: string | null;
   imageUrl: string | null;
   imageUrls: string[];
@@ -52,35 +46,6 @@ export default function ListingReviewPreview({ id }: { id: string }) {
         </>
       ) : data ? (
         <>
-          <div className="ai-review">
-            <strong>
-              Phân tích AI:{' '}
-              {data.ai?.status === 'success'
-                ? 'Đã phân tích'
-                : data.ai?.status === 'error'
-                  ? 'Phân tích lỗi'
-                  : 'Chưa phân tích'}
-            </strong>
-            {data.ai?.payload && (
-              <>
-                <p>{data.ai.payload.summary}</p>
-                <p>
-                  Gợi ý mức rủi ro:{' '}
-                  {data.ai.payload.riskLevel === 'high'
-                    ? 'Cao'
-                    : data.ai.payload.riskLevel === 'medium'
-                      ? 'Trung bình'
-                      : 'Thấp'}
-                </p>
-                <p>
-                  Thông tin cần bổ sung:{' '}
-                  {data.ai.payload.missingInformation.join(', ') || 'Không có gợi ý'}
-                </p>
-              </>
-            )}
-            {data.ai?.error && <p>{data.ai.error}</p>}
-            <p>Admin cần kiểm tra nội dung và nguồn; AI không xác minh chủ trọ.</p>
-          </div>
           <p className="full-description">{data.summary}</p>
           {data.phone && <p>Liên hệ: {data.phone}</p>}
           <div className="review-photo-grid">

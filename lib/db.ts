@@ -25,7 +25,6 @@ type Listing = {
   source: { name: string; url: string | null; permission: string };
   verificationStatus: string;
   trustScore: number;
-  aiAnalysis?: unknown;
 };
 
 const LISTING_STALE_DAYS = Math.max(

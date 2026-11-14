@@ -9,18 +9,10 @@ type Source = {
   permission: string;
   listingSelectors?: Record<string, string>;
 };
-type Ai = {
-  enabled: boolean;
-  connected: boolean;
-  modelAvailable: boolean;
-  model: string;
-  status: string;
-};
 export default function SettingsClient() {
   const [runtime, setRuntime] = useState<{ cronConfigured: boolean } | null>(null);
   const [settings, setSettings] = useState<SiteSettings | null>(null),
     [version, setVersion] = useState(0),
-    [ai, setAi] = useState<Ai | null>(null),
     [sources, setSources] = useState<Source[]>([]),
     [source, setSource] = useState({
       sourceId: '',
@@ -46,7 +38,6 @@ export default function SettingsClient() {
       if (!r.ok || !s.ok) throw new Error(p.error || q.error);
       setSettings(p.data.settings);
       setVersion(p.data.version);
-      setAi(p.data.ai);
       setRuntime(p.data.runtime);
       setSources(q.data);
     } catch (e) {
@@ -173,7 +164,7 @@ export default function SettingsClient() {
             </label>
           </section>
           <section className="editor-section">
-            <h2>Collector và AI</h2>
+            <h2>Thu thập dữ liệu</h2>
             <label className="settings-check">
               <input
                 type="checkbox"
@@ -190,53 +181,16 @@ export default function SettingsClient() {
               />
               Chỉ nhận dữ liệu xác định thuộc Đà Nẵng
             </label>
-            <label className="settings-check">
-              <input
-                type="checkbox"
-                checked={settings.aiEnabled}
-                onChange={(e) => change('aiEnabled', e.target.checked)}
-              />
-              Bật phân tích AI cho dữ liệu nhập và collector
-            </label>
-            <label>
-              Số tin AI phân tích tối đa mỗi lượt
-              <input
-                type="number"
-                min={1}
-                max={20}
-                value={settings.aiMaxListings}
-                onChange={(e) => change('aiMaxListings', Number(e.target.value))}
-              />
-            </label>
             <p>
-              AI chỉ hỗ trợ nhận xét, không xác minh chủ trọ hay tự công khai tin. Nếu AI lỗi, dữ
-              liệu vẫn ở hàng chờ và lượt chạy báo chưa hoàn tất.
+              Tin nhập và tin thu thập luôn được lưu để Admin kiểm tra, không có phân tích tự động.
             </p>
-            <div className="ai-health">
-              <p>
-                Lịch chạy tự động phía máy chủ:{' '}
-                {runtime?.cronConfigured
-                  ? 'Đã có khóa cron; cần lịch gọi từ hosting'
-                  : 'Chưa cấu hình khóa cron'}
-                . Tự chạy khi mở trang Admin không thay thế lịch máy chủ.
-              </p>
-              <strong>
-                AI:{' '}
-                {ai?.connected
-                  ? ai.modelAvailable
-                    ? 'Đã kết nối, có mô hình'
-                    : 'Đã kết nối, thiếu mô hình'
-                  : 'Chưa kết nối dịch vụ'}
-              </strong>
-              <p>
-                Mô hình: {ai?.model || 'Chưa đọc được'} ·{' '}
-                {settings.aiEnabled ? 'Đang bật trong cấu hình' : 'Đang tắt trong cấu hình'}
-              </p>
-              <p>
-                Địa chỉ dịch vụ, mô hình và secret được cấu hình ở máy chủ. Màn hình này không nhận
-                mật khẩu hoặc token.
-              </p>
-            </div>
+            <p>
+              Lịch chạy tự động phía máy chủ:{' '}
+              {runtime?.cronConfigured
+                ? 'Đã có khóa cron; cần lịch gọi từ hosting'
+                : 'Chưa cấu hình khóa cron'}
+              . Tự chạy khi mở trang Admin không thay thế lịch máy chủ.
+            </p>
           </section>
           <button className="primary-btn" disabled={busy}>
             {busy ? 'Đang lưu...' : 'Lưu cấu hình'}

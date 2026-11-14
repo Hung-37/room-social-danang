@@ -51,13 +51,6 @@ try {
       sql += insert('listings', row, ['id']) + '\n';
       count++;
     }
-    const [analyses] = await c.query(
-      'SELECT * FROM listing_ai_analysis WHERE listing_id IN (' +
-        ids.map(() => '?').join(',') +
-        ')',
-      ids
-    );
-    for (const row of analyses) sql += insert('listing_ai_analysis', row) + '\n';
   }
   await writeFile(dir + '/collected-listings.sql', sql);
   let demo =

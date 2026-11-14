@@ -66,52 +66,6 @@ if (!failed && !process.argv.includes("--dependencies-only")) {
         mutationColumns.length === 4,
         "V17 content version/deletion columns; run npm run db:upgrade-v17 if missing",
       );
-      let aiEnabled =
-        process.env.COLLECTOR_USE_AI === "true" ||
-        process.env.ENABLE_AI_ANALYSIS === "true";
-      if (actual.has("site_settings")) {
-        const [settings] = await db.query(
-          "SELECT value FROM site_settings WHERE id=1",
-        );
-        if (settings[0]) {
-          const saved =
-            typeof settings[0].value === "string"
-              ? JSON.parse(settings[0].value)
-              : settings[0].value;
-          aiEnabled = saved.aiEnabled ?? aiEnabled;
-        }
-      }
-      if (process.env.AI_DISABLED === "true") aiEnabled = false;
-      if (!aiEnabled)
-        console.log("SKIP AI đang tắt; chưa xác minh model thật.");
-      else {
-        const model = process.env.OLLAMA_MODEL || "llama3.2:3b";
-        try {
-          const response = await fetch(
-            (process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434").replace(
-              /\/$/,
-              "",
-            ) + "/api/tags",
-            { signal: AbortSignal.timeout(3000) },
-          );
-          if (!response.ok) throw new Error();
-          const data = await response.json();
-          result(
-            Boolean(
-              data.models?.some(
-                (entry) =>
-                  entry.name === model || entry.name === model + ":latest",
-              ),
-            ),
-            "AI provider reachable and configured model installed",
-          );
-          console.log(
-            "NOTE: Model availability does not verify analysis accuracy.",
-          );
-        } catch {
-          result(false, "AI enabled but provider/model unavailable");
-        }
-      }
     } catch {
       result(
         false,

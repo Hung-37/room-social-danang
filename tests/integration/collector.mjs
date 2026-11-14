@@ -1,4 +1,4 @@
-// Isolated QA database and a synthetic Ollama fixture are required. No external crawl.
+// Isolated QA database is required. No external crawl.
 import assert from 'node:assert/strict';
 import mysql from 'mysql2/promise';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
@@ -10,7 +10,7 @@ if (
   !process.env.TEST_ADMIN_EMAIL ||
   !process.env.TEST_ADMIN_PASSWORD
 )
-  throw new Error('Set test server/admin/database. Use synthetic Ollama at 11435 only.');
+  throw new Error('Set test server/admin/database.');
 let checks = 0;
 async function api(path, { cookie = '', method = 'GET', body, status = 200 } = {}) {
   const r = await fetch(base + path, {
@@ -48,8 +48,9 @@ for (const path of ['/api/admin/users', '/api/admin/settings']) {
   await api(path, { cookie: student.cookie, status: 401 });
 }
 const first = (await api('/api/admin/settings', { cookie: admin.cookie })).data;
-assert.equal(first.ai.modelAvailable, true);
-checks++;
+assert.equal('ai' in first, false);
+assert.equal('aiEnabled' in first.settings, false);
+checks += 2;
 async function settings(patch) {
   const p = (await api('/api/admin/settings', { cookie: admin.cookie })).data;
   return (
@@ -60,18 +61,10 @@ async function settings(patch) {
     })
   ).data;
 }
-await api('/api/admin/settings', {
-  cookie: admin.cookie,
-  method: 'PUT',
-  body: { settings: { ...first.settings, aiMaxListings: 21 }, version: first.version },
-  status: 400
-});
 for(const invalid of [{siteName:'x'.repeat(61)},{contactEmail:'invalid email'},{registrationEnabled:'true'}])await api('/api/admin/settings',{cookie:admin.cookie,method:'PUT',body:{settings:{...first.settings,...invalid},version:first.version},status:400});
-let current = await settings({
+await settings({
   siteName: 'RoomĐàNẵng QA',
-  contactEmail: 'help@test.local',
-  aiEnabled: true,
-  aiMaxListings: 2
+  contactEmail: 'help@test.local'
 });
 assert.equal((await api('/api/site/settings')).data.siteName, 'RoomĐàNẵng QA');
 checks++;
@@ -153,72 +146,26 @@ const dataRows = [
 let result = await api('/api/import/listings', {
   cookie: admin.cookie,
   method: 'POST',
-  body: { format: 'json', useAi: true, content: JSON.stringify(dataRows) }
+  body: { format: 'json', content: JSON.stringify(dataRows) }
 });
 assert.equal(result.saved, 1);
 assert.equal(result.data[0].area, 25.5);
 assert.equal(result.rejected.length, 1);
-assert.equal(result.ai.analyzed, 1);
 assert.equal(result.status, 'completed');
+assert.equal('ai' in result, false);
 checks += 5;
 const listingId = result.data[0].externalId;
 const preview = (
   await api('/api/admin/listings/' + listingId + '/preview', { cookie: admin.cookie })
 ).data;
-assert.equal(preview.ai.status, 'success');
-assert.equal(preview.ai.payload.riskLevel, 'medium');
-checks += 2;
+assert.equal('ai' in preview, false);
+checks++;
 const c = await mysql.createConnection(process.env.MYSQL_URL);
 try {
   const [logs] = await c.query('SELECT * FROM collector_runs ORDER BY id DESC LIMIT 1');
   assert.equal(logs[0].status, 'completed');
   assert(logs[0].started_at);
   checks += 2;
-  const [analyses] = await c.query('SELECT * FROM listing_ai_analysis WHERE listing_id=?', [
-    listingId
-  ]);
-  assert.equal(analyses[0].prompt_version, 'room-review-v10');
-  assert.equal(analyses[0].content_hash.length, 64);
-  checks += 2;
-  await fetch('http://127.0.0.1:11435/test-mode', {
-    method: 'POST',
-    body: JSON.stringify({ mode: 'invalid' })
-  });
-  result = await api('/api/import/listings', {
-    cookie: admin.cookie,
-    method: 'POST',
-    body: {
-      format: 'json',
-      useAi: true,
-      content: JSON.stringify([
-        { ...dataRows[0], id: 'bad-ai-' + stamp, title: 'Phòng trọ lỗi AI Hải Châu ' + stamp }
-      ])
-    }
-  });
-  assert.equal(result.status, 'partial');
-  assert.equal(result.ai.analyzed, 0);
-  assert.equal(result.ai.errors.length, 1);
-  assert.equal(result.saved, 1);
-  checks += 4;
-  assert.equal(
-    (
-      await api('/api/admin/listings/' + result.data[0].externalId + '/preview', {
-        cookie: admin.cookie
-      })
-    ).data.ai.status,
-    'error'
-  );
-  checks++;
-  const [failedLog] = await c.query(
-    'SELECT status,error_count FROM collector_runs ORDER BY id DESC LIMIT 1'
-  );
-  assert.equal(failedLog[0].status, 'partial');
-  assert(Number(failedLog[0].error_count) > 0);
-  checks += 2;
-  await fetch('http://127.0.0.1:11435/test-mode', {
-    method: 'POST',
-    body: JSON.stringify({ mode: 'good' })
-  });
   for (const id of ['phongtro123-da-nang', 'tromoi-da-nang', 'thuephongtro-da-nang'])
     await api('/api/collector/check', {
       cookie: admin.cookie,
@@ -287,13 +234,13 @@ try {
       method: 'POST',
       body: { sourceId: 'data-template' }
     });
-    assert.equal(result.meta.ai.analyzed, 1);
-    assert.equal(result.meta.persistence.databaseSaved, 1);
-    assert.equal(result.meta.status, 'completed');
+      assert.equal(result.meta.persistence.databaseSaved, 1);
+      assert.equal(result.meta.status, 'completed');
+      assert.equal('ai' in result.meta, false);
     checks += 3;
     result = await api('/api/collector/init', { cookie: admin.cookie, method: 'POST', body: {} });
-    assert(result.meta.ai.analyzed > 0);
-    assert.equal(result.meta.persistence.storage, 'mysql');
+      assert.equal(result.meta.persistence.storage, 'mysql');
+      assert.equal('ai' in result.meta, false);
     checks += 2;
   } finally {
     await writeFile(file, original);
@@ -304,19 +251,6 @@ try {
     method: 'POST',
     body: { sourceId: 'data-template' },
     status: 503
-  });
-  await settings({ collectorEnabled: true, aiEnabled: false });
-  await api('/api/ai/analyze', {
-    cookie: admin.cookie,
-    method: 'POST',
-    body: { text: 'Phòng trọ Hải Châu' },
-    status: 503
-  });
-  await api('/api/ai/analyze', {
-    cookie: student.cookie,
-    method: 'POST',
-    body: { text: 'Phòng trọ Hải Châu' },
-    status: 401
   });
   // Re-crawled content changes return an approved source listing to review.
   await api('/api/listings/' + listingId + '/status', {
@@ -329,7 +263,6 @@ try {
     method: 'POST',
     body: {
       format: 'json',
-      useAi: false,
       content: JSON.stringify([
         { ...dataRows[0], description: 'Nội dung đã thay đổi, cần Admin xem xét và duyệt lại.' }
       ])
@@ -354,11 +287,7 @@ try {
   }
 } finally {
   await c.end();
-  await fetch('http://127.0.0.1:11435/test-mode', {
-    method: 'POST',
-    body: JSON.stringify({ mode: 'good' })
-  });
 }
 console.log(
-  `PASS: ${checks} V10 checks: persisted settings/source toggles, blocked sessions, user controls, AI validation/storage/error status, unified import/init/run, decimal areas, city filter, database logs and re-review on source changes. Synthetic model only.`
+  `PASS: ${checks} collector checks: persisted settings/source toggles, blocked sessions, user controls, unified import/init/run without AI, decimal areas, city filter, database logs and re-review on source changes.`
 );
