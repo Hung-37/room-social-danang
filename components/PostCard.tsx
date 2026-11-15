@@ -1,5 +1,7 @@
 "use client";
 import { useFavorites } from "./FavoritesProvider";
+import { useToast } from "./Toast";
+import { useLoginModal } from "./LoginModalProvider";
 import Link from "next/link";
 import { memo, useEffect, useRef, useState } from "react";
 import type { RoomPost } from "@/lib/data";
@@ -31,9 +33,9 @@ function PostCard({
   );
   const [retryInteraction, setRetryInteraction] = useState(0);
   const mutation = useRef(0);
-  const [notice, setNotice] = useState("");
+  const { showToast } = useToast();
+  const { openLoginModal } = useLoginModal();
   const href = `/bai/${encodeURIComponent(post.id)}`;
-  const login = `/dang-nhap?next=${encodeURIComponent(href)}`;
   useEffect(() => {
     if (room) return;
     if (post.interactionSummary !== undefined && retryInteraction === 0) {
@@ -75,9 +77,9 @@ function PostCard({
     setSaving(true);
     try {
       await favorites.toggle(post.id, !saved);
-      setNotice(saved ? "Đã bỏ lưu." : "Đã lưu vào tài khoản.");
+      showToast(saved ? "Đã bỏ lưu" : "Đã lưu vào tài khoản", "success");
     } catch (e) {
-      setNotice(e instanceof Error ? e.message : "Chưa thể lưu.");
+      showToast(e instanceof Error ? e.message : "Chưa thể lưu", "error");
     } finally {
       setSaving(false);
     }
@@ -99,12 +101,14 @@ function PostCard({
       if (!r.ok) throw new Error(p.error);
       setLiked(Boolean(p.data.viewerReaction));
       setVotes(p.data.total);
+      showToast(liked ? "Đã bỏ thích" : "Đã thích bài viết", "success");
     } catch (e) {
       setInteractionError(true);
-      setNotice(
+      showToast(
         e instanceof Error && e.name === "Error"
           ? e.message
-          : "Không thể gửi tương tác.",
+          : "Không thể gửi tương tác",
+        "error",
       );
     } finally {
       setBusy(false);
@@ -119,10 +123,10 @@ function PostCard({
         });
       else {
         await navigator.clipboard.writeText(location.origin + href);
-        setNotice("Đã sao chép liên kết.");
+        showToast("Đã sao chép liên kết", "success");
       }
     } catch {
-      setNotice("Bạn có thể sao chép địa chỉ từ trang chi tiết.");
+      showToast("Bạn có thể sao chép địa chỉ từ trang chi tiết", "info");
     }
   }
   return (
@@ -182,6 +186,20 @@ function PostCard({
             {post.clusterName}
           </p>
         )}
+        {post.sourceUrl && (
+          <div className="card-source">
+            <span className="source-label">Nguồn:</span>
+            <a
+              href={post.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="source-link"
+            >
+              Xem bài gốc
+              <Icon name="arrow" />
+            </a>
+          </div>
+        )}
         <div className="card-toolbar">
           <Link href={href} className="card-read">
             {room ? "Xem chi tiết" : "Đọc thảo luận"}
@@ -206,13 +224,13 @@ function PostCard({
               <Icon name="bookmark" />
             </button>
           ) : (
-            <Link
+            <button
               className="quiet-icon"
-              href={login}
+              onClick={() => openLoginModal("login", href)}
               aria-label={`Đăng nhập để lưu: ${post.title}`}
             >
               <Icon name="bookmark" />
-            </Link>
+            </button>
           )}
           {!room &&
             (authenticated ? (
@@ -227,13 +245,13 @@ function PostCard({
                 {votes > 0 && votes}
               </button>
             ) : (
-              <Link
+              <button
                 className="quiet-icon"
-                href={login}
+                onClick={() => openLoginModal("login", href)}
                 aria-label={`Đăng nhập để thích: ${post.title}`}
               >
                 <Icon name="heart" />
-              </Link>
+              </button>
             ))}
           <button
             className="quiet-icon"
@@ -253,11 +271,6 @@ function PostCard({
             >
               Thử lại tương tác
             </button>
-          </p>
-        )}
-        {notice && (
-          <p className="card-notice" role="status">
-            {notice}
           </p>
         )}
       </div>

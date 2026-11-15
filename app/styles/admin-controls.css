@@ -230,3 +230,128 @@
     flex: 1;
   }
 }
+
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--line);
+  background: #fffefa;
+  box-shadow: 0 3px 18px rgba(22, 80, 69, .06);
+}
+.admin-topbar-inner {
+  display: flex;
+  width: min(1360px, calc(100% - 32px));
+  min-height: 72px;
+  margin-inline: auto;
+  justify-content: space-between;
+}
+.admin-topbar .brand {
+  flex: none;
+  max-width: none;
+}
+.admin-nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+}
+.admin-nav-links a {
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+  text-decoration: none;
+}
+.admin-nav-links a[aria-current="page"],
+.admin-nav-links a:hover {
+  background: var(--surface-subtle);
+  color: var(--brand);
+}
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-menu-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+.admin-menu-toggle span {
+  display: block;
+  height: 2px;
+  margin: 4px 0;
+  border-radius: 2px;
+  background: var(--text);
+}
+.admin-mobile-nav {
+  display: grid;
+  gap: 4px;
+  padding: 8px max(16px, calc((100% - 1360px) / 2)) 16px;
+  border-top: 1px solid var(--line);
+  background: #fffefa;
+}
+.admin-mobile-nav a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 9px;
+  color: var(--text);
+  font-weight: 650;
+}
+.admin-mobile-nav a:hover,
+.admin-mobile-nav a[aria-current="page"] {
+  background: var(--surface-subtle);
+  color: var(--brand);
+}
+@media (max-width: 1100px) {
+  .admin-nav-links {
+    display: none;
+  }
+  .admin-menu-toggle {
+    display: block;
+  }
+}
+@media (max-width: 700px) {
+  .admin-topbar-inner {
+    width: calc(100% - 24px);
+    min-height: 64px;
+    gap: 8px;
+  }
+  .admin-topbar .brand {
+    min-width: 0;
+    max-width: min(65%, 260px);
+    font-size: 17px;
+  }
+  .admin-topbar .brand > span:nth-child(2) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .admin-badge {
+    flex: none;
+    font-size: 10px;
+  }
+  .admin-header-actions {
+    width: auto;
+    gap: 6px;
+  }
+  .admin-header-actions > a {
+    display: none;
+  }
+  .admin-header-actions > button:not(.admin-menu-toggle) {
+    min-height: 40px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .admin-mobile-nav {
+    padding: 8px 12px 14px;
+  }
+}

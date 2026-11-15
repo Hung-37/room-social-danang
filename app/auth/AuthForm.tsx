@@ -158,51 +158,92 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
     <main id="main-content" tabIndex={-1} className="auth-page">
       <div className="auth-layout">
         <section className="auth-intro">
-          <Link href="/" className="brand auth-brand">
-            <span className="brand-mark">R</span>
-            <span>
-              Room<span>ĐàNẵng</span>
-            </span>
-          </Link>
+          <div className="auth-intro-top">
+            <Link href="/" className="brand auth-brand">
+              <span className="brand-mark">R</span>
+              <span>
+                Room<span>ĐàNẵng</span>
+              </span>
+            </Link>
+            <Link href="/" className="auth-home-link">
+              Về trang chủ
+            </Link>
+          </div>
           <div className="auth-intro-copy">
-            <span className="eyebrow">Cộng đồng phòng trọ Đà Nẵng</span>
+            <span className="eyebrow">
+              Nền tảng tìm phòng trọ tại Đà Nẵng
+            </span>
             <h1>
-              {isLogin ? "Chào mừng bạn trở lại." : "Tìm phòng cùng cộng đồng."}
+              {isLogin ? (
+                <>
+                  Tìm phòng phù hợp.
+                  <br />
+                  <em>An tâm ở Đà Nẵng.</em>
+                </>
+              ) : (
+                <>
+                  Bắt đầu hành trình
+                  <br />
+                  <em>tìm nơi ở mới.</em>
+                </>
+              )}
             </h1>
             <p>
               {isLogin
-                ? "Đăng nhập để lưu phòng, tham gia thảo luận và kiểm chứng thông tin cùng sinh viên Đà Nẵng."
-                : "Tạo tài khoản để lưu phòng yêu thích, hỏi người thật và chia sẻ trải nghiệm của bạn."}
+                ? "RoomĐàNẵng kết nối tin phòng, khu vực trường học và kinh nghiệm cộng đồng trong một nơi."
+                : "Tạo tài khoản để lưu tin yêu thích, hỏi cộng đồng và trao đổi trực tiếp về phòng trọ."}
             </p>
+            <div className="auth-benefit-list">
+              <div className="auth-benefit">
+                <span aria-hidden="true">⌕</span>
+                <p>
+                  <strong>Tìm theo khu vực</strong>
+                  <small>Khám phá phòng gần trường và tiện ích.</small>
+                </p>
+              </div>
+              <div className="auth-benefit">
+                <span aria-hidden="true">✓</span>
+                <p>
+                  <strong>Biết rõ nguồn tin</strong>
+                  <small>Đối chiếu bài gốc và kiểm tra thông tin.</small>
+                </p>
+              </div>
+              <div className="auth-benefit">
+                <span aria-hidden="true">↗</span>
+                <p>
+                  <strong>Kết nối cộng đồng</strong>
+                  <small>Hỏi kinh nghiệm từ người đang sống tại Đà Nẵng.</small>
+                </p>
+              </div>
+            </div>
+            <Link href="/bang-tin" className="auth-discover-link">
+              Khám phá phòng trọ <span aria-hidden="true">→</span>
+            </Link>
           </div>
           <div className="auth-proof">
-            <span>✓</span>
+            <span aria-hidden="true">✓</span>
             <p>
-              <strong>Thông tin có nguồn</strong>
+              <strong>Tìm hiểu kỹ trước khi quyết định</strong>
               <br />
-              Mỗi bài đăng đều có lịch sử và mức độ tin cậy.
-            </p>
-          </div>
-          <div className="auth-proof">
-            <span>◎</span>
-            <p>
-              <strong>Cộng đồng theo cụm</strong>
-              <br />
-              Kết nối đúng khu vực trường bạn đang học.
+              Xem tin gốc, xác nhận chi phí và hẹn xem phòng trực tiếp.
             </p>
           </div>
         </section>
 
         <section className="auth-panel">
-          <div className="auth-tabs">
+          <div className="auth-tabs" role="tablist" aria-label="Chọn hình thức tài khoản">
             <Link
               className={isLogin ? "auth-tab is-active" : "auth-tab"}
+              role="tab"
+              aria-selected={isLogin}
               href={`/dang-nhap?next=${encodeURIComponent(returnPath)}`}
             >
               Đăng nhập
             </Link>
             <Link
               className={!isLogin ? "auth-tab is-active" : "auth-tab"}
+              role="tab"
+              aria-selected={!isLogin}
               href={`/dang-ky?next=${encodeURIComponent(returnPath)}`}
             >
               Đăng ký
@@ -223,7 +264,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               <h3>
                 {isLogin ? "Đăng nhập thành công!" : "Tài khoản đã được tạo!"}
               </h3>
-              <p>Đang chuyển hướng đến trang chủ...</p>
+              <p>Đang chuyển bạn đến trang tiếp theo...</p>
               <Link className="primary-btn auth-home-btn" href="/">
                 Về trang chủ
               </Link>
@@ -340,11 +381,6 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               {isLogin && (
                 <div className="auth-options">
                   <p>Cần trợ giúp đăng nhập? Vui lòng liên hệ quản trị viên.</p>
-                </div>
-              )}
-              {isLogin && process.env.NODE_ENV !== "production" && (
-                <div className="admin-hint">
-                  <small>Admin demo chỉ có trong môi trường phát triển.</small>
                 </div>
               )}
               {error && (

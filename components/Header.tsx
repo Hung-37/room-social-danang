@@ -5,10 +5,12 @@ import { accountResponse } from "./useAccountStatus";
 import { useState, useEffect, useRef } from "react";
 import { signOut } from "@/lib/client-session";
 import { useRouter, usePathname } from "next/navigation";
+import { useLoginModal } from "./LoginModalProvider";
 
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
+  const { openLoginModal } = useLoginModal();
   const [siteName, setSiteName] = useState("RoomĐàNẵng");
   useEffect(() => {
     fetch("/api/site/settings", { cache: "no-store" })
@@ -367,9 +369,12 @@ export default function Header() {
               )}
             </div>
           ) : (
-            <Link href="/dang-nhap" className="profile-chip">
+            <button
+              className="profile-chip"
+              onClick={() => openLoginModal("login", pathname)}
+            >
               <span aria-hidden="true">👤</span> Đăng nhập
-            </Link>
+            </button>
           )}
         </div>
       </div>
@@ -433,9 +438,15 @@ export default function Header() {
               </button>
             </>
           ) : (
-            <Link href="/dang-nhap" onClick={() => setShowMobileNav(false)}>
+            <button
+              className="mobile-nav-link"
+              onClick={() => {
+                openLoginModal("login", pathname);
+                setShowMobileNav(false);
+              }}
+            >
               Đăng nhập / Đăng ký <span>＋</span>
-            </Link>
+            </button>
           )}
         </nav>
       )}

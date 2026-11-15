@@ -1,4 +1,7 @@
 import FavoritesProvider from '@/components/FavoritesProvider';
+import SiteFooter from '@/components/SiteFooter';
+import { ToastProvider } from '@/components/Toast';
+import { LoginModalProvider } from '@/components/LoginModalProvider';
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import './globals.css';
@@ -42,7 +45,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a className="skip-link" href="#main-content">
           Bỏ qua điều hướng
         </a>
-        <FavoritesProvider>{children}</FavoritesProvider>
+        <ToastProvider>
+          <LoginModalProvider>
+            <FavoritesProvider>{children}</FavoritesProvider>
+          </LoginModalProvider>
+        </ToastProvider>
+        <SiteFooter />
       </body>
     </html>
   );

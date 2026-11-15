@@ -2,12 +2,24 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+const navItems = [
+  { href: "/admin", label: "Tổng quan" },
+  { href: "/admin?tab=listings", label: "Tin cần duyệt" },
+  { href: "/admin/chu-tro", label: "Xác minh chủ trọ" },
+  { href: "/admin/nguoi-dung", label: "Người dùng" },
+  { href: "/admin/cau-hinh", label: "Cấu hình" },
+  { href: "/admin/tin-nhan", label: "Báo cáo tin nhắn" },
+];
 
 export default function AdminHeader() {
+  const pathname = usePathname();
   const router = useRouter();
-  const [busy, setBusy] = useState(false),
-    [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [showMobileNav, setShowMobileNav] = useState(false);
+
   async function logout() {
     if (busy) return;
     setBusy(true);
@@ -30,22 +42,46 @@ export default function AdminHeader() {
   return (
     <header className="admin-topbar">
       <div className="container admin-topbar-inner">
-        <Link href="/" className="brand">
+        <Link href="/" className="brand" aria-label="Về trang chủ">
           <span className="brand-mark">R</span>
           <span>
             Room<span>ĐàNẵng</span>
           </span>
           <span className="admin-badge">Quản trị</span>
         </Link>
-        <nav className="admin-nav-links">
-          <Link href="/admin">Tổng quan</Link>
-          <Link href="/admin?tab=listings">Tin cần duyệt</Link>
-          <Link href="/admin/chu-tro">Xác minh chủ trọ</Link>
-          <Link href="/admin/nguoi-dung">Người dùng</Link>
-          <Link href="/admin/cau-hinh">Cấu hình</Link>
-          <Link href="/admin/tin-nhan">Báo cáo tin nhắn</Link>
+
+        <nav className="admin-nav-links" aria-label="Điều hướng quản trị">
+          {navItems.map((item) => {
+            const isActive =
+              item.href === "/admin"
+                ? pathname === "/admin" || pathname.startsWith("/admin?")
+                : pathname === item.href || pathname.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
+
         <div className="admin-header-actions">
+          <button
+            type="button"
+            className="admin-menu-toggle"
+            aria-label={showMobileNav ? "Đóng menu" : "Mở menu"}
+            aria-expanded={showMobileNav}
+            aria-controls="admin-mobile-navigation"
+            onClick={() => setShowMobileNav((value) => !value)}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
           <Link href="/" className="secondary-btn">
             ← Về trang chủ
           </Link>
@@ -59,6 +95,35 @@ export default function AdminHeader() {
           </button>
         </div>
       </div>
+
+      {showMobileNav && (
+        <nav
+          id="admin-mobile-navigation"
+          className="admin-mobile-nav"
+          aria-label="Menu quản trị trên điện thoại"
+        >
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setShowMobileNav(false)}
+              aria-current={
+                (item.href === "/admin"
+                  ? pathname === "/admin" || pathname.startsWith("/admin?")
+                  : pathname === item.href || pathname.startsWith(item.href))
+                  ? "page"
+                  : undefined
+              }
+            >
+              {item.label}
+            </Link>
+          ))}
+          <Link href="/" onClick={() => setShowMobileNav(false)}>
+            Về trang chủ
+          </Link>
+        </nav>
+      )}
+
       {error && (
         <p className="container feedback feedback-error" role="alert">
           {error}

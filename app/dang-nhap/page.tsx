@@ -1,5 +1,6 @@
-import AuthForm from '@/app/auth/AuthForm';
+import { redirect } from 'next/navigation';
 
 export default function LoginPage() {
-  return <AuthForm mode="login" />;
+  // Redirect to home and trigger login modal
+  redirect('/?openLogin=true');
 }

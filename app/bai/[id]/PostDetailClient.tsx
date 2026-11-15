@@ -7,6 +7,19 @@ import StartChat from "@/components/StartChat";
 import CommentThread from "@/components/CommentThread";
 import Icon from "@/components/Icons";
 import RoomPhotoGallery from "@/components/RoomPhotoGallery";
+
+function getSafeSourceUrl(value?: string) {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && !url.username && !url.password
+      ? url
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function PostDetailClient({ id }: { id: string }) {
   const [post, setPost] = useState<RoomPost | null>(null);
   const [loading, setLoading] = useState(true);
@@ -98,6 +111,7 @@ export default function PostDetailClient({ id }: { id: string }) {
       </section>
     );
   const room = Boolean(post.price);
+  const sourceUrl = getSafeSourceUrl(post.sourceUrl);
   return (
     <div className="content-shell post-detail-page">
       <nav className="breadcrumb" aria-label="Đường dẫn">
@@ -162,6 +176,33 @@ export default function PostDetailClient({ id }: { id: string }) {
                 </>
               )}
               <p className="full-description">{post.summary}</p>
+              {room && (
+                <section className="source-origin-card" aria-label="Nguồn tin">
+                  <div className="source-origin-copy">
+                    <strong>Bài đăng từ nguồn gốc</strong>
+                    <span>
+                      {sourceUrl
+                        ? `Đối chiếu thông tin tại ${sourceUrl.hostname}.`
+                        : "Tin này chưa có liên kết tới bài đăng gốc."}
+                    </span>
+                  </div>
+                  {sourceUrl ? (
+                    <a
+                      className="source-origin-link"
+                      href={sourceUrl.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Icon name="arrow" />
+                      Xem bài đăng gốc
+                    </a>
+                  ) : (
+                    <span className="source-origin-missing">
+                      Chưa có liên kết
+                    </span>
+                  )}
+                </section>
+              )}
               <div className="detail-bottom-line">
                 <span>
                   <Icon name="message" />

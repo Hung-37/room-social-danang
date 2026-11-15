@@ -1,5 +1,6 @@
-import AuthForm from '@/app/auth/AuthForm';
+import { redirect } from 'next/navigation';
 
 export default function RegisterPage() {
-  return <AuthForm mode="register" />;
+  // Redirect to home and trigger login modal in register mode
+  redirect('/?openRegister=true');
 }

@@ -13,6 +13,8 @@ type Source = {
   permission: string;
   enabled: boolean;
   note: string;
+  canEnable?: boolean;
+  enableRestriction?: string | null;
   listingSelectors?: Record<string, string>;
   result?: { ok?: boolean; status?: string; note?: string };
 };
@@ -158,6 +160,7 @@ const INTERVAL_MS = 6 * 60 * 60 * 1000;
 
 export default function AdminCollectorClient() {
   const [sources, setSources] = useState<Source[]>([]);
+  const [savingSourceId, setSavingSourceId] = useState<string | null>(null);
   const [run, setRun] = useState<RunResponse | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [autoRun, setAutoRun] = useState(false);
@@ -216,24 +219,46 @@ export default function AdminCollectorClient() {
   async function loadSources() {
     try {
       const response = await fetch("/api/collector/check");
-      const payload = await response.json();
+      const payload = await response.json().catch(() => null);
+      if (!response.ok || !payload || !Array.isArray(payload.data))
+        throw new Error(payload?.error || "Chưa tải được danh sách nguồn.");
       setSources(payload.data ?? []);
+      return true;
     } catch (error) {
-      setMessage("Không tải được danh sách nguồn.");
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Không tải được danh sách nguồn.",
+      );
+      return false;
     }
   }
 
   async function toggleSource(source: Source) {
-    const response = await fetch("/api/collector/check", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sourceId: source.id, enabled: !source.enabled }),
-    });
-    if (response.ok) {
+    if (savingSourceId) return;
+    setSavingSourceId(source.id);
+    setMessage(`Đang cập nhật nguồn ${source.name}...`);
+    try {
+      const response = await fetch("/api/collector/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sourceId: source.id, enabled: !source.enabled }),
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok)
+        throw new Error(
+          payload?.error || "Không thể cập nhật trạng thái nguồn.",
+        );
+      if (!(await loadSources())) return;
       setMessage(`${source.name}: đã ${source.enabled ? "tắt" : "bật"} nguồn.`);
-      loadSources();
-    } else {
-      setMessage("Không thể cập nhật trạng thái nguồn.");
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Không thể cập nhật trạng thái nguồn.",
+      );
+    } finally {
+      setSavingSourceId(null);
     }
   }
 
@@ -808,6 +833,121 @@ export default function AdminCollectorClient() {
           </div>
         )}
 
+        {dashboard && (
+          <section className="admin-overview-grid" aria-label="Tổng quan dữ liệu">
+            <div className="admin-overview-card admin-status-chart">
+              <div className="admin-overview-heading">
+                <div>
+                  <span className="admin-card-kicker">Kiểm duyệt</span>
+                  <h2>Trạng thái tin đăng</h2>
+                </div>
+                <span className="admin-chart-total">
+                  {dashboard.listings.publishedCount +
+                    dashboard.listings.pendingCount +
+                    dashboard.listings.rejectedCount}{" "}
+                  tin
+                </span>
+              </div>
+              {dashboard.listings.publishedCount +
+                dashboard.listings.pendingCount +
+                dashboard.listings.rejectedCount ===
+              0 ? (
+                <p className="admin-chart-empty">Chưa có tin đăng để thống kê.</p>
+              ) : (
+                <div
+                  className="admin-status-chart-rows"
+                  aria-label="Biểu đồ trạng thái tin đăng"
+                >
+                  {[
+                    {
+                      label: "Đã duyệt",
+                      value: dashboard.listings.publishedCount,
+                      className: "is-published",
+                    },
+                    {
+                      label: "Chờ duyệt",
+                      value: dashboard.listings.pendingCount,
+                      className: "is-pending",
+                    },
+                    {
+                      label: "Từ chối",
+                      value: dashboard.listings.rejectedCount,
+                      className: "is-rejected",
+                    },
+                  ].map((item) => {
+                    const total =
+                      dashboard.listings.publishedCount +
+                      dashboard.listings.pendingCount +
+                      dashboard.listings.rejectedCount;
+                    const percentage = Math.round((item.value / total) * 100);
+                    return (
+                      <div
+                        className="admin-status-chart-row"
+                        key={item.className}
+                      >
+                        <div className="admin-status-chart-label">
+                          <span>
+                            <i className={item.className} aria-hidden="true" />
+                            {item.label}
+                          </span>
+                          <strong>{item.value}</strong>
+                        </div>
+                        <div
+                          className="admin-chart-track"
+                          role="img"
+                          aria-label={`${item.label}: ${item.value} tin, ${percentage}%`}
+                        >
+                          <span
+                            className={item.className}
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            <div className="admin-overview-card admin-collector-card">
+              <div className="admin-overview-heading">
+                <div>
+                  <span className="admin-card-kicker">Vận hành</span>
+                  <h2>Thu thập dữ liệu</h2>
+                </div>
+                <span
+                  className={`admin-live-indicator ${collectorStatus?.active ? "is-running" : ""}`}
+                >
+                  {collectorStatusError
+                    ? "Chưa rõ"
+                    : collectorStatus?.active
+                      ? "Đang chạy"
+                      : "Sẵn sàng"}
+                </span>
+              </div>
+              <div className="admin-collector-metrics">
+                <div>
+                  <span>Nguồn đang bật</span>
+                  <strong>
+                    {sources.filter((source) => source.enabled).length}
+                    <small> / {sources.length}</small>
+                  </strong>
+                </div>
+                <div>
+                  <span>Tin ở lượt gần nhất</span>
+                  <strong>{collectorStatus?.lastRun?.collected ?? 0}</strong>
+                </div>
+              </div>
+              <p className="admin-overview-footnote">
+                {collectorStatusError
+                  ? collectorStatusError
+                  : collectorStatus?.lastRun
+                    ? `Lượt gần nhất · ${new Date(collectorStatus.lastRun.ranAt).toLocaleString("vi-VN")}`
+                    : "Chưa ghi nhận lượt thu thập nào."}
+              </p>
+            </div>
+          </section>
+        )}
+
         <div className="admin-tabs">
           <button
             className={`admin-tab ${activeTab === "collector" ? "is-active" : ""}`}
@@ -1003,9 +1143,9 @@ export default function AdminCollectorClient() {
               {crawlPreview?.meta && (
                 <p className="admin-status-note">
                   Định dạng: <strong>{crawlPreview.meta.format}</strong> · đã
-                  đọc {crawlPreview.meta.pages ?? 1}/
-                  {crawlPreview.meta.maxPages ?? crawlMaxPages} trang · nhận
-                  diện {crawlPreview.meta.received} tin
+                  đọc <strong>{crawlPreview.meta.pages ?? 1}</strong>/
+                  {crawlPreview.meta.maxPages ?? crawlMaxPages} trang tối đa ·
+                  nhận diện {crawlPreview.meta.received} tin
                   {crawlPreview.meta.limited ? " (đã giới hạn 500 tin)" : ""}
                   {crawlPreview.meta.robots?.warning
                     ? ` · ${crawlPreview.meta.robots.warning}`
@@ -1084,6 +1224,9 @@ export default function AdminCollectorClient() {
                   />
                   <span>Tự chạy mỗi 6 giờ</span>
                 </label>
+                <small className="admin-auto-run-note">
+                  Chỉ hoạt động khi trang Admin đang mở
+                </small>
                 <button
                   className="primary-btn"
                   onClick={() => runCollector()}
@@ -1144,12 +1287,28 @@ export default function AdminCollectorClient() {
                           Cào lại nguồn này
                         </button>
                       )}
-                    <button
-                      className={source.enabled ? "danger-btn" : "success-btn"}
-                      onClick={() => toggleSource(source)}
-                    >
-                      {source.enabled ? "Tắt nguồn" : "Bật nguồn"}
-                    </button>
+                    {source.enabled || source.canEnable !== false ? (
+                      <button
+                        className={source.enabled ? "danger-btn" : "success-btn"}
+                        disabled={savingSourceId !== null}
+                        onClick={() => void toggleSource(source)}
+                      >
+                        {savingSourceId === source.id
+                          ? "Đang lưu..."
+                          : source.enabled
+                            ? "Tắt nguồn"
+                            : "Bật nguồn"}
+                      </button>
+                    ) : (
+                      <span
+                        className="source-status source-restricted"
+                        title={source.enableRestriction || source.note}
+                      >
+                        {source.permission === "manual_review"
+                          ? "Chỉ tham khảo"
+                          : "Cần cấu hình URL"}
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}
@@ -1304,7 +1463,7 @@ export default function AdminCollectorClient() {
               <p>
                 {loadingListings
                   ? "Đang tải danh sách…"
-                  : `Tìm thấy ${listingTotal} bài đăng. Trang ${Math.floor(listingOffset / 20) + 1}.`}
+                  : `${listingTotal} tin đăng · ${Math.ceil(listingTotal / 20)} trang cần xử lý${listingTotal ? ` · Trang ${Math.floor(listingOffset / 20) + 1}/${Math.ceil(listingTotal / 20)}` : ""} · 20 tin/trang.`}
               </p>
               <div className="button-row">
                 <button

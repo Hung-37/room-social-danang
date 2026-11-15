@@ -6,19 +6,39 @@ import { getManagedSourcesAsync, setSourceEnabledAsync } from '@/lib/collector-s
 import { saveCollectorSourceSetting } from '@/lib/collector-db';
 import { apiData, apiError } from '@/lib/api-response';
 import type { CollectorSource } from '@/lib/collector/parser.js';
+
+function sourceEnableRestriction(source: CollectorSource) {
+  if (source.permission === 'manual_review')
+    return 'Nguồn này chỉ dùng để tham khảo; chưa được phép thu thập tự động.';
+  if (
+    source.id === 'data-template' &&
+    process.env.NODE_ENV === 'production' &&
+    process.env.COLLECTOR_INCLUDE_DEMO !== 'true'
+  )
+    return 'Nguồn dữ liệu mẫu đang bị khóa trên production.';
+  if (source.permission !== 'local_file' && !isPublicFeedUrl(source.url))
+    return 'Cần cấu hình URL HTTPS công khai hợp lệ trước khi bật nguồn.';
+  return null;
+}
+
 export async function GET(r: Request) {
   if (!getAdminSessionFromRequest(r)) return apiError('Yêu cầu quyền Admin.', 401);
   try {
     const sources = await getManagedSourcesAsync();
     return apiData(
-      sources.map((s) => ({
-        ...s,
-        result: {
-          ok: false,
-          status: s.enabled ? 'configured' : 'disabled',
-          note: 'Trạng thái cấu hình, chưa xác minh nguồn trực tiếp. Dùng Xem thử URL để kiểm tra.'
-        }
-      })),
+      sources.map((s) => {
+        const enableRestriction = sourceEnableRestriction(s);
+        return {
+          ...s,
+          canEnable: enableRestriction === null,
+          enableRestriction,
+          result: {
+            ok: false,
+            status: s.enabled ? 'configured' : 'disabled',
+            note: 'Trạng thái cấu hình, chưa xác minh nguồn trực tiếp. Dùng Xem thử URL để kiểm tra.'
+          }
+        };
+      }),
       { meta: { configured: sources.length } }
     );
   } catch {
@@ -33,8 +53,10 @@ export async function POST(r: Request) {
   try {
     if (typeof b.sourceId === 'string' && typeof b.enabled === 'boolean' && !('url' in b)) {
       const selected=(await getManagedSourcesAsync()).find(s=>s.id===b.sourceId);
-      if(b.enabled&&selected?.permission==='manual_review')return apiError('Nguồn này chưa được cho phép thu thập tự động.',400);
-      if(b.enabled&&b.sourceId==='data-template'&&process.env.NODE_ENV==='production'&&process.env.COLLECTOR_INCLUDE_DEMO!=='true')return apiError('Nguồn mẫu đang bị khóa ở máy chủ production. Hãy dùng dữ liệu SQL mẫu riêng.',400);
+      if (b.enabled && selected) {
+        const restriction = sourceEnableRestriction(selected);
+        if (restriction) return apiError(restriction, 400);
+      }
       const ok = await setSourceEnabledAsync(b.sourceId, b.enabled, admin.email);
       return ok
         ? apiData({ success: true, sourceId: b.sourceId, enabled: b.enabled })

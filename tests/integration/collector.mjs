@@ -174,7 +174,15 @@ try {
     });
   const sources = (await api('/api/collector/check', { cookie: admin.cookie })).data;
   assert.equal(sources.find((s) => s.id === 'phongtro123-da-nang').enabled, false);
+  const manualReviewSource = sources.find((s) => s.id === 'cafeland-manual-review');
+  assert.equal(manualReviewSource.canEnable, false);
   checks++;
+  await api('/api/collector/check', {
+    cookie: admin.cookie,
+    method: 'POST',
+    body: { sourceId: 'cafeland-manual-review', enabled: true },
+    status: 400
+  });
   const custom = (
     await api('/api/collector/check', {
       cookie: admin.cookie,
