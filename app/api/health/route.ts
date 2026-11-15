@@ -1,4 +1,4 @@
-import { checkDatabaseHealth, hasDatabaseConfig } from "@/lib/db";
+import { checkDatabaseHealth, hasDatabaseConfig } from "@/lib/server/db";
 import packageInfo from "@/package.json";
 export const dynamic = "force-dynamic";
 export async function GET() {

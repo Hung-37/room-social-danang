@@ -1,5 +1,5 @@
-import { getPublicThreadPost } from "@/lib/thread-access";
-import { apiData, apiError } from "@/lib/api-response";
+import { getPublicThreadPost } from "@/lib/server/thread-access";
+import { apiData, apiError } from "@/lib/server/api-response";
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -18,9 +18,9 @@ export async function GET(
   }
 }
 
-import { resolveRequestUser } from "@/lib/user-auth";
-import { mutateOwnPost } from "@/lib/owned-content";
-import { MutationError } from "@/lib/mutation-errors";
+import { resolveRequestUser } from "@/lib/server/user-auth";
+import { mutateOwnPost } from "@/lib/server/owned-content";
+import { MutationError } from "@/lib/server/mutation-errors";
 async function owned(
   request: Request,
   ctx: { params: Promise<{ id: string }> },

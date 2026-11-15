@@ -1,8 +1,8 @@
 import type { RowDataPacket } from 'mysql2/promise';
-import { getDatabasePool } from '@/lib/mysql-pool';
-import { resolveRequestUser } from '@/lib/user-auth';
-import { getAdminSessionFromRequest } from '@/lib/admin-auth';
-import { apiError, apiData } from '@/lib/api-response';
+import { getDatabasePool } from '@/lib/server/mysql-pool';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
+import { apiError, apiData } from '@/lib/server/api-response';
 type Context = { params: Promise<{ id: string }> };
 export async function GET(r: Request, ctx: Context) {
   const sessionResult = await resolveRequestUser(r);

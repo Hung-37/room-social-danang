@@ -1,6 +1,6 @@
-import { createAdminToken, isValidAdminCredentials } from "@/lib/admin-auth";
-import { rateLimit } from "@/lib/rate-limit";
-import { apiError, apiData } from "@/lib/api-response";
+import { createAdminToken, isValidAdminCredentials } from "@/lib/server/admin-auth";
+import { rateLimit } from "@/lib/server/rate-limit";
+import { apiError, apiData } from "@/lib/server/api-response";
 
 export async function POST(request: Request) {
   try {

@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Link from "next/link";
-import { getClusterOverview } from "@/lib/cluster-overview";
+import { getClusterOverview } from "@/lib/server/cluster-overview";
 
 export const dynamic = "force-dynamic";
 

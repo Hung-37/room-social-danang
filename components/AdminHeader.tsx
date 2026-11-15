@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-const navItems = [
+const navItems: { href: string; label: string; tab?: string }[] = [
   { href: "/admin", label: "Tổng quan" },
-  { href: "/admin?tab=listings", label: "Tin cần duyệt" },
+  { href: "/admin?tab=listings", label: "Tin cần duyệt", tab: "listings" },
+  { href: "/admin?tab=reports", label: "Báo cáo bài viết", tab: "reports" },
   { href: "/admin/chu-tro", label: "Xác minh chủ trọ" },
   { href: "/admin/nguoi-dung", label: "Người dùng" },
   { href: "/admin/cau-hinh", label: "Cấu hình" },
@@ -15,10 +16,22 @@ const navItems = [
 
 export default function AdminHeader() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [showMobileNav, setShowMobileNav] = useState(false);
+  const selectedTab = searchParams.get("tab");
+  function isActive(item: (typeof navItems)[number]) {
+    if (item.tab) return pathname === "/admin" && selectedTab === item.tab;
+    if (item.href === "/admin")
+      return (
+        pathname === "/admin" &&
+        selectedTab !== "listings" &&
+        selectedTab !== "reports"
+      );
+    return pathname === item.href || pathname.startsWith(`${item.href}/`);
+  }
 
   async function logout() {
     if (busy) return;
@@ -52,16 +65,11 @@ export default function AdminHeader() {
 
         <nav className="admin-nav-links" aria-label="Điều hướng quản trị">
           {navItems.map((item) => {
-            const isActive =
-              item.href === "/admin"
-                ? pathname === "/admin" || pathname.startsWith("/admin?")
-                : pathname === item.href || pathname.startsWith(item.href);
-
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={isActive ? "page" : undefined}
+                aria-current={isActive(item) ? "page" : undefined}
               >
                 {item.label}
               </Link>
@@ -107,13 +115,7 @@ export default function AdminHeader() {
               key={item.href}
               href={item.href}
               onClick={() => setShowMobileNav(false)}
-              aria-current={
-                (item.href === "/admin"
-                  ? pathname === "/admin" || pathname.startsWith("/admin?")
-                  : pathname === item.href || pathname.startsWith(item.href))
-                  ? "page"
-                  : undefined
-              }
+              aria-current={isActive(item) ? "page" : undefined}
             >
               {item.label}
             </Link>

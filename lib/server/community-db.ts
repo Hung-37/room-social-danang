@@ -1,13 +1,13 @@
 import { requireVersion } from "./mutation-errors";
 import type { PoolConnection, ResultSetHeader } from "mysql2/promise";
-import { getDatabasePool as getPool } from "@/lib/mysql-pool";
-export { hasDatabaseConfig as hasCommunityDatabase } from "@/lib/mysql-pool";
+import { getDatabasePool as getPool } from "@/lib/server/mysql-pool";
+export { hasDatabaseConfig as hasCommunityDatabase } from "@/lib/server/mysql-pool";
 import type { RoomPost } from "@/lib/data";
 import type { CommunityComment } from "@/lib/types";
 import {
   COMMUNITY_REACTIONS,
   type CommunityReaction,
-} from "@/lib/community-interactions";
+} from "@/lib/server/community-interactions";
 import { normalizeToRoomPost } from "@/lib/data";
 
 export async function communityPostExists(postId: string) {

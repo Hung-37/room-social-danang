@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { collectListings, DEFAULT_RELEVANCE_KEYWORDS } from '@/lib/collector/parser.js';
+import { collectListings, DEFAULT_RELEVANCE_KEYWORDS } from '@/lib/server/collector/parser.js';
 
-import { processListings } from '@/lib/listing-pipeline';
-import { getAdminSessionFromRequest } from '@/lib/admin-auth';
-import { rateLimit } from '@/lib/rate-limit';
+import { processListings } from '@/lib/server/listing-pipeline';
+import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
+import { rateLimit } from '@/lib/server/rate-limit';
 
 const MAX_INPUT_BYTES = 2 * 1024 * 1024;
 const MAX_LISTINGS = 500;

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getListingById, hasDatabaseConfig } from '@/lib/db';
-import { readScrapedListings } from '@/lib/file-storage';
+import { getListingById, hasDatabaseConfig } from '@/lib/server/db';
+import { readScrapedListings } from '@/lib/server/file-storage';
 
 export async function GET(
   _request: Request,

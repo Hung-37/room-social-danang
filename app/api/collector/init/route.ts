@@ -1,8 +1,8 @@
-import { getAdminSessionFromRequest } from '@/lib/admin-auth';
-import { getManagedSourcesAsync } from '@/lib/collector-source-storage';
-import { withCollectorJobLock } from '@/lib/collector-job-lock';
-import { runCollectorPipeline } from '@/lib/collector-runner';
-import { apiData, apiError } from '@/lib/api-response';
+import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
+import { getManagedSourcesAsync } from '@/lib/server/collector-source-storage';
+import { withCollectorJobLock } from '@/lib/server/collector-job-lock';
+import { runCollectorPipeline } from '@/lib/server/collector-runner';
+import { apiData, apiError } from '@/lib/server/api-response';
 export async function POST(r: Request) {
   const secret = process.env.CRON_SECRET || process.env.COLLECTOR_CRON_SECRET;
   if (

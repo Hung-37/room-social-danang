@@ -1,7 +1,7 @@
-import { getDatabasePool as getPool } from '@/lib/mysql-pool';
-export { hasDatabaseConfig as hasCollectorDatabase } from '@/lib/mysql-pool';
-import type { CollectorRunRecord } from '@/lib/collector-run-storage';
-import type { CollectorSource } from '@/lib/collector/parser.js';
+import { getDatabasePool as getPool } from '@/lib/server/mysql-pool';
+export { hasDatabaseConfig as hasCollectorDatabase } from '@/lib/server/mysql-pool';
+import type { CollectorRunRecord } from '@/lib/server/collector-run-storage';
+import type { CollectorSource } from '@/lib/server/collector/parser.js';
 
 export async function listCollectorSourceSettings() {
   const [rows] = await getPool().query(

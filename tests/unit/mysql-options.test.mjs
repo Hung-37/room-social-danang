@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mysqlConnectionOptions } from '../../lib/mysql-options.js';
+import { mysqlConnectionOptions } from '../../lib/server/mysql-options.js';
 const MYSQL_URL='mysql://user:password@example.com/db';
 test('local connection retains URI without forcing TLS',()=>{
  assert.deepEqual(mysqlConnectionOptions({MYSQL_URL}),{uri:MYSQL_URL});

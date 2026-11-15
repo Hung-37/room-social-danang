@@ -1,5 +1,5 @@
-import { apiError } from "@/lib/api-response";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
+import { apiError } from "@/lib/server/api-response";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
 
 function retired(request: Request) {
   if (!getAdminSessionFromRequest(request))

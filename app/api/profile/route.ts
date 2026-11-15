@@ -2,10 +2,10 @@ import {
   resolveRequestUser,
   applyUserSessionCookie,
   createUserToken
-} from '@/lib/user-auth';
-import { apiData, apiError } from '@/lib/api-response';
-import { account, profile } from '@/lib/account-db';
-import { getDatabasePool } from '@/lib/mysql-pool';
+} from '@/lib/server/user-auth';
+import { apiData, apiError } from '@/lib/server/api-response';
+import { account, profile } from '@/lib/server/account-db';
+import { getDatabasePool } from '@/lib/server/mysql-pool';
 export async function GET(r: Request) {
   const sessionResult = await resolveRequestUser(r);
   if (sessionResult.error) return sessionResult.error;

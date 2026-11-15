@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import { getSiteSettings } from "@/lib/site-settings";
+import { getSiteSettings } from "@/lib/server/site-settings";
 export const dynamic = "force-dynamic";
 export default async function Page() {
   const { settings } = await getSiteSettings();

@@ -1,5 +1,5 @@
-import { apiError } from "@/lib/api-response";
-import { getDatabasePool } from "@/lib/mysql-pool";
+import { apiError } from "@/lib/server/api-response";
+import { getDatabasePool } from "@/lib/server/mysql-pool";
 import type { RowDataPacket } from "mysql2/promise";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";

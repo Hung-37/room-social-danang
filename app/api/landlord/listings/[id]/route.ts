@@ -1,11 +1,11 @@
-import { MutationError } from "@/lib/mutation-errors";
-import { resolveRequestUser } from "@/lib/user-auth";
-import { apiData, apiError } from "@/lib/api-response";
+import { MutationError } from "@/lib/server/mutation-errors";
+import { resolveRequestUser } from "@/lib/server/user-auth";
+import { apiData, apiError } from "@/lib/server/api-response";
 import {
   ownListing,
   mutateListing,
   ListingError,
-} from "@/lib/managed-listings";
+} from "@/lib/server/managed-listings";
 type Context = { params: Promise<{ id: string }> };
 function failure(e: unknown) {
   return apiError(

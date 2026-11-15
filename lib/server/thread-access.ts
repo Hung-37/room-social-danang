@@ -1,12 +1,12 @@
-import { getDatabasePool, hasDatabaseConfig } from "@/lib/mysql-pool";
+import { getDatabasePool, hasDatabaseConfig } from "@/lib/server/mysql-pool";
 import {
   getCommunityPostById,
   getCommunityCommentCount,
-} from "@/lib/community-db";
-import { getListingById } from "@/lib/db";
+} from "@/lib/server/community-db";
+import { getListingById } from "@/lib/server/db";
 import { normalizeToRoomPost } from "@/lib/data";
-import { readScrapedListings, isListingStale } from "@/lib/file-storage";
-import { listCommunityPosts } from "@/lib/server-community-storage";
+import { readScrapedListings, isListingStale } from "@/lib/server/file-storage";
+import { listCommunityPosts } from "@/lib/server/server-community-storage";
 
 export async function getPublicThread(
   id: string,

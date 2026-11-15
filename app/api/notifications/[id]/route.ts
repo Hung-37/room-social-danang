@@ -1,6 +1,6 @@
-import { resolveRequestUser } from "@/lib/user-auth";
-import { apiData, apiError } from "@/lib/api-response";
-import { getDatabasePool } from "@/lib/mysql-pool";
+import { resolveRequestUser } from "@/lib/server/user-auth";
+import { apiData, apiError } from "@/lib/server/api-response";
+import { getDatabasePool } from "@/lib/server/mysql-pool";
 import type { ResultSetHeader } from "mysql2/promise";
 type Context = { params: Promise<{ id: string }> };
 async function change(request: Request, ctx: Context, remove: boolean) {

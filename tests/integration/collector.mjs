@@ -233,7 +233,7 @@ try {
   });
   await api('/api/collector/check',{cookie:admin.cookie,method:'POST',body:{name:'Bộ chọn lỗi',url:'https://feed.example.vn/rooms',enabled:false,selectors:{itemSelector:'[broken'}},status:400});
   // Template runtime file is restored and only QA has COLLECTOR_INCLUDE_DEMO enabled.
-  const file = join(process.env.TEST_RUNTIME_DIR || join(process.cwd(), '.next/standalone'), 'fixtures/listings.json'),
+  const file = join(process.env.TEST_RUNTIME_DIR || join(process.cwd(), '.next/standalone'), 'data', 'fixtures', 'listings.json'),
     original = await readFile(file);
   try {
     await writeFile(file, JSON.stringify([{ ...dataRows[0], id: 'collector-template-' + stamp }]));

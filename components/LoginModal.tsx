@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { notifySessionChanged } from "@/lib/client-session";
+import { notifySessionChanged } from "@/lib/client/client-session";
 import { useToast } from "./Toast";
 
 type AuthMode = "login" | "register";

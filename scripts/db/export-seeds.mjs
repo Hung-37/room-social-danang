@@ -1,4 +1,4 @@
-import { mysqlConnectionOptions } from '../../lib/mysql-options.js';
+import { mysqlConnectionOptions } from '../../lib/server/mysql-options.js';
 import '../lib/env.mjs';
 // Export only the project's explicitly labelled demo rows and selected collected public listings.
 import mysql from 'mysql2/promise';

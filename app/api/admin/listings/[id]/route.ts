@@ -1,15 +1,15 @@
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { hasDatabaseConfig } from "@/lib/mysql-pool";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { hasDatabaseConfig } from "@/lib/server/mysql-pool";
 import {
   deleteRejectedListing,
   ListingDeletionError,
-} from "@/lib/listing-deletions";
+} from "@/lib/server/listing-deletions";
 import {
   readScrapedListings,
   writeJsonAtomically,
   SCRAPED_DATA_FILE,
-} from "@/lib/file-storage";
-import { apiData, apiError } from "@/lib/api-response";
+} from "@/lib/server/file-storage";
+import { apiData, apiError } from "@/lib/server/api-response";
 
 export async function DELETE(
   request: Request,

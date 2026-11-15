@@ -3,9 +3,9 @@ import {
   listUserNotifications,
   markUserNotificationsRead,
   unreadNotificationCount,
-} from "@/lib/community-db";
-import { hasUserDatabase } from "@/lib/user-db";
-import { resolveRequestUser } from "@/lib/user-auth";
+} from "@/lib/server/community-db";
+import { hasUserDatabase } from "@/lib/server/user-db";
+import { resolveRequestUser } from "@/lib/server/user-auth";
 
 export async function GET(request: Request) {
   const sessionResult = await resolveRequestUser(request);

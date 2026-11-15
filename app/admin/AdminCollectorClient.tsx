@@ -158,7 +158,19 @@ type AuditLog = {
 
 const INTERVAL_MS = 6 * 60 * 60 * 1000;
 
-export default function AdminCollectorClient() {
+type AdminTab =
+  | "collector"
+  | "listings"
+  | "community"
+  | "reports"
+  | "audit"
+  | "html";
+
+export default function AdminCollectorClient({
+  initialTab = "collector",
+}: {
+  initialTab?: AdminTab;
+}) {
   const [sources, setSources] = useState<Source[]>([]);
   const [savingSourceId, setSavingSourceId] = useState<string | null>(null);
   const [run, setRun] = useState<RunResponse | null>(null);
@@ -170,9 +182,7 @@ export default function AdminCollectorClient() {
   const [importFile, setImportFile] = useState<File | null>(null);
   const [importResult, setImportResult] = useState<ImportResponse | null>(null);
   const [isImporting, setIsImporting] = useState(false);
-  const [activeTab, setActiveTab] = useState<
-    "collector" | "listings" | "community" | "reports" | "audit" | "html"
-  >("collector");
+  const [activeTab, setActiveTab] = useState<AdminTab>(initialTab);
   const [listings, setListings] = useState<Listing[]>([]);
   const [loadingListings, setLoadingListings] = useState(false);
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
@@ -215,6 +225,10 @@ export default function AdminCollectorClient() {
   );
   const [isPreviewingUrl, setIsPreviewingUrl] = useState(false);
   const [isImportingPreview, setIsImportingPreview] = useState(false);
+
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
 
   async function loadSources() {
     try {
@@ -1755,7 +1769,11 @@ export default function AdminCollectorClient() {
                     </div>
                     <div className="listing-actions">
                       <span className={`status-badge ${report.status}`}>
-                        {report.status}
+                        {report.status === "pending"
+                          ? "Chờ xử lý"
+                          : report.status === "resolved"
+                            ? "Đã xử lý"
+                            : "Đã bỏ qua"}
                       </span>
                       <Link
                         href={`/bai/${report.postId}`}
@@ -1764,18 +1782,22 @@ export default function AdminCollectorClient() {
                       >
                         Xem bài
                       </Link>
-                      <button
-                        className="success-btn"
-                        onClick={() => updateReport(report.id, "resolved")}
-                      >
-                        Đã xử lý
-                      </button>
-                      <button
-                        className="secondary-btn"
-                        onClick={() => updateReport(report.id, "dismissed")}
-                      >
-                        Bỏ qua
-                      </button>
+                      {report.status === "pending" && (
+                        <>
+                          <button
+                            className="success-btn"
+                            onClick={() => updateReport(report.id, "resolved")}
+                          >
+                            Đã xử lý
+                          </button>
+                          <button
+                            className="secondary-btn"
+                            onClick={() => updateReport(report.id, "dismissed")}
+                          >
+                            Bỏ qua
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ))}

@@ -1,4 +1,4 @@
-import { getAdminSession } from '@/lib/admin-auth';
+import { getAdminSession } from '@/lib/server/admin-auth';
 import { redirect } from 'next/navigation';
 import AdminHeader from '@/components/AdminHeader';
 import UsersClient from './UsersClient';

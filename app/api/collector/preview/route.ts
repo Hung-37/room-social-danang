@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { fetchGenericUrlListings, isPublicFeedUrl } from '@/lib/collector/parser.js';
-import { getAdminSessionFromRequest } from '@/lib/admin-auth';
-import { rateLimit } from '@/lib/rate-limit';
+import { fetchGenericUrlListings, isPublicFeedUrl } from '@/lib/server/collector/parser.js';
+import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
+import { rateLimit } from '@/lib/server/rate-limit';
 
 export const runtime = 'nodejs';
 

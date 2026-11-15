@@ -1,5 +1,5 @@
 import type { Cluster, RoomPost } from "@/lib/types";
-import { decodeHtmlText } from "@/lib/html-text";
+import { decodeHtmlText } from "@/lib/shared/html-text";
 export type { Cluster, RoomPost } from "@/lib/types";
 
 import { UNASSIGNED_CLUSTER_ID } from "@/lib/policies/address-cluster.js";

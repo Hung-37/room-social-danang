@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { deduplicateListings, fetchGenericUrlListings, fetchHtmlListings, isPlaceholderListingUrl, isPublicFeedUrl, normalizeListing, parseGenericHtmlListings, publicSources, sanitizeListingSummary } from '../../lib/collector/parser.js';
+import { deduplicateListings, fetchGenericUrlListings, fetchHtmlListings, isPlaceholderListingUrl, isPublicFeedUrl, normalizeListing, parseGenericHtmlListings, publicSources, sanitizeListingSummary } from '../../lib/server/collector/parser.js';
 
 const tromoiSource = publicSources.find((source) => source.id === 'tromoi-da-nang');
 const thuephongtroSource = publicSources.find((source) => source.id === 'thuephongtro-da-nang');
@@ -192,11 +192,11 @@ test('preserves decimal room area from dot or comma without inflating it',()=>{
  for(const area of ['25.5m²','25,5 m²',25.5])assert.equal(normalizeListing({id:'decimal',title:'Phòng trọ Hải Châu',area,price:'2 triệu'},tromoiSource).area,25.5);
 });
 test('public JSON feeds validate redirects and check robots before reading data',async()=>{
- const {fetchPublicListings}=await import('../../lib/collector/parser.js');const calls=[];const mock=async(url,options)=>{calls.push({url,redirect:options.redirect});return url.endsWith('/robots.txt')?new Response('User-agent: *\nDisallow: /private'):Response.json([{id:'x',title:'Phòng trọ Hải Châu',price:'2 triệu'}]);};
+ const {fetchPublicListings}=await import('../../lib/server/collector/parser.js');const calls=[];const mock=async(url,options)=>{calls.push({url,redirect:options.redirect});return url.endsWith('/robots.txt')?new Response('User-agent: *\nDisallow: /private'):Response.json([{id:'x',title:'Phòng trọ Hải Châu',price:'2 triệu'}]);};
  const result=await fetchPublicListings({...tromoiSource,url:'https://feed.example.vn/rooms',permission:'public_feed'},mock);assert.equal(result.length,1);assert(calls[0].url.endsWith('/robots.txt'));assert(calls.every(c=>c.redirect==='manual'));
  await assert.rejects(fetchPublicListings({...tromoiSource,url:'https://feed.example.vn/private',permission:'public_feed'},mock),/robots/);
 });
-test('robots supports specific Allow and wildcard query blocking',async()=>{const {checkRobotsAllowed}=await import('../../lib/collector/parser.js');const mock=async()=>new Response('User-agent: *\nDisallow: /private\nAllow: /private/public\nDisallow: /*?*page=');assert.equal((await checkRobotsAllowed('https://feed.example.vn/private/public',mock)).allowed,true);assert.equal((await checkRobotsAllowed('https://feed.example.vn/rooms?page=2',mock)).allowed,false);});
+test('robots supports specific Allow and wildcard query blocking',async()=>{const {checkRobotsAllowed}=await import('../../lib/server/collector/parser.js');const mock=async()=>new Response('User-agent: *\nDisallow: /private\nAllow: /private/public\nDisallow: /*?*page=');assert.equal((await checkRobotsAllowed('https://feed.example.vn/private/public',mock)).allowed,true);assert.equal((await checkRobotsAllowed('https://feed.example.vn/rooms?page=2',mock)).allowed,false);});
 test('custom CSS source supports nested attribute selectors and generic fallback',async()=>{const source={...tromoiSource,id:'custom-qa',url:'https://feed.example.vn/rooms',listingSelectors:{itemSelector:'article[data-room]',titleSelector:'.info > h2',areaSelector:'span.area'}};const html='<article data-room="1"><div class="info"><h2>Phòng trọ Hải Châu</h2></div><p>Phòng trọ tại Hải Châu, Đà Nẵng, giá 2 triệu.</p><span class="area">25,5 m²</span><a href="/rooms/1">Xem</a></article>';const mock=async url=>new Response(url.endsWith('/robots.txt')?'User-agent: *\nAllow: /':html);const rows=await fetchHtmlListings(source,mock);assert.equal(rows[0].area,25.5);assert.equal(rows[0].source.url,'https://feed.example.vn/rooms/1');});
 
 test('crawler follows 50 pages, floors fractional budgets and stops at hard cap', async () => {

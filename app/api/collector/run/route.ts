@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { publicSources } from "@/lib/collector/parser.js";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { rateLimit } from "@/lib/rate-limit";
-import { getManagedSourcesAsync } from "@/lib/collector-source-storage";
-import { withCollectorJobLock } from "@/lib/collector-job-lock";
-import { runCollectorPipeline } from "@/lib/collector-runner";
+import { publicSources } from "@/lib/server/collector/parser.js";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { rateLimit } from "@/lib/server/rate-limit";
+import { getManagedSourcesAsync } from "@/lib/server/collector-source-storage";
+import { withCollectorJobLock } from "@/lib/server/collector-job-lock";
+import { runCollectorPipeline } from "@/lib/server/collector-runner";
 
 function isAuthorizedCronRequest(request: Request) {
   const secret = process.env.CRON_SECRET ?? process.env.COLLECTOR_CRON_SECRET;

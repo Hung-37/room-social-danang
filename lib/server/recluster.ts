@@ -1,6 +1,6 @@
 import type { RowDataPacket } from "mysql2/promise";
-import { getDatabasePool } from "@/lib/mysql-pool";
-import { autoAssignCluster } from "@/lib/auto-cluster";
+import { getDatabasePool } from "@/lib/server/mysql-pool";
+import { autoAssignCluster } from "@/lib/server/auto-cluster";
 
 type ListingRow = RowDataPacket & {
   id: number;

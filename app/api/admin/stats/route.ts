@@ -1,8 +1,8 @@
-import { apiData, apiError } from "@/lib/api-response";
-import { getListingCounts, hasDatabaseConfig } from "@/lib/db";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { getCommunityCounts } from "@/lib/community-db";
-import { listCollectorRunsDb } from "@/lib/collector-db";
+import { apiData, apiError } from "@/lib/server/api-response";
+import { getListingCounts, hasDatabaseConfig } from "@/lib/server/db";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { getCommunityCounts } from "@/lib/server/community-db";
+import { listCollectorRunsDb } from "@/lib/server/collector-db";
 
 export async function GET(request: Request) {
   if (!getAdminSessionFromRequest(request))

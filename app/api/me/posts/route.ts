@@ -1,6 +1,6 @@
-import { resolveRequestUser } from "@/lib/user-auth";
-import { apiData, apiError } from "@/lib/api-response";
-import { ownPosts } from "@/lib/owned-content";
+import { resolveRequestUser } from "@/lib/server/user-auth";
+import { apiData, apiError } from "@/lib/server/api-response";
+import { ownPosts } from "@/lib/server/owned-content";
 export async function GET(request: Request) {
   const session = await resolveRequestUser(request);
   if (session.error) return session.error;

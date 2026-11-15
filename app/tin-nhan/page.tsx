@@ -10,18 +10,34 @@ export default async function Page({
   return (
     <>
       <Header />
-      <main id="main-content" tabIndex={-1} className="content-shell explorer">
-        <span className="section-eyebrow">Trao đổi riêng tư</span>
-        <h1>Tin nhắn của bạn</h1>
-        <p>
-          Tin nhắn không hiển thị công khai; chỉ tài khoản tham gia được truy cập qua ứng dụng.
-          Không chuyển tiền khi chưa kiểm tra phòng và hợp đồng.
-        </p>
-        <p>
-          <Link className="text-link" href="/lich-xem-phong">
-            Mở lịch xem phòng của bạn →
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="content-shell explorer messaging-page"
+      >
+        <div className="messaging-heading">
+          <div>
+            <span className="section-eyebrow">Không gian riêng tư</span>
+            <h1>Tin nhắn của bạn</h1>
+            <p>
+              Trao đổi trực tiếp về phòng và lịch xem. Chỉ những người tham gia
+              cuộc trò chuyện mới có thể đọc nội dung.
+            </p>
+          </div>
+          <Link className="secondary-btn" href="/lich-xem-phong">
+            Mở lịch xem phòng
           </Link>
-        </p>
+        </div>
+        <aside className="message-safety-note">
+          <span aria-hidden="true">✓</span>
+          <p>
+            <strong>Giao dịch an toàn</strong>
+            <span>
+              Không chuyển tiền đặt cọc trước khi xem phòng, xác minh người cho
+              thuê và kiểm tra điều khoản hợp đồng.
+            </span>
+          </p>
+        </aside>
         <Inbox initial={params['hoi-thoai'] || ''} />
       </main>
     </>

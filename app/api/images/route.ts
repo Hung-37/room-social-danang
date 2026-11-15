@@ -1,11 +1,11 @@
 import sharp from 'sharp';
 import { randomUUID } from 'node:crypto';
 import type { RowDataPacket } from 'mysql2/promise';
-import { resolveRequestUser } from '@/lib/user-auth';
-import { landlordStatus } from '@/lib/landlord-db';
-import { getDatabasePool } from '@/lib/mysql-pool';
-import { apiData, apiError } from '@/lib/api-response';
-import { rateLimit } from '@/lib/rate-limit';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { landlordStatus } from '@/lib/server/landlord-db';
+import { getDatabasePool } from '@/lib/server/mysql-pool';
+import { apiData, apiError } from '@/lib/server/api-response';
+import { rateLimit } from '@/lib/server/rate-limit';
 export const runtime = 'nodejs';
 const LIMIT = 5 * 1024 * 1024;
 export async function POST(r: Request) {

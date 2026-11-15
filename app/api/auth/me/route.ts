@@ -1,8 +1,8 @@
-import { account } from '@/lib/account-db';
-import { landlordStatus } from '@/lib/landlord-db';
-import { resolveRequestUser } from '@/lib/user-auth';
-import { can, roleLabel } from '@/lib/roles';
-import { apiError, apiData } from '@/lib/api-response';
+import { account } from '@/lib/server/account-db';
+import { landlordStatus } from '@/lib/server/landlord-db';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { can, roleLabel } from '@/lib/shared/roles';
+import { apiError, apiData } from '@/lib/server/api-response';
 
 export async function GET(request: Request) {
   const sessionResult = await resolveRequestUser(request);

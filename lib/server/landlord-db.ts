@@ -1,5 +1,5 @@
 import type { RowDataPacket } from "mysql2/promise";
-import { getDatabasePool as db } from "@/lib/mysql-pool";
+import { getDatabasePool as db } from "@/lib/server/mysql-pool";
 export async function landlordStatus(
   id: string,
 ): Promise<"pending" | "verified" | "rejected"> {

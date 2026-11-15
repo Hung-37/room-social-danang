@@ -1,11 +1,11 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
-import { publicSources } from '@/lib/collector/parser.js';
+import { publicSources } from '@/lib/server/collector/parser.js';
 import {
   hasCollectorDatabase,
   listCollectorSourceSettings,
   saveCollectorSourceSetting
-} from '@/lib/collector-db';
+} from '@/lib/server/collector-db';
 
 const SETTINGS_FILE = join(process.cwd(), 'data', 'collector-source-settings.json');
 type SourceSettings = Record<string, { enabled?: boolean }>;

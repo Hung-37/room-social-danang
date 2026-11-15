@@ -1,4 +1,4 @@
-import { mysqlConnectionOptions } from '../../lib/mysql-options.js';
+import { mysqlConnectionOptions } from '../../lib/server/mysql-options.js';
 import "../lib/env.mjs";
 import { upgradeCommunityMutations } from "./upgrade-v17.mjs";
 import mysql from "mysql2/promise";

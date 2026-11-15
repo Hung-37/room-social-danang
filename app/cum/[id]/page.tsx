@@ -1,13 +1,13 @@
-import { getUserSession } from "@/lib/user-auth";
+import { getUserSession } from "@/lib/server/user-auth";
 import { notFound } from "next/navigation";
 import Header from "@/components/Header";
 import PostCard from "@/components/PostCard";
 import { clusters, type RoomPost, normalizeToRoomPost } from "@/lib/data";
-import { getListings, hasDatabaseConfig } from "@/lib/db";
-import { listCommunityPosts as listDatabaseDiscussions } from "@/lib/community-db";
-import { listCommunityPosts as listFileDiscussions } from "@/lib/server-community-storage";
-import { getClusterOverview } from "@/lib/cluster-overview";
-import { readScrapedListings } from "@/lib/file-storage";
+import { getListings, hasDatabaseConfig } from "@/lib/server/db";
+import { listCommunityPosts as listDatabaseDiscussions } from "@/lib/server/community-db";
+import { listCommunityPosts as listFileDiscussions } from "@/lib/server/server-community-storage";
+import { getClusterOverview } from "@/lib/server/cluster-overview";
+import { readScrapedListings } from "@/lib/server/file-storage";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";

@@ -1,5 +1,5 @@
-import { createOnce, submissionKey } from "@/lib/idempotency";
-import { MutationError } from "@/lib/mutation-errors";
+import { createOnce, submissionKey } from "@/lib/server/idempotency";
+import { MutationError } from "@/lib/server/mutation-errors";
 import { paginationInteger } from "@/lib/policies/pagination.js";
 import { clusters } from "@/lib/data";
 import { randomUUID } from "node:crypto";
@@ -7,15 +7,15 @@ import type { RoomPost } from "@/lib/data";
 import {
   createCommunityPost,
   listCommunityPosts,
-} from "@/lib/server-community-storage";
+} from "@/lib/server/server-community-storage";
 import {
   createCommunityPost as createCommunityPostDb,
   hasCommunityDatabase,
   listCommunityPosts as listCommunityPostsDb,
-} from "@/lib/community-db";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { resolveRequestUser } from "@/lib/user-auth";
-import { apiData, apiError } from "@/lib/api-response";
+} from "@/lib/server/community-db";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { resolveRequestUser } from "@/lib/server/user-auth";
+import { apiData, apiError } from "@/lib/server/api-response";
 
 const MAX_TITLE_LENGTH = 120;
 const MAX_BODY_LENGTH = 3000;

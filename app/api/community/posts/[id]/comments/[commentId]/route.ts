@@ -1,7 +1,7 @@
-import { resolveRequestUser } from "@/lib/user-auth";
-import { apiData, apiError } from "@/lib/api-response";
-import { mutateOwnComment } from "@/lib/owned-content";
-import { MutationError } from "@/lib/mutation-errors";
+import { resolveRequestUser } from "@/lib/server/user-auth";
+import { apiData, apiError } from "@/lib/server/api-response";
+import { mutateOwnComment } from "@/lib/server/owned-content";
+import { MutationError } from "@/lib/server/mutation-errors";
 type Context = { params: Promise<{ id: string; commentId: string }> };
 async function owned(request: Request, ctx: Context, remove: boolean) {
   const session = await resolveRequestUser(request);

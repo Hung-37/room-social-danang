@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, type FormEvent } from 'react';
-import type { SiteSettings } from '@/lib/site-settings';
+import type { SiteSettings } from '@/lib/server/site-settings';
 type Source = {
   id: string;
   name: string;

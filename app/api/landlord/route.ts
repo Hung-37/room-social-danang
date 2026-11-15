@@ -1,7 +1,7 @@
 import { paginationInteger } from "@/lib/policies/pagination.js";
-import { resolveRequestUser } from "@/lib/user-auth";
-import { landlordStatus, ownListings } from "@/lib/landlord-db";
-import { apiData, apiError } from "@/lib/api-response";
+import { resolveRequestUser } from "@/lib/server/user-auth";
+import { landlordStatus, ownListings } from "@/lib/server/landlord-db";
+import { apiData, apiError } from "@/lib/server/api-response";
 export async function GET(request: Request) {
   const sessionResult = await resolveRequestUser(request);
   if (sessionResult.error) return sessionResult.error;

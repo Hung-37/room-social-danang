@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { RoomPost } from "@/lib/data";
 import StartChat from "@/components/StartChat";
 import CommentThread from "@/components/CommentThread";
+import ReportPost from "@/components/ReportPost";
 import Icon from "@/components/Icons";
 import RoomPhotoGallery from "@/components/RoomPhotoGallery";
 
@@ -213,6 +214,7 @@ export default function PostDetailClient({ id }: { id: string }) {
                   Chia sẻ
                 </button>
               </div>
+              <ReportPost postId={id} />
               {notice && <p role="status">{notice}</p>}
             </div>
           </article>

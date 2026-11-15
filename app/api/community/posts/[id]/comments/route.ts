@@ -1,18 +1,18 @@
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimit } from "@/lib/server/rate-limit";
 import { randomUUID } from "node:crypto";
-import { apiData, apiError } from "@/lib/api-response";
-import { getPublicThread } from "@/lib/thread-access";
-import { hasDatabaseConfig } from "@/lib/mysql-pool";
+import { apiData, apiError } from "@/lib/server/api-response";
+import { getPublicThread } from "@/lib/server/thread-access";
+import { hasDatabaseConfig } from "@/lib/server/mysql-pool";
 import {
   createCommunityComment,
   getCommunityCommentCount,
   listCommunityComments,
-} from "@/lib/community-db";
+} from "@/lib/server/community-db";
 import {
   createCommunityComment as createFileComment,
   listCommunityComments as listFileComments,
-} from "@/lib/server-community-storage";
-import { resolveRequestUser } from "@/lib/user-auth";
+} from "@/lib/server/server-community-storage";
+import { resolveRequestUser } from "@/lib/server/user-auth";
 
 const headers = { "Cache-Control": "private, no-store" };
 export async function GET(

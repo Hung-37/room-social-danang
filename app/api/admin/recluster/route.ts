@@ -1,13 +1,13 @@
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { hasDatabaseConfig } from "@/lib/mysql-pool";
-import { reclusterDatabaseListings } from "@/lib/recluster";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { hasDatabaseConfig } from "@/lib/server/mysql-pool";
+import { reclusterDatabaseListings } from "@/lib/server/recluster";
 import {
   readScrapedListings,
   writeJsonAtomically,
   SCRAPED_DATA_FILE,
-} from "@/lib/file-storage";
-import { autoAssignCluster } from "@/lib/auto-cluster";
-import { apiData, apiError } from "@/lib/api-response";
+} from "@/lib/server/file-storage";
+import { autoAssignCluster } from "@/lib/server/auto-cluster";
+import { apiData, apiError } from "@/lib/server/api-response";
 
 export async function POST(request: Request) {
   if (!getAdminSessionFromRequest(request))

@@ -114,14 +114,26 @@ Repo cũng có các lệnh test và migration chuyên biệt; xem phần `script
 ## Cấu trúc dự án
 
 ```text
-app/              Trang ứng dụng và API routes
-components/       Thành phần giao diện dùng chung
-lib/              Logic nghiệp vụ và tiện ích
-database/         Schema và tài liệu database
-scripts/          Công cụ khởi tạo, kiểm tra và migration
+app/
+  <route>/        Trang, layout và component riêng của route
+  api/            HTTP API route handlers
+components/       Component giao diện dùng chung
+lib/
+  client/         Tiện ích phiên và xác thực phía trình duyệt
+  data/           Dữ liệu miền dùng chung cho giao diện và backend
+  server/         Xác thực, nghiệp vụ, database và lưu trữ phía server
+    collector/    Thu thập và phân tích nguồn dữ liệu
+  shared/         Tiện ích dùng chung giữa client và server
+  policies/       Quy tắc kiểm tra và phân loại dữ liệu
+  types/          Kiểu dữ liệu dùng chung
+data/             JSON, CSV, cache và fixture dữ liệu
+database/         Schema, migration, seed và hợp đồng database
+scripts/db/       Lệnh khởi tạo, nâng cấp và xuất dữ liệu
 public/           Tài nguyên tĩnh
-tests/            Kiểm thử integration và trình duyệt
+tests/            Kiểm thử unit, integration và trình duyệt
 ```
+
+`app/` được giữ theo quy ước App Router của Next.js: trang và API phải nằm tại đây để URL không thay đổi. Giao diện dùng chung nằm trong `components/`, tiện ích trình duyệt trong `lib/client/`. API route là lớp nhận/trả HTTP; xử lý backend nằm trong `lib/server/`. Dữ liệu đầu vào và fixture đặt trong `data/`, còn schema và migration nằm trong `database/`.
 
 ## An toàn dữ liệu và vận hành
 

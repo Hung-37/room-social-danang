@@ -1,7 +1,7 @@
-import { getAdminSessionFromRequest } from '@/lib/admin-auth';
-import { getSiteSettings, validateSettings, defaultSettings } from '@/lib/site-settings';
-import { getDatabasePool } from '@/lib/mysql-pool';
-import { apiData, apiError } from '@/lib/api-response';
+import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
+import { getSiteSettings, validateSettings, defaultSettings } from '@/lib/server/site-settings';
+import { getDatabasePool } from '@/lib/server/mysql-pool';
+import { apiData, apiError } from '@/lib/server/api-response';
 import type { RowDataPacket } from 'mysql2/promise';
 export async function GET(r: Request) {
   if (!getAdminSessionFromRequest(r)) return apiError('Yêu cầu quyền Admin.', 401);

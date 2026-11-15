@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { resolveRequestUser } from '@/lib/user-auth';
-import { createCommunityReport, hasCommunityDatabase } from '@/lib/community-db';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { createCommunityReport, hasCommunityDatabase } from '@/lib/server/community-db';
 
 const allowedReasons = ['spam', 'scam', 'harassment', 'wrong_information', 'other'] as const;
 

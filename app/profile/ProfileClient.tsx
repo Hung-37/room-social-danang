@@ -4,7 +4,7 @@ import Link from "next/link";
 import {
   notifySessionChanged,
   signOut as endSession,
-} from "@/lib/client-session";
+} from "@/lib/client/client-session";
 import type { User } from "@/lib/types";
 import { useRouter } from "next/navigation";
 type Saved = {

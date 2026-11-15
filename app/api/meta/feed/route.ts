@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { fetchOfficialMetaFeed } from '@/lib/meta';
-import { hasDatabaseConfig, saveListings } from '@/lib/db';
+import { fetchOfficialMetaFeed } from '@/lib/server/meta';
+import { hasDatabaseConfig, saveListings } from '@/lib/server/db';
 
 export async function GET() {
   try {

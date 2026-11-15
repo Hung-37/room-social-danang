@@ -1,4 +1,4 @@
-import { mysqlConnectionOptions } from '../lib/mysql-options.js';
+import { mysqlConnectionOptions } from '../lib/server/mysql-options.js';
 import { createRequire } from "node:module";
 import { readFile } from "node:fs/promises";
 const require = createRequire(import.meta.url);

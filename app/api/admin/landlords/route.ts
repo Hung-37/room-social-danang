@@ -1,7 +1,7 @@
 import { paginationInteger } from "@/lib/policies/pagination.js";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { listLandlords, verifyLandlord } from "@/lib/landlord-db";
-import { apiData, apiError } from "@/lib/api-response";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { listLandlords, verifyLandlord } from "@/lib/server/landlord-db";
+import { apiData, apiError } from "@/lib/server/api-response";
 export async function GET(request: Request) {
   if (!getAdminSessionFromRequest(request))
     return apiError("Vui lòng đăng nhập quản trị viên.", 401);

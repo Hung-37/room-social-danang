@@ -6,8 +6,8 @@ import type { RowDataPacket, PoolConnection } from "mysql2/promise";
 import {
   getDatabasePool as getPool,
   hasDatabaseConfig,
-} from "@/lib/mysql-pool";
-export { hasDatabaseConfig } from "@/lib/mysql-pool";
+} from "@/lib/server/mysql-pool";
+export { hasDatabaseConfig } from "@/lib/server/mysql-pool";
 import type { ListingFilters } from "@/lib/types";
 export type { ListingFilters } from "@/lib/types";
 

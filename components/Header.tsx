@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { accountResponse } from "./useAccountStatus";
 import { useState, useEffect, useRef } from "react";
-import { signOut } from "@/lib/client-session";
+import { signOut } from "@/lib/client/client-session";
 import { useRouter, usePathname } from "next/navigation";
 import { useLoginModal } from "./LoginModalProvider";
 

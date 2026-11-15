@@ -1,8 +1,8 @@
 import type { RowDataPacket } from "mysql2/promise";
 import { clusters } from "@/lib/data";
-import { getDatabasePool, hasDatabaseConfig } from "@/lib/mysql-pool";
-import { readScrapedListings } from "@/lib/file-storage";
-import { listCommunityPosts } from "@/lib/server-community-storage";
+import { getDatabasePool, hasDatabaseConfig } from "@/lib/server/mysql-pool";
+import { readScrapedListings } from "@/lib/server/file-storage";
+import { listCommunityPosts } from "@/lib/server/server-community-storage";
 
 export async function getClusterOverview() {
   const rooms = new Map<string, number>();

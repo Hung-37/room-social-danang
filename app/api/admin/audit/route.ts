@@ -1,6 +1,6 @@
-import { apiData, apiError } from '@/lib/api-response';
-import { getAdminSessionFromRequest } from '@/lib/admin-auth';
-import { hasCommunityDatabase, listModerationLogs } from '@/lib/community-db';
+import { apiData, apiError } from '@/lib/server/api-response';
+import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
+import { hasCommunityDatabase, listModerationLogs } from '@/lib/server/community-db';
 
 export async function GET(request: Request) {
   if (!getAdminSessionFromRequest(request)) return apiError('Admin authentication required.', 401, 'UNAUTHORIZED');

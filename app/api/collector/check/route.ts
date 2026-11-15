@@ -1,11 +1,11 @@
 import { load } from 'cheerio';
 import { randomUUID } from 'node:crypto';
-import { isPublicFeedUrl } from '@/lib/collector/parser.js';
-import { getAdminSessionFromRequest } from '@/lib/admin-auth';
-import { getManagedSourcesAsync, setSourceEnabledAsync } from '@/lib/collector-source-storage';
-import { saveCollectorSourceSetting } from '@/lib/collector-db';
-import { apiData, apiError } from '@/lib/api-response';
-import type { CollectorSource } from '@/lib/collector/parser.js';
+import { isPublicFeedUrl } from '@/lib/server/collector/parser.js';
+import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
+import { getManagedSourcesAsync, setSourceEnabledAsync } from '@/lib/server/collector-source-storage';
+import { saveCollectorSourceSetting } from '@/lib/server/collector-db';
+import { apiData, apiError } from '@/lib/server/api-response';
+import type { CollectorSource } from '@/lib/server/collector/parser.js';
 
 function sourceEnableRestriction(source: CollectorSource) {
   if (source.permission === 'manual_review')

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { authenticateUser, hasUserDatabase } from "@/lib/user-db";
-import { applyUserSessionCookie, createUserToken } from "@/lib/user-auth";
-import { apiError } from "@/lib/api-response";
-import { rateLimit } from "@/lib/rate-limit";
+import { authenticateUser, hasUserDatabase } from "@/lib/server/user-db";
+import { applyUserSessionCookie, createUserToken } from "@/lib/server/user-auth";
+import { apiError } from "@/lib/server/api-response";
+import { rateLimit } from "@/lib/server/rate-limit";
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);

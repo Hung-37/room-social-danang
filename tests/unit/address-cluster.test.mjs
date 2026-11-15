@@ -5,7 +5,7 @@ import {
   ensureClusterAssigned,
   normalizeAddress,
 } from "../../lib/policies/address-cluster.js";
-import { normalizeListing } from "../../lib/collector/parser.js";
+import { normalizeListing } from "../../lib/server/collector/parser.js";
 
 const cases = [
   ["378, Lê Thạch, Phường Hòa An, Quận Cẩm Lệ, Đà Nẵng", "Cho thuê", "cam-le"],

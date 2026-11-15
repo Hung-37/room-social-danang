@@ -1,7 +1,7 @@
-import { resolveRequestUser } from '@/lib/user-auth';
-import { apiData, apiError } from '@/lib/api-response';
-import { conversationFor, ChatError } from '@/lib/chat-db';
-import { getDatabasePool } from '@/lib/mysql-pool';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { apiData, apiError } from '@/lib/server/api-response';
+import { conversationFor, ChatError } from '@/lib/server/chat-db';
+import { getDatabasePool } from '@/lib/server/mysql-pool';
 import type { RowDataPacket } from 'mysql2/promise';
 export async function GET(r: Request, { params }: { params: Promise<{ id: string }> }) {
   const sessionResult = await resolveRequestUser(r);

@@ -1,7 +1,7 @@
-import { collectConfiguredSources, mergeCollectedRuns } from '@/lib/collector/service.js';
+import { collectConfiguredSources, mergeCollectedRuns } from '@/lib/server/collector/service.js';
 import { processListings } from './listing-pipeline';
 import { getSiteSettings } from './site-settings';
-import type { CollectorSource } from '@/lib/collector/parser.js';
+import type { CollectorSource } from '@/lib/server/collector/parser.js';
 export async function runCollectorPipeline(sources: CollectorSource[]) {
   const { settings } = await getSiteSettings();
   if (!settings.collectorEnabled)

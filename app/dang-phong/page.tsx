@@ -1,8 +1,8 @@
 import type { User } from "@/lib/types";
 import Header from "@/components/Header";
 import Link from "next/link";
-import { getUserSession } from "@/lib/user-auth";
-import { landlordStatus } from "@/lib/landlord-db";
+import { getUserSession } from "@/lib/server/user-auth";
+import { landlordStatus } from "@/lib/server/landlord-db";
 import LandlordListingForm from "./LandlordListingForm";
 export default async function LandlordListingPage() {
   let user: User | null = null;

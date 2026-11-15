@@ -1,8 +1,8 @@
-import { getSiteSettings } from "@/lib/site-settings";
+import { getSiteSettings } from "@/lib/server/site-settings";
 import { NextResponse } from "next/server";
-import { createUser, hasUserDatabase } from "@/lib/user-db";
-import { applyUserSessionCookie, createUserToken } from "@/lib/user-auth";
-import { apiError } from "@/lib/api-response";
+import { createUser, hasUserDatabase } from "@/lib/server/user-db";
+import { applyUserSessionCookie, createUserToken } from "@/lib/server/user-auth";
+import { apiError } from "@/lib/server/api-response";
 import { isValidEmail, isValidPassword } from "@/lib/policies/domain-policies.js";
 
 export async function POST(request: Request) {

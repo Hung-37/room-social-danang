@@ -1,8 +1,8 @@
 import { withListingWriteLock } from "./listing-write-lock";
 import { deletedListingIds } from "./listing-deletions";
 import { listingRejectionReason } from "@/lib/policies/listing-policy.js";
-import type { NormalizedListing } from "@/lib/collector/parser.js";
-import { deduplicateListings } from "@/lib/collector/parser.js";
+import type { NormalizedListing } from "@/lib/server/collector/parser.js";
+import { deduplicateListings } from "@/lib/server/collector/parser.js";
 import { saveListings } from "./db";
 import { hasDatabaseConfig } from "./mysql-pool";
 import { getSiteSettings } from "./site-settings";

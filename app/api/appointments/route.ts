@@ -1,8 +1,8 @@
-import { resolveRequestUser } from '@/lib/user-auth';
-import { apiData, apiError } from '@/lib/api-response';
-import { visits, requestVisit } from '@/lib/appointments';
-import { ChatError } from '@/lib/chat-db';
-import { rateLimit } from '@/lib/rate-limit';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { apiData, apiError } from '@/lib/server/api-response';
+import { visits, requestVisit } from '@/lib/server/appointments';
+import { ChatError } from '@/lib/server/chat-db';
+import { rateLimit } from '@/lib/server/rate-limit';
 export async function GET(r: Request) {
   const sessionResult = await resolveRequestUser(r);
   if (sessionResult.error) return sessionResult.error;

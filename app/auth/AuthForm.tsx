@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { notifySessionChanged } from "@/lib/client-session";
+import { notifySessionChanged } from "@/lib/client/client-session";
 
 type AuthMode = "login" | "register";
 

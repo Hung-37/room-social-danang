@@ -1,17 +1,17 @@
 import { paginationInteger } from "@/lib/policies/pagination.js";
-import { getThreadStats } from "@/lib/community-db";
+import { getThreadStats } from "@/lib/server/community-db";
 import { NextResponse } from "next/server";
 import {
   getListingCounts,
   getListings,
   hasDatabaseConfig,
   type ListingFilters,
-} from "@/lib/db";
-import { readScrapedListings } from "@/lib/file-storage";
+} from "@/lib/server/db";
+import { readScrapedListings } from "@/lib/server/file-storage";
 import { readWithDatabaseFallback } from "@/lib/policies/listing-read-service.js";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { getCommunityCommentCounts } from "@/lib/server-community-storage";
-import { getCommunityInteractionTotals } from "@/lib/community-interactions";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { getCommunityCommentCounts } from "@/lib/server/server-community-storage";
+import { getCommunityInteractionTotals } from "@/lib/server/community-interactions";
 
 function readCachedListings(
   search: string,

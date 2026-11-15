@@ -1,27 +1,6 @@
 @import './styles/tokens.css';
 @import './styles/admin.css';
 
-/* ===== GLOBAL VARIABLES ===== */
-:root {
-  --bg: #f5f7fa;
-  --card: #ffffff;
-  --text: #111827;
-  --muted: #475569;
-  --line: #e5e7eb;
-  --brand: #0b5ed7;
-  --brand-dark: #0a3d7f;
-  --success: #057642;
-  --warning: #856404;
-  --danger: #dc2626;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.12);
-  --radius: 12px;
-  --radius-lg: 16px;
-  --font-base: 16px;
-  --font-sm: 14px;
-  --font-xs: 12px;
-}
-
 /* ===== RESET & BASE ===== */
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }

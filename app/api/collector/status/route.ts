@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { getCollectorJobStatus } from "@/lib/collector-job-lock";
-import { listCollectorRuns } from "@/lib/collector-run-storage";
-import { hasCollectorDatabase, listCollectorRunsDb } from "@/lib/collector-db";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { getCollectorJobStatus } from "@/lib/server/collector-job-lock";
+import { listCollectorRuns } from "@/lib/server/collector-run-storage";
+import { hasCollectorDatabase, listCollectorRunsDb } from "@/lib/server/collector-db";
 
 export async function GET(request: Request) {
   if (!getAdminSessionFromRequest(request))

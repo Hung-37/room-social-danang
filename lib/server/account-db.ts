@@ -1,6 +1,6 @@
 import type { RowDataPacket } from "mysql2/promise";
 import { getDatabasePool as db } from "./mysql-pool";
-import type { User } from "./types";
+import type { User } from "@/lib/types";
 export async function account(id: string) {
   const [rows] = await db().query<RowDataPacket[]>(
     "SELECT external_id AS id,name,email,role,created_at AS createdAt FROM users WHERE external_id=?",

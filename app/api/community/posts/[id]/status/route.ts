@@ -1,7 +1,7 @@
-import { MutationError } from "@/lib/mutation-errors";
+import { MutationError } from "@/lib/server/mutation-errors";
 import { NextResponse } from "next/server";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { moderateCommunityPost } from "@/lib/community-db";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { moderateCommunityPost } from "@/lib/server/community-db";
 
 export async function PATCH(
   request: Request,

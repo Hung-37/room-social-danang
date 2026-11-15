@@ -1,6 +1,6 @@
 import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
-import { getDatabasePool as getPool } from '@/lib/mysql-pool';
-export { hasDatabaseConfig as hasUserDatabase } from '@/lib/mysql-pool';
+import { getDatabasePool as getPool } from '@/lib/server/mysql-pool';
+export { hasDatabaseConfig as hasUserDatabase } from '@/lib/server/mysql-pool';
 import type { User } from '@/lib/types';
 
 function hashPassword(password: string) {

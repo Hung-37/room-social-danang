@@ -1,5 +1,5 @@
-import { getSiteSettings } from '@/lib/site-settings';
-import { apiData, apiError } from '@/lib/api-response';
+import { getSiteSettings } from '@/lib/server/site-settings';
+import { apiData, apiError } from '@/lib/server/api-response';
 export async function GET() {
   try {
     const { settings: s } = await getSiteSettings();

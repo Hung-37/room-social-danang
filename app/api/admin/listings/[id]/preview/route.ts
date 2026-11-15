@@ -1,6 +1,6 @@
-import { getAdminSessionFromRequest } from '@/lib/admin-auth';
-import { getDatabasePool } from '@/lib/mysql-pool';
-import { apiError, apiData } from '@/lib/api-response';
+import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
+import { getDatabasePool } from '@/lib/server/mysql-pool';
+import { apiError, apiData } from '@/lib/server/api-response';
 import type { RowDataPacket } from 'mysql2/promise';
 export async function GET(r: Request, { params }: { params: Promise<{ id: string }> }) {
   if (!getAdminSessionFromRequest(r)) return apiError('Yêu cầu quản trị viên.', 401);

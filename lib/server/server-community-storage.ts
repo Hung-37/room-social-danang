@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import type { RoomPost } from '@/lib/data';
 import { clusters, UNASSIGNED_CLUSTER_ID } from '@/lib/data';
-import { readScrapedListings } from '@/lib/file-storage';
+import { readScrapedListings } from '@/lib/server/file-storage';
 import type { CommunityComment } from '@/lib/types';
 
 type CommunityThread = {

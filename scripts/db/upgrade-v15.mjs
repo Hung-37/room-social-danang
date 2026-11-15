@@ -1,4 +1,4 @@
-import { mysqlConnectionOptions } from '../../lib/mysql-options.js';
+import { mysqlConnectionOptions } from '../../lib/server/mysql-options.js';
 import '../lib/env.mjs';
 import mysql from "mysql2/promise";
 import { readFile } from "node:fs/promises";

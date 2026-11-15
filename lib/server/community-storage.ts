@@ -1,5 +1,5 @@
 import type { RoomPost } from '@/lib/data';
-import { decodeHtmlText } from '@/lib/html-text';
+import { decodeHtmlText } from '@/lib/shared/html-text';
 
 export type CommunityComment = {
   id: string;

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { updateListingStatus, hasDatabaseConfig } from "@/lib/db";
-import { updateScrapedListingStatus } from "@/lib/file-storage";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
-import { recordModerationLog } from "@/lib/community-db";
-import { MutationError } from "@/lib/mutation-errors";
+import { updateListingStatus, hasDatabaseConfig } from "@/lib/server/db";
+import { updateScrapedListingStatus } from "@/lib/server/file-storage";
+import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
+import { recordModerationLog } from "@/lib/server/community-db";
+import { MutationError } from "@/lib/server/mutation-errors";
 
 export async function POST(
   request: Request,

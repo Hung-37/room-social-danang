@@ -1,4 +1,4 @@
-import { mysqlConnectionOptions } from '../../lib/mysql-options.js';
+import { mysqlConnectionOptions } from '../../lib/server/mysql-options.js';
 import '../lib/env.mjs';
 // Explicitly labelled sample data; does not create an administrator or usable demo password.
 import mysql from 'mysql2/promise';

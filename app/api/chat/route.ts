@@ -1,6 +1,6 @@
-import { resolveRequestUser } from '@/lib/user-auth';
-import { apiData, apiError } from '@/lib/api-response';
-import { startConversation, inbox, ChatError } from '@/lib/chat-db';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { apiData, apiError } from '@/lib/server/api-response';
+import { startConversation, inbox, ChatError } from '@/lib/server/chat-db';
 export async function GET(request: Request) {
   const sessionResult = await resolveRequestUser(request);
   if (sessionResult.error) return sessionResult.error;

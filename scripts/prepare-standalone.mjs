@@ -27,10 +27,9 @@ for (const [source, destination] of [
   await mkdir(join(target, destination), { recursive: true });
   await cp(source, join(target, destination), { recursive: true, filter: (file) => !file.replaceAll("\\", "/").split("/").includes("mysql-data") });
 }
-await mkdir(join(target, "fixtures"), { recursive: true });
+await mkdir(join(target, "data", "fixtures"), { recursive: true });
 await copyFile(
-  "fixtures/listings.json",
-  join(target, "fixtures/listings.json"),
+  "data/fixtures/listings.json",
+  join(target, "data", "fixtures", "listings.json"),
 );
-await mkdir(join(target, "data"), { recursive: true });
 console.log("Standalone runtime and database initializer packaged.");

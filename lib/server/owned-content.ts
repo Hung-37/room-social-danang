@@ -1,7 +1,7 @@
 import { deletePostNotifications } from "./post-notifications";
 import type { RowDataPacket } from "mysql2/promise";
 import { getDatabasePool } from "./mysql-pool";
-import { clusters } from "./data";
+import { clusters } from "@/lib/data";
 import { MutationError, requireVersion } from "./mutation-errors";
 export async function ownPosts(user: string, offset: number) {
   const [rows] = await getDatabasePool().query<RowDataPacket[]>(

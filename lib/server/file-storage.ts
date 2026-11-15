@@ -1,9 +1,9 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
-import { deduplicateListings, isPlaceholderListingUrl, sanitizeListingSummary } from '@/lib/collector/parser.js';
+import { deduplicateListings, isPlaceholderListingUrl, sanitizeListingSummary } from '@/lib/server/collector/parser.js';
 
 export const SCRAPED_DATA_FILE = join(process.cwd(), 'data', 'cached-listings.json');
-const TEMPLATE_DATA_FILE = join(process.cwd(), 'fixtures', 'listings.json');
+const TEMPLATE_DATA_FILE = join(process.cwd(), 'data', 'fixtures', 'listings.json');
 const STALE_AFTER_MS = Math.max(Number(process.env.LISTING_STALE_DAYS) || 30, 1) * 24 * 60 * 60 * 1000;
 let listingsCache: unknown[] | null = null;
 let listingsCacheMtime = -1;
@@ -140,6 +140,6 @@ export function writeJsonAtomically(filePath: string, value: unknown) {
 export function readTemplateListings(): unknown[] {
   if (!existsSync(TEMPLATE_DATA_FILE)) return [];
   const content = JSON.parse(readFileSync(TEMPLATE_DATA_FILE, 'utf-8')) as unknown;
-  if (!Array.isArray(content)) throw new Error('File fixtures/listings.json phải là một mảng JSON.');
+  if (!Array.isArray(content)) throw new Error('File data/fixtures/listings.json phải là một mảng JSON.');
   return content;
 }

@@ -1,17 +1,17 @@
-import { getPublicThread } from '@/lib/thread-access';
+import { getPublicThread } from '@/lib/server/thread-access';
 import { NextResponse } from 'next/server';
 import {
   COMMUNITY_REACTIONS,
   getCommunityInteractions,
   setCommunityInteraction,
   type CommunityReaction
-} from '@/lib/community-interactions';
-import { resolveRequestUser } from '@/lib/user-auth';
+} from '@/lib/server/community-interactions';
+import { resolveRequestUser } from '@/lib/server/user-auth';
 import {
   getCommunityInteractionsDb,
   hasCommunityDatabase,
   setCommunityInteractionDb
-} from '@/lib/community-db';
+} from '@/lib/server/community-db';
 
 function validActorId(value: unknown) {
   return typeof value === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(value) ? value : null;

@@ -1,6 +1,6 @@
 /**
  * Client-side identity mirror for UI state. Server APIs authenticate with the
- * HttpOnly user session cookie from lib/user-auth.ts.
+ * HttpOnly user session cookie from lib/server/user-auth.ts.
  */
 
 import type { User } from '@/lib/types';

@@ -1,7 +1,7 @@
-import { resolveRequestUser } from '@/lib/user-auth';
-import { apiData, apiError } from '@/lib/api-response';
-import { updateVisit } from '@/lib/appointments';
-import { ChatError } from '@/lib/chat-db';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { apiData, apiError } from '@/lib/server/api-response';
+import { updateVisit } from '@/lib/server/appointments';
+import { ChatError } from '@/lib/server/chat-db';
 export async function PATCH(r: Request, { params }: { params: Promise<{ id: string }> }) {
   const sessionResult = await resolveRequestUser(r);
   if (sessionResult.error) return sessionResult.error;

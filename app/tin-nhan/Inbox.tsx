@@ -284,6 +284,10 @@ export default function Inbox({ initial }: { initial: string }) {
     }
   }
   const current = chats.find((c) => c.id === active);
+  const unreadTotal = chats.reduce(
+    (total, chat) => total + Number(chat.unread || 0),
+    0,
+  );
   return (
     <>
       {error && (
@@ -298,6 +302,19 @@ export default function Inbox({ initial }: { initial: string }) {
       ) : (
         <div className="inbox-layout">
           <aside className="inbox-list" aria-label="Cuộc trò chuyện">
+            <div className="inbox-list-heading">
+              <div>
+                <span>HỘP THƯ RIÊNG</span>
+                <h2>Cuộc trò chuyện</h2>
+              </div>
+              <span className="inbox-count" aria-label={`${chats.length} hội thoại`}>
+                {chats.length}
+              </span>
+            </div>
+            <div className="inbox-summary" aria-live="polite">
+              <span>{chats.length} hội thoại</span>
+              <span>{unreadTotal} chưa đọc</span>
+            </div>
             <div className="inbox-filters">
               <label>
                 Tìm hội thoại
@@ -324,13 +341,28 @@ export default function Inbox({ initial }: { initial: string }) {
               {listLoading && <p role="status">Đang lọc...</p>}
             </div>
             {loading ? (
-              <p role="status">Đang tải...</p>
-            ) : !chats.length ? (
-              <p>
-                {query || filter !== "all"
-                  ? "Không có hội thoại phù hợp. Hãy thử từ khóa hoặc bộ lọc khác."
-                  : "Chưa có cuộc trò chuyện. Mở một phòng và chọn “Nhắn chủ trọ”."}
+              <p className="inbox-loading" role="status">
+                Đang tải hội thoại...
               </p>
+            ) : !chats.length ? (
+              <div className="inbox-empty">
+                <span aria-hidden="true">✉</span>
+                <strong>
+                  {query || filter !== "all"
+                    ? "Không tìm thấy hội thoại"
+                    : "Hộp thư đang trống"}
+                </strong>
+                <p>
+                  {query || filter !== "all"
+                    ? "Thử đổi từ khóa hoặc bộ lọc để xem thêm."
+                    : "Mở tin phòng bạn quan tâm và chọn “Nhắn chủ trọ” để bắt đầu trao đổi."}
+                </p>
+                {!query && filter === "all" && (
+                  <Link href="/bang-tin" className="text-link">
+                    Khám phá phòng trọ →
+                  </Link>
+                )}
+              </div>
             ) : (
               chats.map((c) => (
                 <button
@@ -342,12 +374,25 @@ export default function Inbox({ initial }: { initial: string }) {
                   aria-pressed={active === c.id}
                   onClick={() => setActive(c.id)}
                 >
-                  <strong>{c.otherName}</strong>
-                  <span>{c.title}</span>
-                  <small>
-                    {c.lastMessage || "Bắt đầu trao đổi về phòng"}{" "}
-                    {Number(c.unread) > 0 && <b> · {c.unread} chưa đọc</b>}
-                  </small>
+                  <span className="chat-preview-avatar" aria-hidden="true">
+                    {(c.otherName.trim().slice(0, 1) || "N").toLocaleUpperCase(
+                      "vi-VN",
+                    )}
+                  </span>
+                  <span className="chat-preview-copy">
+                    <span className="chat-preview-name">
+                      <strong>{c.otherName}</strong>
+                      {Number(c.unread) > 0 && (
+                        <span className="chat-unread">
+                          {c.unread} mới
+                        </span>
+                      )}
+                    </span>
+                    <span className="chat-preview-title">{c.title}</span>
+                    <small>
+                      {c.lastMessage || "Bắt đầu trao đổi về phòng"}
+                    </small>
+                  </span>
                 </button>
               ))
             )}
@@ -363,12 +408,25 @@ export default function Inbox({ initial }: { initial: string }) {
             ) : (
               <>
                 <div className="chat-title">
-                  <h2>
-                    {selected?.otherName ||
+                  <span className="chat-title-avatar" aria-hidden="true">
+                    {(
+                      selected?.otherName ||
                       current?.otherName ||
-                      "Cuộc trò chuyện"}
-                  </h2>
-                  <p>{selected?.title || current?.title}</p>
+                      "C"
+                    )
+                      .trim()
+                      .slice(0, 1)
+                      .toLocaleUpperCase("vi-VN")}
+                  </span>
+                  <div>
+                    <span className="chat-title-kicker">ĐANG TRAO ĐỔI VỚI</span>
+                    <h2>
+                      {selected?.otherName ||
+                        current?.otherName ||
+                        "Cuộc trò chuyện"}
+                    </h2>
+                    <p>{selected?.title || current?.title}</p>
+                  </div>
                 </div>
                 {selected?.listingDeleted && (
                   <p role="status" className="chat-hint">
@@ -408,25 +466,41 @@ export default function Inbox({ initial }: { initial: string }) {
                   aria-label="Lịch sử tin nhắn"
                   aria-live="polite"
                 >
-                  {items.map((m) => (
-                    <article
-                      key={m.id}
-                      className={
-                        m.senderId === user
-                          ? "chat-message mine"
-                          : "chat-message"
-                      }
-                    >
-                      <p>{m.body}</p>
-                      <time dateTime={m.createdAt}>
-                        {new Date(m.createdAt).toLocaleString("vi-VN", {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                          timeZone: "Asia/Ho_Chi_Minh",
-                        })}
-                      </time>
-                    </article>
-                  ))}
+                  {items.length === 0 ? (
+                    <div className="chat-empty">
+                      <span aria-hidden="true">✦</span>
+                      <strong>Bắt đầu cuộc trò chuyện</strong>
+                      <p>
+                        Hỏi thêm về phòng, chi phí và lịch xem trước khi quyết
+                        định.
+                      </p>
+                    </div>
+                  ) : (
+                    items.map((m) => (
+                      <article
+                        key={m.id}
+                        className={
+                          m.senderId === user
+                            ? "chat-message mine"
+                            : "chat-message"
+                        }
+                      >
+                        <span className="chat-message-sender">
+                          {m.senderId === user
+                            ? "Bạn"
+                            : selected?.otherName || "Người trò chuyện"}
+                        </span>
+                        <p>{m.body}</p>
+                        <time dateTime={m.createdAt}>
+                          {new Date(m.createdAt).toLocaleString("vi-VN", {
+                            dateStyle: "short",
+                            timeStyle: "short",
+                            timeZone: "Asia/Ho_Chi_Minh",
+                          })}
+                        </time>
+                      </article>
+                    ))
+                  )}
                 </div>
                 {!threadReady ? (
                   <p role="status">

@@ -1,8 +1,8 @@
-import { resolveRequestUser } from '@/lib/user-auth';
-import { apiData, apiError } from '@/lib/api-response';
-import { savedPosts } from '@/lib/account-db';
-import { getDatabasePool } from '@/lib/mysql-pool';
-import { getPublicThread } from '@/lib/thread-access';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { apiData, apiError } from '@/lib/server/api-response';
+import { savedPosts } from '@/lib/server/account-db';
+import { getDatabasePool } from '@/lib/server/mysql-pool';
+import { getPublicThread } from '@/lib/server/thread-access';
 import type { RowDataPacket } from 'mysql2/promise';
 export async function GET(r: Request) {
   const sessionResult = await resolveRequestUser(r);

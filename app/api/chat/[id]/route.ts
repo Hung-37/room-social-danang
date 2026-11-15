@@ -1,7 +1,7 @@
-import { resolveRequestUser } from '@/lib/user-auth';
-import { apiData, apiError } from '@/lib/api-response';
-import { messages, sendMessage, chatAction, ChatError } from '@/lib/chat-db';
-import { rateLimit } from '@/lib/rate-limit';
+import { resolveRequestUser } from '@/lib/server/user-auth';
+import { apiData, apiError } from '@/lib/server/api-response';
+import { messages, sendMessage, chatAction, ChatError } from '@/lib/server/chat-db';
+import { rateLimit } from '@/lib/server/rate-limit';
 type Context = { params: Promise<{ id: string }> };
 function failure(e: unknown) {
   return apiError(
