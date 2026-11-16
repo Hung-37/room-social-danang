@@ -334,6 +334,7 @@ export default function LandlordDashboard() {
                     )}
                     <div className="management-room-body">
                       <span
+                        data-testid="listing-status-badge"
                         className={
                           "listing-status status-" + l.verificationStatus
                         }
