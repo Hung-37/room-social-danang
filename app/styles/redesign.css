@@ -215,7 +215,9 @@ textarea::placeholder {
   border-color: var(--line);
   background: var(--card);
   box-shadow: var(--shadow);
+  animation: ui-arrive 180ms ease-out;
 }
+@keyframes ui-arrive { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .card-context, .card-source, .card-toolbar { flex-wrap: wrap; }
 .card-content { padding: 22px; }
 .card-content h3 { font-size: 20px; line-height: 1.4; }
@@ -225,7 +227,7 @@ textarea::placeholder {
 .card-source { gap: 8px 12px; overflow-wrap: anywhere; }
 .source-label { min-width: 0; }
 .cover-badge { max-width: calc(100% - 24px); white-space: normal; line-height: 1.5; }
-.cover-badge.is-reference { color: #71451b; background: #fff2d9; border: 1px solid #e1bb75; }
+.cover-badge.is-reference, .category-pill.is-reference { color: #71451b; background: #fff2d9; border: 1px solid #e1bb75; white-space: normal; line-height: 1.5; }
 .quiet-icon { min-width: 44px; min-height: 44px; width: auto; padding: 8px; gap: 5px; }
 .quiet-icon.is-selected { color: var(--brand-2); background: var(--brand-soft); }
 .card-read, .comment-count, .source-link { display: inline-flex; align-items: center; min-height: 44px; }

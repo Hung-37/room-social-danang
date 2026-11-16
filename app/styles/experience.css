@@ -1384,8 +1384,8 @@ main:focus {
 .contact-card {
   padding: 27px 24px;
   border-radius: 18px;
-  background: #e9f1e4;
-  border: 1px solid #d8e4d1;
+  background: var(--brand-soft);
+  border: 1px solid var(--line);
 }
 .contact-card h2 {
   font-size: 22px;
@@ -1394,7 +1394,7 @@ main:focus {
 }
 .contact-card > p {
   font-size: 14px;
-  color: #52654e;
+  color: var(--muted);
 }
 .contact-card > .primary-btn,
 .contact-card > .secondary-btn {
@@ -1404,7 +1404,7 @@ main:focus {
   text-align: center;
 }
 .contact-note {
-  border-top: 1px solid #d0dec9;
+  border-top: 1px solid var(--line);
   padding-top: 18px;
   font-size: 14px !important;
   line-height: 1.8;

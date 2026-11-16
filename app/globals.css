@@ -139,7 +139,7 @@ img { max-width: 100%; height: auto; }
   padding: 8px 16px;
   border-radius: 8px;
   color: var(--muted);
-  font-size: clamp(13px, 1.5vw, 15px);
+  font-size: clamp(14px, 1.5vw, 15px);
   font-weight: 600;
   transition: all 0.2s;
   white-space: nowrap;
@@ -169,7 +169,7 @@ img { max-width: 100%; height: auto; }
   border-radius: 8px;
   background: #f3f4f6;
   color: var(--text);
-  font-size: clamp(13px, 1.5vw, 15px);
+  font-size: clamp(14px, 1.5vw, 15px);
   font-weight: 600;
   transition: background 0.2s;
   white-space: nowrap;
@@ -187,7 +187,7 @@ img { max-width: 100%; height: auto; }
   border-radius: 20px;
   background: #f3f4f6;
   color: var(--text);
-  font-size: clamp(13px, 1.5vw, 15px);
+  font-size: clamp(14px, 1.5vw, 15px);
   font-weight: 600;
   transition: background 0.2s;
   white-space: nowrap;
@@ -293,7 +293,7 @@ img { max-width: 100%; height: auto; }
 }
 
 .stat-label {
-  font-size: clamp(11px, 1.5vw, 13px);
+  font-size: 14px;
   opacity: 0.9;
   line-height: 1.3;
 }
@@ -360,7 +360,7 @@ img { max-width: 100%; height: auto; }
 
 .quick-link-card h3 {
   margin: 0 0 6px;
-  font-size: clamp(12px, 1.6vw, 18px);
+  font-size: clamp(16px, 1.6vw, 18px);
   font-weight: 700;
   line-height: 1.3;
   color: var(--text);
@@ -371,7 +371,7 @@ img { max-width: 100%; height: auto; }
 .quick-link-card p {
   margin: 0;
   color: var(--muted);
-  font-size: clamp(10px, 1.2vw, 13px);
+  font-size: 14px;
   line-height: 1.5;
   font-weight: 500;
   overflow-wrap: anywhere;
@@ -488,7 +488,7 @@ img { max-width: 100%; height: auto; }
 .area-schools {
   font-size: 14px;
   color: var(--muted);
-  opacity: 0.8;
+  opacity: 1;
 }
 
 /* ===== COMMUNITY SECTION ===== */

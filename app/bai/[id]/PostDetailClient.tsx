@@ -141,7 +141,7 @@ export default function PostDetailClient({ id }: { id: string }) {
                 <span>{post.updated}</span>
               </div>
               <h1>{post.title}</h1>
-              {room && <p className="category-pill">{display.label}</p>}
+              {room && <p className={`category-pill${display.isReference ? " is-reference" : ""}`}>{display.label}</p>}
               {!room && (
                 <div className="detail-author">
                   <span className="person-avatar">
@@ -224,14 +224,14 @@ export default function PostDetailClient({ id }: { id: string }) {
               <p>Trao đổi về phí điện nước, tiền cọc và thời gian xem phòng.</p>
               {post.phone && (
                 <a
-                  className="primary-btn"
+                  className="secondary-btn"
                   href={`tel:${post.phone.replace(/[^+\d]/g, "")}`}
                 >
                   Gọi {post.phone}
                 </a>
               )}
               <Link
-                className={post.phone ? "secondary-btn" : "primary-btn"}
+                className="secondary-btn"
                 href="#binh-luan"
               >
                 <Icon name="message" />
