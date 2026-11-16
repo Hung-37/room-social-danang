@@ -26,6 +26,9 @@ export default function LoginModal({
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
   const [error, setError] = useState("");
+  const [requestId, setRequestId] = useState("");
+  const [canRetry, setCanRetry] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -74,7 +77,11 @@ export default function LoginModal({
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    if (loading) return;
     setError("");
+    setRequestId("");
+    setCanRetry(false);
+    setAccountCreated(false);
 
     if (!validateEmail(email)) {
       setError("Vui lòng nhập email hợp lệ (ví dụ: user@email.com).");
@@ -136,16 +143,33 @@ export default function LoginModal({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name: name.trim(), email, password, role }),
         });
+        const payload = (await registerResponse.json().catch(() => ({}))) as { error?: string; code?: string; requestId?: string };
+        if (payload.code === "ACCOUNT_CREATED_LOGIN_REQUIRED") {
+          setLoading(false);
+          setPassword("");
+          setError("Tài khoản đã được tạo. Đăng nhập bằng email này để tiếp tục.");
+          setRequestId(payload.requestId ?? registerResponse.headers.get("X-Request-Id") ?? "");
+          setAccountCreated(true);
+          setMode("login");
+          return;
+        }
         if (registerResponse.ok) {
           notifySessionChanged();
-        } else if (registerResponse.status === 503) {
-          setLoading(false);
-          setError("Chưa kết nối cơ sở dữ liệu. Vui lòng thử lại sau.");
-          return;
         } else {
-          const payload = (await registerResponse.json()) as { error?: string };
           setLoading(false);
-          setError(payload.error || "Không thể tạo tài khoản.");
+          setPassword("");
+          const messages: Record<string, string> = {
+            EMAIL_TAKEN: "Email này đã được đăng ký.",
+            DATABASE_UNAVAILABLE: "Hệ thống đang bận. Vui lòng thử lại sau ít phút.",
+            SERVER_MISCONFIGURED: "Hệ thống chưa sẵn sàng. Vui lòng báo bộ phận hỗ trợ.",
+            REGISTER_SCHEMA_ERROR: "Hệ thống đang được cập nhật. Vui lòng thử lại sau.",
+            REGISTER_WRITE_FORBIDDEN: "Hệ thống tạm thời không thể tạo tài khoản.",
+            REGISTER_FAILED: "Không thể tạo tài khoản lúc này.",
+            ACCOUNT_CREATED_LOGIN_REQUIRED: "Tài khoản đã được tạo. Hãy đăng nhập để tiếp tục.",
+          };
+          setError(messages[payload.code ?? ""] ?? payload.error ?? "Không thể tạo tài khoản.");
+          setRequestId(payload.requestId ?? registerResponse.headers.get("X-Request-Id") ?? "");
+          setCanRetry(payload.code === "DATABASE_UNAVAILABLE");
           return;
         }
       }
@@ -159,6 +183,10 @@ export default function LoginModal({
     } catch {
       setLoading(false);
       setError("Đã có lỗi xảy ra. Vui lòng thử lại.");
+      if (mode === "register") {
+        setPassword("");
+        setCanRetry(true);
+      }
     }
   }
 
@@ -170,6 +198,9 @@ export default function LoginModal({
       setEmail("");
       setPassword("");
       setError("");
+      setRequestId("");
+      setCanRetry(false);
+      setAccountCreated(false);
       setSubmitted(false);
     }
   }
@@ -328,8 +359,11 @@ export default function LoginModal({
               {error && (
                 <p className="modal-error" role="alert">
                   {error}
+                  {requestId && <small> Mã hỗ trợ: {requestId}</small>}
                 </p>
               )}
+              {accountCreated && <p role="status">Mật khẩu đã được xóa. Hãy nhập lại mật khẩu để đăng nhập.</p>}
+              {canRetry && <button type="button" className="secondary-btn" disabled={loading} onClick={() => { const form = document.querySelector<HTMLFormElement>(".modal-form"); form?.requestSubmit(); }}>Thử lại</button>}
               <button
                 className="btn btn-primary btn-full"
                 type="submit"
