@@ -45,12 +45,22 @@
   padding: 14px 0;
   margin: 12px 0;
 }
-.message-search summary,
-.visit-request summary {
+.message-search summary {
   cursor: pointer;
   font-weight: 650;
   color: #076b61;
   padding: 4px 0;
+}
+.visit-request > summary {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-subtle);
+  color: var(--brand-dark);
+  cursor: pointer;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 .message-search label {
   margin-top: 14px;
