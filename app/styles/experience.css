@@ -29,7 +29,7 @@ button:disabled {
   opacity: 0.65;
 }
 :focus-visible {
-  outline: 3px solid #087568;
+  outline: 3px solid var(--brand);
   outline-offset: 4px;
   box-shadow: 0 0 0 5px #fff;
 }
@@ -122,7 +122,7 @@ main:focus {
 .section-eyebrow {
   display: block;
   color: #096858;
-  font-size: 11px;
+  font-size: 14px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 700;
@@ -142,7 +142,7 @@ main:focus {
   margin: 0;
 }
 .subtle-text {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
 }
 .topbar-inner {
@@ -163,7 +163,7 @@ main:focus {
   height: 38px;
   border-radius: 12px;
   transform: rotate(-6deg);
-  background: #087568;
+  background: var(--brand);
   box-shadow: none;
 }
 .nav-links {
@@ -233,7 +233,7 @@ main:focus {
   color: var(--text);
   background: transparent;
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   text-align: left;
   white-space: nowrap;
 }
@@ -268,7 +268,7 @@ main:focus {
 }
 .notification-header .mark-read-btn {
   color: var(--brand-dark);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
 }
 .notification-list {
@@ -278,7 +278,7 @@ main:focus {
 .notification-item {
   padding: 10px 7px;
   border-bottom: 1px solid var(--line);
-  font-size: 12px;
+  font-size: 14px;
 }
 .notification-item:last-child {
   border-bottom: 0;
@@ -293,19 +293,19 @@ main:focus {
 }
 .notification-time {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 14px;
 }
 .notification-empty {
   margin: 0;
   padding: 15px 7px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 .notification-dropdown > a {
   padding: 10px 14px;
   border-top: 1px solid var(--line);
   color: var(--brand-dark);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
 }
 .notification-dropdown > .notification-footer {
@@ -327,7 +327,7 @@ main:focus {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: #126b57;
 }
@@ -346,7 +346,7 @@ main:focus {
 }
 .hero-copy h1 em {
   font-style: normal;
-  color: #087568;
+  color: var(--brand);
 }
 .hero-copy > p {
   font-size: 16px;
@@ -374,7 +374,7 @@ main:focus {
 }
 .hero-search label > span {
   display: block;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   margin: 0 0 4px;
 }
@@ -395,7 +395,7 @@ main:focus {
   border-radius: 0;
   width: 100%;
   min-width: 0;
-  font-size: 13px;
+  font-size: 14px;
   color: #324a40;
   min-height: 32px;
 }
@@ -408,14 +408,14 @@ main:focus {
 }
 .hero-search .primary-btn {
   padding: 13px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .hero-assurance {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   margin-top: 20px;
-  font-size: 11px;
+  font-size: 14px;
   color: #4b6457;
 }
 .hero-assurance > span {
@@ -508,12 +508,12 @@ main:focus {
   gap: 12px;
   align-items: center;
   padding: 16px 20px;
-  background: #fffefa;
+  background: var(--card);
   border: 1px solid #f5f0e1;
   border-radius: 15px;
   box-shadow: 0 14px 30px #183b3020;
   transform: rotate(-3deg);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 .hero-art-card > span {
@@ -528,7 +528,7 @@ main:focus {
 }
 .hero-art-card small {
   display: block;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 400;
   color: #576b63;
 }
@@ -577,7 +577,7 @@ main:focus {
 }
 .quick-paths > a > div > span {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   margin-top: 3px;
 }
@@ -634,12 +634,12 @@ main:focus {
   color: #936b43;
 }
 .area-shortcuts strong {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.4;
   margin-bottom: 8px;
 }
 .area-shortcuts > a > span:last-child {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.5;
   color: var(--muted);
 }
@@ -692,7 +692,7 @@ main:focus {
   color: #245942;
   border-radius: 7px;
   padding: 5px 9px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
 }
 .cover-badge .ui-icon {
@@ -747,7 +747,7 @@ main:focus {
   align-items: center;
   flex-wrap: wrap;
   gap: 8px;
-  font-size: 11px;
+  font-size: 14px;
   color: var(--muted);
   margin-bottom: 13px;
 }
@@ -758,7 +758,7 @@ main:focus {
   background: #eef5e9;
   padding: 3px 8px;
   border-radius: 6px;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
 }
 .category-pill.is-warning {
@@ -767,7 +767,7 @@ main:focus {
 }
 .card-time {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 14px;
 }
 .card-content h3 {
   font-size: 17px;
@@ -777,12 +777,12 @@ main:focus {
   font-weight: 700;
 }
 .card-content h3 > a:hover {
-  color: #087568;
+  color: var(--brand);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .card-description {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   line-height: 1.65;
   margin: 0 0 13px;
@@ -796,7 +796,7 @@ main:focus {
   display: flex;
   gap: 6px;
   align-items: flex-start;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.5;
   color: #53695b;
   margin: 12px 0;
@@ -819,7 +819,7 @@ main:focus {
   letter-spacing: -0.03em;
 }
 .room-facts > span {
-  font-size: 12px;
+  font-size: 14px;
   padding-left: 12px;
   border-left: 1px solid var(--line);
   color: var(--muted);
@@ -836,7 +836,7 @@ main:focus {
   align-items: center;
   gap: 7px;
   color: #12634f;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   min-height: 44px;
   margin-right: auto;
@@ -861,7 +861,7 @@ main:focus {
   border-radius: 9px;
   background: transparent;
   color: #54685d;
-  font-size: 12px;
+  font-size: 14px;
 }
 .quiet-icon:hover,
 .comment-count:hover {
@@ -874,14 +874,14 @@ main:focus {
   height: 17px;
 }
 .quiet-icon.is-selected {
-  color: #087568;
+  color: var(--brand);
   background: #e9f2e5;
 }
 .quiet-icon.is-selected svg {
   fill: #cce4d0;
 }
 .card-notice {
-  font-size: 11px;
+  font-size: 14px;
   color: #24634f;
   margin: 0;
   padding-bottom: 12px;
@@ -895,11 +895,11 @@ main:focus {
   display: inline-grid;
   place-items: center;
   flex: none;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 .card-author {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text);
   font-weight: 700;
 }
@@ -969,7 +969,7 @@ main:focus {
   margin: 10px 0;
 }
 .landlord-invitation p {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
   margin: 0;
 }
@@ -982,7 +982,7 @@ main:focus {
   display: flex;
   align-items: center;
   gap: 25px;
-  font-size: 11px;
+  font-size: 14px;
   color: var(--muted);
 }
 .footer-brand {
@@ -992,7 +992,7 @@ main:focus {
   letter-spacing: -0.05em;
 }
 .footer-brand span {
-  color: #087568;
+  color: var(--brand);
 }
 .public-footer > span {
   margin-left: auto;
@@ -1007,7 +1007,7 @@ main:focus {
   flex-wrap: wrap;
   gap: 10px;
   color: #5b6d61;
-  font-size: 12px;
+  font-size: 14px;
   margin: 0 0 30px;
 }
 .breadcrumb a {
@@ -1052,7 +1052,7 @@ main:focus {
 .explorer-filters label {
   display: grid;
   min-width: 0;
-  font-size: 11px;
+  font-size: 14px;
   gap: 7px;
   color: #395343;
   font-weight: 700;
@@ -1066,7 +1066,7 @@ main:focus {
   background: #fafcf8;
   border: 1px solid #d8e3d7;
   border-radius: 9px;
-  font-size: 12px;
+  font-size: 14px;
   color: #263d2e;
   font-weight: 400;
 }
@@ -1075,7 +1075,7 @@ main:focus {
 }
 .explorer-filters > .secondary-btn {
   min-height: 44px;
-  font-size: 11px;
+  font-size: 14px;
   white-space: nowrap;
 }
 .explorer-layout {
@@ -1093,7 +1093,7 @@ main:focus {
   gap: 18px;
 }
 .explorer-layout > section > p[role='status'] {
-  font-size: 12px;
+  font-size: 14px;
   color: #536757;
   margin-top: 0;
   margin-bottom: 18px;
@@ -1127,14 +1127,14 @@ main:focus {
   margin: 0 0 12px;
 }
 .guide-card p {
-  font-size: 12px;
+  font-size: 14px;
   color: #52634e;
   line-height: 1.8;
   margin-bottom: 18px;
 }
 .guide-card a {
   color: #0b634d;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.7;
   display: inline-block;
@@ -1153,7 +1153,7 @@ main:focus {
 }
 .neighborhood-note p,
 .neighborhood-note li {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   line-height: 1.8;
 }
@@ -1161,7 +1161,7 @@ main:focus {
   padding-left: 18px;
 }
 .neighborhood-note .text-link {
-  font-size: 12px;
+  font-size: 14px;
 }
 .explorer-more {
   min-width: 160px;
@@ -1182,7 +1182,7 @@ main:focus {
   max-width: 850px;
 }
 .discussion-form label {
-  font-size: 13px;
+  font-size: 14px;
 }
 .discussion-form input,
 .discussion-form textarea,
@@ -1197,7 +1197,7 @@ main:focus {
   gap: 20px;
 }
 .composer-footer p {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
 }
 .route-feedback {
@@ -1330,7 +1330,7 @@ main:focus {
   border-left: 1px solid var(--line);
 }
 .detail-article .room-location {
-  font-size: 13px;
+  font-size: 14px;
   margin: 15px 0 24px;
 }
 .detail-article hr {
@@ -1352,7 +1352,7 @@ main:focus {
   gap: 15px;
   padding-top: 15px;
   border-top: 1px solid var(--line);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
 }
 .detail-bottom-line > span {
@@ -1368,11 +1368,11 @@ main:focus {
 }
 .detail-author strong {
   display: block;
-  font-size: 13px;
+  font-size: 14px;
 }
 .detail-author > div > span {
   display: block;
-  font-size: 11px;
+  font-size: 14px;
   color: var(--muted);
 }
 .detail-sidebar {
@@ -1393,7 +1393,7 @@ main:focus {
   margin: 14px 0;
 }
 .contact-card > p {
-  font-size: 13px;
+  font-size: 14px;
   color: #52654e;
 }
 .contact-card > .primary-btn,
@@ -1406,7 +1406,7 @@ main:focus {
 .contact-note {
   border-top: 1px solid #d0dec9;
   padding-top: 18px;
-  font-size: 11px !important;
+  font-size: 14px !important;
   line-height: 1.8;
   margin-top: 20px;
   margin-bottom: 0;
@@ -1419,7 +1419,7 @@ main:focus {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  font-size: 13px;
+  font-size: 14px;
   color: #24624e;
 }
 .detail-loading {
@@ -1464,7 +1464,7 @@ main:focus {
   font-size: 24px;
 }
 .count-pill {
-  font-size: 13px;
+  font-size: 14px;
   background: #eef4e9;
   color: #40613e;
   border-radius: 25px;
@@ -1503,7 +1503,7 @@ main:focus {
 }
 .comment-form-footer small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .comment-form-footer .primary-btn {
@@ -1527,7 +1527,7 @@ main:focus {
   font-size: 14px;
 }
 .sign-in-callout p {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
   margin: 6px 0 0;
 }
@@ -1539,10 +1539,10 @@ main:focus {
   height: 28px;
 }
 .sign-in-callout .primary-btn {
-  font-size: 12px;
+  font-size: 14px;
 }
 .feedback {
-  font-size: 13px;
+  font-size: 14px;
   background: #f0f6ed;
   color: #1c5b3c;
   border-radius: 10px;
@@ -1584,10 +1584,10 @@ main:focus {
   gap: 8px 15px;
 }
 .comment-meta strong {
-  font-size: 13px;
+  font-size: 14px;
 }
 .comment-meta time {
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted);
 }
 .comment-item p {
@@ -1615,7 +1615,7 @@ main:focus {
   font-size: 17px;
 }
 .empty-conversation p {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--muted);
 }
 @media (min-width: 1500px) {
@@ -1725,25 +1725,25 @@ main:focus {
   .hero-art-card {
     bottom: 22px;
     padding: 12px;
-    font-size: 11px;
+    font-size: 14px;
     left: -25px;
   }
   .hero-art-card small {
-    font-size: 9px;
+    font-size: 14px;
   }
   .hero-art-card > span {
     width: 30px;
     height: 30px;
   }
   .hero-assurance {
-    font-size: 10px;
+    font-size: 14px;
     gap: 12px;
   }
   .quick-paths > a {
     padding: 19px;
   }
   .quick-paths > a > div > span {
-    font-size: 11px;
+    font-size: 14px;
   }
   .quick-icon {
     width: 40px;
@@ -1843,7 +1843,7 @@ main:focus {
     display: none;
   }
   .hero-kicker {
-    font-size: 11px;
+    font-size: 14px;
   }
   .hero-copy h1 {
     font-size: 39px;
@@ -1865,7 +1865,7 @@ main:focus {
     padding-left: 0;
   }
   .hero-search label > span {
-    font-size: 11px;
+    font-size: 14px;
   }
   .hero-search input {
     font-size: 14px;
@@ -1876,7 +1876,7 @@ main:focus {
     min-height: 46px;
   }
   .hero-assurance {
-    font-size: 10px;
+    font-size: 14px;
     gap: 8px 15px;
     margin-top: 17px;
   }
@@ -1893,7 +1893,7 @@ main:focus {
     font-size: 14px;
   }
   .quick-paths > a > div > span {
-    font-size: 11px;
+    font-size: 14px;
   }
   .quick-paths > a > .ui-icon {
     width: 17px;
@@ -1911,11 +1911,11 @@ main:focus {
     line-height: 1.3;
   }
   .section-eyebrow {
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: 0.08em;
   }
   .section-title-row .text-link {
-    font-size: 11px;
+    font-size: 14px;
     gap: 4px;
     text-align: right;
     max-width: 105px;
@@ -1930,10 +1930,10 @@ main:focus {
     padding: 17px 14px;
   }
   .area-shortcuts strong {
-    font-size: 12px;
+    font-size: 14px;
   }
   .area-shortcuts > a > span:last-child {
-    font-size: 10px;
+    font-size: 14px;
   }
   .area-icon {
     margin-bottom: 12px;
@@ -1957,7 +1957,7 @@ main:focus {
     font-size: 18px;
   }
   .card-description {
-    font-size: 13px;
+    font-size: 14px;
   }
   .room-facts > strong {
     font-size: 19px;
@@ -1966,7 +1966,7 @@ main:focus {
     gap: 4px;
   }
   .card-read {
-    font-size: 12px;
+    font-size: 14px;
   }
   .quiet-icon,
   .comment-count {
@@ -1999,7 +1999,7 @@ main:focus {
     font-size: 30px;
   }
   .community-intro > p {
-    font-size: 13px;
+    font-size: 14px;
   }
   .landlord-invitation {
     display: block;
@@ -2019,14 +2019,14 @@ main:focus {
     order: 3;
   }
   .public-footer > span {
-    font-size: 10px;
+    font-size: 14px;
   }
   .explorer {
     padding-top: 25px;
     padding-bottom: 40px;
   }
   .breadcrumb {
-    font-size: 11px;
+    font-size: 14px;
     margin-bottom: 22px;
   }
   .explorer-heading {
@@ -2039,13 +2039,13 @@ main:focus {
     max-width: 340px;
   }
   .explorer-heading p {
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.8;
   }
   .explorer-heading > .primary-btn,
   .explorer-heading > .secondary-btn {
     min-height: 44px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .explorer-filters,
   .discussions-explorer .explorer-filters {
@@ -2060,10 +2060,10 @@ main:focus {
   }
   .explorer-filters input,
   .explorer-filters select {
-    font-size: 13px;
+    font-size: 14px;
   }
   .explorer-filters > .secondary-btn {
-    font-size: 12px;
+    font-size: 14px;
   }
   .feed-room-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -2080,7 +2080,7 @@ main:focus {
     font-size: 20px;
   }
   .guide-card p {
-    font-size: 13px;
+    font-size: 14px;
   }
   .explorer-guide > .neighborhood-note {
     display: none;
@@ -2154,7 +2154,7 @@ main:focus {
   }
   .detail-room-price > span {
     padding-left: 12px;
-    font-size: 13px;
+    font-size: 14px;
   }
   .full-description {
     font-size: 15px;
@@ -2186,7 +2186,7 @@ main:focus {
     font-size: 23px;
   }
   .comment-panel .subtle-text {
-    font-size: 10px;
+    font-size: 14px;
   }
   .comment-form-footer {
     display: block;
@@ -2199,7 +2199,7 @@ main:focus {
     font-size: 15px;
   }
   .comment-form-footer small {
-    font-size: 10px;
+    font-size: 14px;
   }
   .comment-meta {
     gap: 4px 12px;
@@ -2210,16 +2210,16 @@ main:focus {
   .comment-item > .person-avatar {
     width: 29px;
     height: 29px;
-    font-size: 11px;
+    font-size: 14px;
   }
   .comment-item p {
     font-size: 14px;
   }
   .comment-meta time {
-    font-size: 10px;
+    font-size: 14px;
   }
   .comment-meta strong {
-    font-size: 12px;
+    font-size: 14px;
   }
   .route-empty {
     padding: 50px 10px;
@@ -2267,7 +2267,7 @@ main:focus {
   background: #fff0e9;
 }
 .auth-options p {
-  font-size: 12px;
+  font-size: 14px;
   color: #54675b;
   margin: 0;
 }
@@ -2296,7 +2296,7 @@ body:has(> .admin-topbar) {
     padding-top: 0;
   }
 }
-.reply-quote{border-left:3px solid #8ab69d;background:#f0f6ef;border-radius:5px;padding:10px 14px;margin:12px 0;font-size:12px}.reply-quote p{margin:4px 0;overflow-wrap:anywhere}.inbox-layout{display:grid;grid-template-columns:310px minmax(0,1fr);gap:22px;margin:25px 0}.inbox-list,.chat-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}.chat-preview{display:block;width:100%;text-align:left;border:1px solid transparent;border-radius:10px;background:#fff;padding:14px;margin-bottom:8px;color:var(--text)}.chat-preview.selected{background:#eef5e9;border-color:#b8d1bc}.chat-preview strong,.chat-preview span,.chat-preview small{display:block;overflow-wrap:anywhere}.chat-preview span{font-size:12px}.chat-preview small{color:var(--muted);font-size:11px}.chat-title h2{font-size:22px;margin:0}.chat-title p{font-size:12px;color:var(--muted)}.chat-messages{max-height:470px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:15px 0}.chat-message{max-width:85%;padding:12px 16px;border-radius:14px;background:#f1f4ed;align-self:flex-start;overflow-wrap:anywhere}.chat-message.mine{background:#e1eee0;align-self:flex-end}.chat-message p{white-space:pre-wrap;margin:0}.chat-message time{font-size:10px;color:#4b6353}.chat-compose label,.chat-tools label{display:block;font-weight:700;font-size:13px}.chat-compose textarea,.chat-tools textarea{display:block;width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit;margin:8px 0 12px}.chat-tools{display:flex;gap:15px;align-items:start;flex-wrap:wrap;margin-top:20px}.chat-tools details{flex:1;min-width:180px}.chat-tools summary{cursor:pointer;padding:10px;font-size:13px}@media(max-width:700px){.inbox-layout{grid-template-columns:minmax(0,1fr)}.inbox-list{max-height:240px;overflow-y:auto}.chat-messages{max-height:420px}.chat-compose>.primary-btn{width:100%}}
+.reply-quote{border-left:3px solid #8ab69d;background:#f0f6ef;border-radius:5px;padding:10px 14px;margin:12px 0;font-size: 14px}.reply-quote p{margin:4px 0;overflow-wrap:anywhere}.inbox-layout{display:grid;grid-template-columns:310px minmax(0,1fr);gap:22px;margin:25px 0}.inbox-list,.chat-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}.chat-preview{display:block;width:100%;text-align:left;border:1px solid transparent;border-radius:10px;background:#fff;padding:14px;margin-bottom:8px;color:var(--text)}.chat-preview.selected{background:#eef5e9;border-color:#b8d1bc}.chat-preview strong,.chat-preview span,.chat-preview small{display:block;overflow-wrap:anywhere}.chat-preview span{font-size: 14px}.chat-preview small{color:var(--muted);font-size: 14px}.chat-title h2{font-size:22px;margin:0}.chat-title p{font-size: 14px;color:var(--muted)}.chat-messages{max-height:470px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:15px 0}.chat-message{max-width:85%;padding:12px 16px;border-radius:14px;background:#f1f4ed;align-self:flex-start;overflow-wrap:anywhere}.chat-message.mine{background:#e1eee0;align-self:flex-end}.chat-message p{white-space:pre-wrap;margin:0}.chat-message time{font-size: 14px;color:#4b6353}.chat-compose label,.chat-tools label{display:block;font-weight:700;font-size: 14px}.chat-compose textarea,.chat-tools textarea{display:block;width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit;margin:8px 0 12px}.chat-tools{display:flex;gap:15px;align-items:start;flex-wrap:wrap;margin-top:20px}.chat-tools details{flex:1;min-width:180px}.chat-tools summary{cursor:pointer;padding:10px;font-size: 14px}@media(max-width:700px){.inbox-layout{grid-template-columns:minmax(0,1fr)}.inbox-list{max-height:240px;overflow-y:auto}.chat-messages{max-height:420px}.chat-compose>.primary-btn{width:100%}}
 .chat-preview small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.chat-title p{overflow-wrap:anywhere}.chat-message time{display:block;margin-top:6px}
 
 .auth-page {
@@ -2345,7 +2345,7 @@ body:has(> .admin-topbar) {
 }
 .auth-home-link {
   color: rgba(255, 255, 255, .84);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 .auth-home-link:hover {
@@ -2364,7 +2364,7 @@ body:has(> .admin-topbar) {
   border-radius: 999px;
   background: rgba(255, 255, 255, .08);
   color: #d7edda;
-  font-size: 10px;
+  font-size: 14px;
 }
 .auth-intro-copy h1 {
   margin: 22px 0 18px;
@@ -2414,11 +2414,11 @@ body:has(> .admin-topbar) {
 }
 .auth-benefit strong {
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
 }
 .auth-benefit small {
   color: rgba(255, 255, 255, .67);
-  font-size: 11px;
+  font-size: 14px;
 }
 .auth-discover-link {
   display: inline-flex;
@@ -2430,7 +2430,7 @@ body:has(> .admin-topbar) {
   border-radius: 12px;
   color: #fff;
   background: rgba(255, 255, 255, .08);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 750;
 }
 .auth-discover-link:hover {
@@ -2493,7 +2493,7 @@ body:has(> .admin-topbar) {
 .auth-submit {
   justify-content: center;
   min-height: 50px;
-  background: #087568;
+  background: var(--brand);
   box-shadow: 0 8px 18px rgba(8, 117, 104, .16);
 }
 .auth-submit span {
@@ -2521,7 +2521,7 @@ body:has(> .admin-topbar) {
   margin: 0 auto 15px;
   place-items: center;
   border-radius: 50%;
-  color: #087568;
+  color: var(--brand);
   background: #e6f4e8;
   font-size: 23px;
   font-weight: 800;
@@ -2554,11 +2554,11 @@ body:has(> .admin-topbar) {
 }
 .source-origin-copy strong {
   color: #244e3e;
-  font-size: 13px;
+  font-size: 14px;
 }
 .source-origin-copy span {
   color: #5c7063;
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
@@ -2572,8 +2572,8 @@ body:has(> .admin-topbar) {
   padding: 9px 13px;
   border-radius: 10px;
   color: #fff;
-  background: #087568;
-  font-size: 12px;
+  background: var(--brand);
+  font-size: 14px;
   font-weight: 750;
 }
 .source-origin-link:hover {
@@ -2586,7 +2586,7 @@ body:has(> .admin-topbar) {
 .source-origin-missing {
   flex: none;
   color: #786443;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 650;
 }
 
@@ -2654,7 +2654,7 @@ body:has(> .admin-topbar) {
 .site-footer-meta p {
   margin: 12px 0 0;
   color: #1f2937;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
   font-weight: 600;
 }
@@ -2669,7 +2669,7 @@ body:has(> .admin-topbar) {
   display: inline-flex;
   align-items: center;
   color: var(--brand);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 .site-footer-nav a:hover {
@@ -2786,14 +2786,14 @@ body:has(> .admin-topbar) {
     font-size: 34px;
   }
   .auth-intro-copy > p {
-    font-size: 13px;
+    font-size: 14px;
   }
   .auth-benefit-list {
     gap: 9px;
     margin: 20px 0;
   }
   .auth-benefit small {
-    font-size: 10px;
+    font-size: 14px;
   }
   .auth-proof {
     display: flex;
