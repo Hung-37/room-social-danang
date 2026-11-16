@@ -363,10 +363,12 @@ fs.mkdirSync(out, { recursive: true });
       JSON.stringify(report.pages.filter((p) => !p.passed)),
     );
   } finally {
-    fs.writeFileSync(
-      path.join(out, "results.json"),
-      JSON.stringify(report, null, 2),
-    );
+    if (!layoutAudit) {
+      fs.writeFileSync(
+        path.join(out, "results.json"),
+        JSON.stringify(report, null, 2),
+      );
+    }
     await browser.close();
   }
   console.log(
