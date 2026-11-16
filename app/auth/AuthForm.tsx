@@ -36,7 +36,6 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
 
-  // Password strength calculation
   useEffect(() => {
     if (!password) {
       setPasswordStrength(0);

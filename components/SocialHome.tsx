@@ -87,7 +87,6 @@ export default function SocialHome() {
       </Suspense>
       <Header />
       <main id="main-content" tabIndex={-1} className="public-home">
-        {/* Hero Section */}
         <section className="hero-section">
           <div className="container">
             <div className="hero-content">
@@ -133,7 +132,6 @@ export default function SocialHome() {
           </div>
         </section>
 
-        {/* Quick Links */}
         <section className="quick-links-section">
           <div className="container">
             <div className="quick-links">
@@ -156,7 +154,6 @@ export default function SocialHome() {
           </div>
         </section>
 
-        {/* Featured Rooms */}
         <section className="featured-section">
           <div className="container">
             <div className="section-header">
@@ -205,7 +202,6 @@ export default function SocialHome() {
           </div>
         </section>
 
-        {/* Areas Section */}
         <section className="areas-section">
           <div className="container">
             <div className="section-header">
@@ -238,7 +234,6 @@ export default function SocialHome() {
           </div>
         </section>
 
-        {/* Community Section */}
         <section className="community-section">
           <div className="container">
             <div className="community-content">
@@ -283,7 +278,6 @@ export default function SocialHome() {
           </div>
         </section>
 
-        {/* CTA Section */}
         <section className="cta-section">
           <div className="container">
             <div className="cta-content">

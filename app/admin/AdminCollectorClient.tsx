@@ -513,7 +513,6 @@ export default function AdminCollectorClient({
             ? "Chưa lưu đầy đủ dữ liệu vào MySQL. Kiểm tra kết nối rồi thử lại."
             : `Đã lưu ${payload.saved ?? 0} tin vào MySQL; tin đang chờ Admin kiểm duyệt.`),
       );
-      // Reload listings after import
       loadListings();
     } catch {
       setMessage("Không thể xử lý dữ liệu nhập.");
@@ -1010,7 +1009,6 @@ export default function AdminCollectorClient({
               kín và mọi bài mới đều cần kiểm chứng.
             </div>
 
-            {/* Thông báo hướng dẫn khi chưa có nguồn */}
             {sources.filter((s) => s.enabled).length === 0 && (
               <div className="admin-notice guide-notice">
                 <strong>📋 Hướng dẫn bắt đầu:</strong>

@@ -31,7 +31,6 @@ function mapPost(row: Record<string, unknown>): RoomPost {
     postKind: row.postKind,
     tags: [],
   });
-  // Override defaults from normalizeToRoomPost for community posts
   const updated = new Date(String(row.updatedAt));
   post.updated = Number.isFinite(updated.getTime())
     ? updated.toLocaleString("vi-VN", {

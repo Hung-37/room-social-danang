@@ -21,7 +21,6 @@ a { color: inherit; text-decoration: none; transition: color 0.2s; }
 button { font: inherit; cursor: pointer; border: none; background: none; }
 img { max-width: 100%; height: auto; }
 
-/* ===== CONTAINER ===== */
 .container {
   width: min(1200px, calc(100% - 32px));
   margin: 0 auto;
@@ -377,7 +376,6 @@ img { max-width: 100%; height: auto; }
   overflow-wrap: anywhere;
 }
 
-/* ===== SECTIONS ===== */
 .featured-section,
 .areas-section,
 .community-section,
@@ -417,7 +415,6 @@ img { max-width: 100%; height: auto; }
   margin-top: 28px;
 }
 
-/* ===== ROOMS GRID ===== */
 .rooms-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -443,7 +440,6 @@ img { max-width: 100%; height: auto; }
   100% { background-position: -200% 0; }
 }
 
-/* ===== AREAS GRID ===== */
 .areas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -531,7 +527,6 @@ img { max-width: 100%; height: auto; }
   border-radius: var(--radius-lg);
 }
 
-/* ===== CTA SECTION ===== */
 .cta-section {
   background: var(--brand);
   color: #fff;
@@ -950,7 +945,6 @@ img { max-width: 100%; height: auto; }
   }
 }
 
-/* ===== UTILITY ===== */
 .sr-only {
   position: absolute;
   width: 1px;
