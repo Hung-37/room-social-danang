@@ -44,6 +44,8 @@
     "test:public:browser": "node tests/browser/public.cjs",
     "test:sessions": "node tests/integration/sessions.mjs",
     "test:sessions:browser": "node tests/browser/sessions.cjs",
+    "test:register-diagnostics": "node tests/integration/register-diagnostics.mjs",
+    "test:register-diagnostics:browser": "node tests/browser/register-diagnostics.cjs",
     "test:mutations": "node tests/integration/mutations.mjs",
     "test:mutations:browser": "node tests/browser/mutations.cjs",
     "db:upgrade-v17": "node scripts/db/upgrade-v17.mjs",
