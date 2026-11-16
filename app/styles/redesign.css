@@ -151,10 +151,10 @@ textarea::placeholder {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
-  gap: 8px;
+  gap: var(--space-8);
   width: min(100%, 560px);
-  margin: 0 auto 24px;
-  padding: 12px;
+  margin: 0 auto var(--space-24);
+  padding: var(--space-12);
   border-radius: 14px;
   background: var(--card);
   color: var(--text);
@@ -164,19 +164,13 @@ textarea::placeholder {
 .home-room-search label {
   display: grid;
   min-width: 0;
-  gap: 4px;
+  gap: var(--space-4);
   font-weight: 700;
 }
 
 .home-room-search input {
   width: 100%;
   min-width: 0;
-  min-height: 46px;
-  padding: 8px 10px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  font: inherit;
-  font-size: 16px;
 }
 
 .home-room-search button {
@@ -347,10 +341,10 @@ textarea::placeholder {
 }
 .post-report-form {
   display: grid;
-  gap: 9px;
+  gap: var(--space-8);
   width: min(100%, 520px);
-  margin-top: 10px;
-  padding: 18px;
+  margin-top: var(--space-12);
+  padding: var(--space-16);
   border: 1px solid var(--line);
   border-radius: 17px;
   background: linear-gradient(145deg, #fffefa, var(--surface-subtle));
@@ -362,7 +356,7 @@ textarea::placeholder {
   font-size: 16px;
 }
 .post-report-form > div:first-child p {
-  margin: 3px 0 5px;
+  margin: 3px 0 var(--space-4);
   color: var(--muted);
   font-size: 12px;
   line-height: 1.55;
@@ -380,13 +374,8 @@ textarea::placeholder {
 .post-report-form textarea {
   width: 100%;
   min-width: 0;
-  padding: 10px 12px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
   color: var(--text);
   background: #fff;
-  font: inherit;
-  font-size: 13px;
 }
 .post-report-form select:focus-visible,
 .post-report-form textarea:focus-visible {

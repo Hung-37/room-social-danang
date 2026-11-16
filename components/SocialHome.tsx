@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Header from "./Header";
+import FormField from "./FormField";
 import PostCard from "./PostCard";
 import { clusters, normalizeToRoomPost, type RoomPost } from "@/lib/data";
 
@@ -96,10 +97,9 @@ export default function SocialHome() {
                 Nền tảng tin đăng phòng trọ được kiểm chứng bởi cộng đồng sinh viên
               </p>
               <form action="/bang-tin" role="search" className="home-room-search">
-                <label>
-                  Tìm phòng
+                <FormField label="Tìm phòng">
                   <input type="search" name="q" placeholder="Tên đường, khu vực, trường học…" />
-                </label>
+                </FormField>
                 <button type="submit" className="primary-btn">Tìm phòng</button>
               </form>
               <div className="hero-stats">

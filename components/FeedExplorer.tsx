@@ -5,6 +5,7 @@ import { useSubmissionKey } from "./useSubmissionKey";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import Header from "./Header";
+import FormField from "./FormField";
 import ManagementPager from "./ManagementPager";
 import Icon from "./Icons";
 import PostCard from "./PostCard";
@@ -350,8 +351,7 @@ export default function FeedExplorer({
           </section>
         )}
         <section className="explorer-filters" aria-label="Bộ lọc">
-          <label>
-            Tìm kiếm
+          <FormField label="Tìm kiếm">
             <input
               type="search"
               value={query}
@@ -362,9 +362,8 @@ export default function FeedExplorer({
                   : "Tiêu đề, nội dung thảo luận..."
               }
             />
-          </label>
-          <label>
-            Khu vực
+          </FormField>
+          <FormField label="Khu vực">
             <select
               aria-label="Khu vực"
               value={cluster}
@@ -377,7 +376,7 @@ export default function FeedExplorer({
                 </option>
               ))}
             </select>
-          </label>
+          </FormField>
           {rooms ? (
             <>
               <label>

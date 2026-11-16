@@ -1,9 +1,9 @@
 .inbox-filters {
   display: grid;
-  gap: 12px;
-  padding: 0 0 20px;
+  gap: var(--space-12);
+  padding: 0 0 var(--space-24);
   border-bottom: 1px solid #d5e3db;
-  margin-bottom: 15px;
+  margin-bottom: var(--space-16);
 }
 .inbox-filters label,
 .message-search label,
@@ -23,13 +23,8 @@
 .visit-request textarea {
   width: 100%;
   min-width: 0;
-  box-sizing: border-box;
-  font: inherit;
   color: #244c40;
   background: #fff;
-  border: 1px solid #b5c9bf;
-  border-radius: 9px;
-  padding: 11px 12px;
 }
 .inbox-filters input:focus-visible,
 .inbox-filters select:focus-visible,
@@ -53,7 +48,7 @@
 }
 .visit-request > summary {
   min-height: 44px;
-  padding: 10px 12px;
+  padding: var(--space-12) var(--space-12);
   border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--surface-subtle);
@@ -157,12 +152,12 @@
   font-size: 0.85rem;
 }
 .visit-request {
-  margin-top: 18px;
+  margin-top: var(--space-16);
 }
 .visit-request form {
   display: grid;
-  gap: 14px;
-  margin-top: 16px;
+  gap: var(--space-16);
+  margin-top: var(--space-16);
 }
 .visit-request form > p {
   font-size: 0.85rem;
@@ -203,7 +198,6 @@
   }
   .visit-request input[type='datetime-local'] {
     max-width: 100%;
-    font-size: 0.85rem;
   }
   .inbox-list .inbox-filters {
     padding-bottom: 14px;
@@ -219,7 +213,7 @@
   top: -18px;
   z-index: 1;
   background: #fff;
-  padding-top: 10px;
+  padding-top: var(--space-12);
 }
 @media (max-width: 700px) {
   .inbox-list {
@@ -360,24 +354,20 @@
   position: sticky;
   top: -20px;
   z-index: 1;
-  gap: 10px;
-  padding: 12px 0 16px;
+  gap: var(--space-12);
+  padding: var(--space-12) 0 var(--space-16);
   border-color: var(--line);
   background: var(--card);
 }
 .inbox-filters label {
-  gap: 5px;
+  gap: var(--space-4);
   color: var(--text);
   font-size: 11px;
 }
 .inbox-filters input,
 .inbox-filters select {
-  min-height: 40px;
-  border-color: var(--line);
-  border-radius: 10px;
   color: var(--text);
   background: #fff;
-  font-size: 12px;
 }
 .inbox-list > .chat-preview {
   display: grid;
@@ -568,12 +558,8 @@
 .chat-compose textarea,
 .chat-tools textarea {
   min-width: 0;
-  border-color: var(--line);
-  border-radius: 11px;
   color: var(--text);
   background: #fff;
-  font-size: 13px;
-  line-height: 1.55;
 }
 .chat-compose textarea:focus-visible,
 .chat-tools textarea:focus-visible {
