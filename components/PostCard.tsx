@@ -6,6 +6,7 @@ import Link from "next/link";
 import { memo, useEffect, useRef, useState } from "react";
 import type { RoomPost } from "@/lib/data";
 import Icon from "./Icons";
+import { listingPresentation } from "@/lib/policies/listing-presentation.js";
 import RoomPhoto from "./RoomPhoto";
 import { roomPhotos } from "@/lib/policies/room-photos.js";
 
@@ -16,7 +17,8 @@ function PostCard({
   post: RoomPost;
   authenticated?: boolean;
 }) {
-  const room = Boolean(post.price);
+  const display = listingPresentation(post);
+  const room = display.contentKind === "listing";
   const favorites = useFavorites();
   const saved = favorites.ids.has(post.id);
   const [saving, setSaving] = useState(false);
@@ -74,6 +76,7 @@ function PostCard({
     return () => controller.abort();
   }, [post.id, room, post.interactionSummary, retryInteraction]);
   async function save() {
+    if (saving || favorites.loading) return;
     setSaving(true);
     try {
       await favorites.toggle(post.id, !saved);
@@ -134,9 +137,9 @@ function PostCard({
       {room && (
         <Link href={href} className="room-cover">
           <span className="sr-only">Xem phòng: {post.title}</span>
-          <RoomPhoto src={roomPhotos(post.imageUrl, post.imageUrls)[0]} />
-          <span className="cover-badge">
-            <Icon name="check" /> Tin đã duyệt
+          <RoomPhoto src={display.showImages ? roomPhotos(post.imageUrl, post.imageUrls)[0] : undefined} />
+          <span className={`cover-badge${display.isReference ? " is-reference" : ""}`}>
+            {!display.isReference && <Icon name="check" />} {display.label}
           </span>
         </Link>
       )}
@@ -176,7 +179,7 @@ function PostCard({
               {post.address || post.clusterName}
             </p>
             <div className="room-facts">
-              <strong>{post.price}</strong>
+              <strong>{post.price || "Chưa có thông tin giá"}</strong>
               {post.area && <span>{post.area}</span>}
             </div>
           </>
@@ -186,18 +189,19 @@ function PostCard({
             {post.clusterName}
           </p>
         )}
-        {post.sourceUrl && (
+        {(display.sourceName || display.sourceUrl) && (
           <div className="card-source">
-            <span className="source-label">Nguồn:</span>
+            <span className="source-label">Nguồn: {display.sourceName || "Website"}</span>
+            {display.sourceUrl && (
             <a
-              href={post.sourceUrl}
+              href={display.sourceUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="source-link"
             >
               Xem bài gốc
               <Icon name="arrow" />
-            </a>
+            </a>)}
           </div>
         )}
         <div className="card-toolbar">
@@ -217,11 +221,13 @@ function PostCard({
             <button
               className={`quiet-icon ${saved ? "is-selected" : ""}`}
               disabled={saving || favorites.loading}
+              aria-busy={saving}
               aria-pressed={saved}
               aria-label={`${saved ? "Bỏ lưu" : "Lưu"}: ${post.title}`}
               onClick={save}
             >
               <Icon name="bookmark" />
+              <span>{saving ? "Đang lưu…" : saved ? "Đã lưu" : "Lưu"}</span>
             </button>
           ) : (
             <button
@@ -237,11 +243,13 @@ function PostCard({
               <button
                 className={`quiet-icon ${liked ? "is-selected" : ""}`}
                 disabled={busy || interactionLoading || interactionError}
+                aria-busy={busy}
                 aria-pressed={liked}
                 aria-label={`Thích: ${post.title}${votes > 0 ? `, ${votes} lượt tương tác` : ""}`}
                 onClick={like}
               >
                 <Icon name="heart" />
+                {liked && <span>Đã thích</span>}
                 {votes > 0 && votes}
               </button>
             ) : (
