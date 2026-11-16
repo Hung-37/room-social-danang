@@ -1,3 +1,4 @@
+import { listingPresentation } from "@/lib/policies/listing-presentation.js";
 import type { Cluster, RoomPost } from "@/lib/types";
 import { decodeHtmlText } from "@/lib/shared/html-text";
 export type { Cluster, RoomPost } from "@/lib/types";
@@ -107,6 +108,7 @@ export function normalizeToRoomPost(input: Record<string, unknown>): RoomPost {
       : Number.isFinite(Number(input[key]))
         ? Number(input[key])
         : null;
+  const display = listingPresentation(input);
   const kind = text("postKind");
   const item = {
     externalId:
@@ -140,9 +142,9 @@ export function normalizeToRoomPost(input: Record<string, unknown>): RoomPost {
     item.price !== null && item.price !== undefined && item.price > 0;
 
   // Xác định trạng thái dựa trên verificationStatus
-  let status: "Còn phòng" | "Cần kiểm chứng" | "Đã có báo cáo" | "Đã từ chối";
+  let status: "Đã duyệt" | "Cần kiểm chứng" | "Đã có báo cáo" | "Đã từ chối";
   if (verificationStatus === "verified") {
-    status = "Còn phòng";
+    status = "Đã duyệt";
   } else if (verificationStatus === "rejected") {
     status = "Đã từ chối";
   } else if (verificationStatus === "reported") {
@@ -160,10 +162,10 @@ export function normalizeToRoomPost(input: Record<string, unknown>): RoomPost {
   const area = item.area ? `${item.area}m²` : "";
 
   // Xác định image icon dựa trên loại bài
-  const image = hasPrice ? "🏠" : "💬";
+  const image = display.contentKind === "listing" ? "🏠" : "💬";
 
   // Tags mặc định dựa trên loại bài
-  const defaultTags = hasPrice
+  const defaultTags = display.contentKind === "listing"
     ? []
     : item.postKind === "question"
       ? ["Hỏi đáp"]
@@ -174,6 +176,12 @@ export function normalizeToRoomPost(input: Record<string, unknown>): RoomPost {
           : [];
 
   return {
+    contentKind: display.contentKind,
+    verificationStatus,
+    isReference: display.isReference,
+    sourceName: decodeHtmlText(display.sourceName),
+    ownerExternalId: text("ownerExternalId") || undefined,
+    imageRightsConfirmed: input.imageRightsConfirmed === true,
     id: String(item.externalId || item.id || ""),
     title: decodeHtmlText(item.title || "Không có tiêu đề"),
     price,
@@ -184,7 +192,7 @@ export function normalizeToRoomPost(input: Record<string, unknown>): RoomPost {
     source: "Website",
     trust: Number(item.trustScore ?? 20),
     comments: Number(item.commentCount ?? 0),
-    updated: "mới cập nhật",
+    updated: display.updated,
     status,
     tags:
       item.tags && item.tags.length > 0
@@ -192,7 +200,7 @@ export function normalizeToRoomPost(input: Record<string, unknown>): RoomPost {
         : defaultTags,
     image,
     imageUrl:
-      typeof item.imageUrl === "string" && item.imageUrl.trim()
+      display.showImages && typeof item.imageUrl === "string" && item.imageUrl.trim()
         ? item.imageUrl
         : undefined,
     address:
@@ -200,9 +208,7 @@ export function normalizeToRoomPost(input: Record<string, unknown>): RoomPost {
         ? decodeHtmlText(item.address)
         : undefined,
     sourceUrl:
-      typeof item.sourceUrl === "string" && item.sourceUrl.trim()
-        ? item.sourceUrl
-        : undefined,
+      display.sourceUrl,
     summary: decodeHtmlText(item.summary ?? ""),
     phone:
       typeof item.phone === "string" && item.phone.trim()

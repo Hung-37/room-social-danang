@@ -20,6 +20,7 @@ export async function communityPostExists(postId: string) {
 
 function mapPost(row: Record<string, unknown>): RoomPost {
   const post = normalizeToRoomPost({
+    contentKind: "discussion",
     id: row.id,
     title: row.title,
     summary: row.summary,
@@ -39,7 +40,7 @@ function mapPost(row: Record<string, unknown>): RoomPost {
         dateStyle: "short",
         timeStyle: "short",
       })
-    : "Mới cập nhật";
+    : "Chưa có thời gian cập nhật";
   post.image = "💬";
   post.price = "";
   post.area = "";

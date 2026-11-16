@@ -10,9 +10,15 @@ export type Cluster = {
 
 export type PostKind = "question" | "experience" | "warning";
 export type PostStatus =
-  "Còn phòng" | "Cần kiểm chứng" | "Đã có báo cáo" | "Đã từ chối";
+  "Đã duyệt" | "Còn phòng" | "Cần kiểm chứng" | "Đã có báo cáo" | "Đã từ chối";
 
 export type RoomPost = {
+  contentKind?: "listing" | "discussion";
+  verificationStatus?: string;
+  isReference?: boolean;
+  sourceName?: string;
+  ownerExternalId?: string;
+  imageRightsConfirmed?: boolean;
   interactionSummary?: { total: number; viewerReaction: string | null } | null;
   version?: number;
   id: string;

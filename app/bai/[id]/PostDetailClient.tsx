@@ -7,19 +7,8 @@ import StartChat from "@/components/StartChat";
 import CommentThread from "@/components/CommentThread";
 import ReportPost from "@/components/ReportPost";
 import Icon from "@/components/Icons";
+import { listingPresentation } from "@/lib/policies/listing-presentation.js";
 import RoomPhotoGallery from "@/components/RoomPhotoGallery";
-
-function getSafeSourceUrl(value?: string) {
-  if (!value) return null;
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" && !url.username && !url.password
-      ? url
-      : null;
-  } catch {
-    return null;
-  }
-}
 
 export default function PostDetailClient({ id }: { id: string }) {
   const [post, setPost] = useState<RoomPost | null>(null);
@@ -111,8 +100,9 @@ export default function PostDetailClient({ id }: { id: string }) {
         </div>
       </section>
     );
-  const room = Boolean(post.price);
-  const sourceUrl = getSafeSourceUrl(post.sourceUrl);
+  const display = listingPresentation(post);
+  const room = display.contentKind === "listing";
+  const sourceUrl = display.sourceUrl ? new URL(display.sourceUrl) : null;
   return (
     <div className="content-shell post-detail-page">
       <nav className="breadcrumb" aria-label="Đường dẫn">
@@ -133,8 +123,8 @@ export default function PostDetailClient({ id }: { id: string }) {
               <RoomPhotoGallery
                 key={post.id}
                 title={post.title}
-                cover={post.imageUrl}
-                images={post.imageUrls}
+                cover={display.showImages ? post.imageUrl : undefined}
+                images={display.showImages ? post.imageUrls : []}
               />
             )}
             <div className="detail-article-body">
@@ -151,6 +141,7 @@ export default function PostDetailClient({ id }: { id: string }) {
                 <span>{post.updated}</span>
               </div>
               <h1>{post.title}</h1>
+              {room && <p className="category-pill">{display.label}</p>}
               {!room && (
                 <div className="detail-author">
                   <span className="person-avatar">
@@ -165,7 +156,7 @@ export default function PostDetailClient({ id }: { id: string }) {
               {room && (
                 <>
                   <div className="detail-room-price">
-                    <strong>{post.price}</strong>
+                    <strong>{post.price || "Chưa có thông tin giá"}</strong>
                     {post.area && <span>{post.area}</span>}
                   </div>
                   <p className="room-location">
@@ -180,7 +171,7 @@ export default function PostDetailClient({ id }: { id: string }) {
               {room && (
                 <section className="source-origin-card" aria-label="Nguồn tin">
                   <div className="source-origin-copy">
-                    <strong>Bài đăng từ nguồn gốc</strong>
+                    <strong>{display.sourceName || "Bài đăng từ nguồn gốc"}</strong>
                     <span>
                       {sourceUrl
                         ? `Đối chiếu thông tin tại ${sourceUrl.hostname}.`
@@ -229,7 +220,7 @@ export default function PostDetailClient({ id }: { id: string }) {
             <section className="contact-card">
               <span className="section-eyebrow">Bạn quan tâm phòng này?</span>
               <h2>Hỏi thêm trước khi quyết định</h2>
-              <StartChat listingId={id} />
+              {display.canChat ? <StartChat listingId={id} /> : sourceUrl ? <a className="primary-btn" href={sourceUrl.href} target="_blank" rel="noopener noreferrer">Xem bài gốc</a> : <p>Chưa có liên hệ chủ trọ hoặc liên kết bài gốc.</p>}
               <p>Trao đổi về phí điện nước, tiền cọc và thời gian xem phòng.</p>
               {post.phone && (
                 <a
@@ -247,9 +238,7 @@ export default function PostDetailClient({ id }: { id: string }) {
                 Đặt câu hỏi về phòng
               </Link>
               <p className="contact-note">
-                <Icon name="check" />
-                Nội dung đã được duyệt. Bạn vẫn nên xem phòng và kiểm tra hợp
-                đồng trước khi đặt cọc.
+                {display.isReference ? display.label : "Nội dung đã được duyệt; chưa xác nhận còn phòng. Bạn vẫn nên xem phòng và kiểm tra hợp đồng trước khi đặt cọc."}
               </p>
             </section>
           ) : (

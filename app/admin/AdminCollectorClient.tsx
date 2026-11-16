@@ -1701,7 +1701,7 @@ export default function AdminCollectorClient({
                     </div>
                     <div className="listing-actions">
                       <span className={`status-badge ${post.status}`}>
-                        {post.status === "Còn phòng"
+                        {(post.status === "Đã duyệt" || post.status === "Còn phòng")
                           ? "Đã duyệt"
                           : post.status === "Đã từ chối"
                             ? "Từ chối"
