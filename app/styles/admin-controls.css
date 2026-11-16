@@ -35,7 +35,7 @@
 }
 .configured-sources > article {
   padding: 20px;
-  border: 1px solid #d5e3db;
+  border: 1px solid var(--line);
   border-radius: 15px;
   background: #fff;
   display: flex;
@@ -46,7 +46,7 @@
 }
 .configured-sources p {
   overflow-wrap: anywhere;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
 }
 .configured-sources article > div {
   min-width: 0;
@@ -76,10 +76,10 @@
 .user-filters select,
 .user-action textarea {
   font: inherit;
-  border: 1px solid #b5c9bf;
+  border: 1px solid var(--line);
   border-radius: 10px;
   padding: 12px;
-  color: #244c40;
+  color: var(--text);
   background: #fff;
   width: 100%;
   min-width: 0;
@@ -92,7 +92,7 @@
 }
 .user-card {
   padding: 24px;
-  border: 1px solid #d5e3db;
+  border: 1px solid var(--line);
   border-radius: 18px;
   background: #fff;
   min-width: 0;
@@ -107,7 +107,7 @@
   position: static;
   box-shadow: none;
   display: inline-flex;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   flex-shrink: 0;
   background: #eef3eb;
   color: #315f4b;
@@ -137,7 +137,7 @@
 .user-filters input:focus-visible,
 .user-filters select:focus-visible,
 .user-action textarea:focus-visible {
-  outline: 3px solid #08766c;
+  outline: 3px solid var(--brand);
   outline-offset: 2px;
 }
 @media (max-width: 700px) {
@@ -146,7 +146,7 @@
     grid-template-columns: 1fr;
   }
   .admin-nav-links {
-    font-size: 0.85rem;
+    font-size: 0.875rem;
   }
   .admin-header-actions {
     width: 100%;
@@ -176,8 +176,8 @@
   border: 1px solid #3d475e;
   border-radius: 16px;
   padding: 24px;
-  background: #151b28;
-  color: #e5e7eb;
+  background: var(--card);
+  color: var(--text);
 }
 .delete-listing-dialog::backdrop {
   background: rgb(8 15 23 / 80%);
@@ -187,12 +187,12 @@
   font-size: 22px;
 }
 .admin-main .delete-listing-title {
-  color: #fff;
+  color: var(--text);
   font-weight: 700;
   overflow-wrap: anywhere;
 }
 .admin-main .delete-listing-dialog p {
-  color: #b4c0d3;
+  color: var(--muted);
   line-height: 1.6;
 }
 .delete-listing-dialog label {
@@ -220,7 +220,7 @@
   min-height: 44px;
 }
 .admin-main .delete-listing-error {
-  color: #ffb4ae;
+  color: var(--danger);
 }
 @media (max-width: 600px) {
   .delete-listing-dialog {
@@ -236,7 +236,7 @@
   top: 0;
   z-index: 1000;
   border-bottom: 1px solid var(--line);
-  background: #fffefa;
+  background: var(--card);
   box-shadow: 0 3px 18px rgba(22, 80, 69, .06);
 }
 .admin-topbar-inner {
@@ -260,7 +260,7 @@
   padding: 8px 10px;
   border-radius: 8px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 650;
   text-decoration: none;
 }
@@ -295,7 +295,7 @@
   gap: 4px;
   padding: 8px max(16px, calc((100% - 1360px) / 2)) 16px;
   border-top: 1px solid var(--line);
-  background: #fffefa;
+  background: var(--card);
 }
 .admin-mobile-nav a {
   min-height: 44px;
@@ -337,7 +337,7 @@
   }
   .admin-badge {
     flex: none;
-    font-size: 10px;
+    font-size: 14px;
   }
   .admin-header-actions {
     width: auto;
@@ -349,7 +349,7 @@
   .admin-header-actions > button:not(.admin-menu-toggle) {
     min-height: 40px;
     padding: 8px 10px;
-    font-size: 12px;
+    font-size: 14px;
   }
   .admin-mobile-nav {
     padding: 8px 12px 14px;

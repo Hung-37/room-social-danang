@@ -1,26 +1,28 @@
 /* Shared palette and component tokens for the Room Da Nang design system. */
 :root {
-  --brand: #0b786f;
-  --brand-2: #095b55;
-  --brand-dark: #064b47;
-  --brand-soft: #e4f2ec;
-  --accent: #c98253;
-  --text: #193a35;
-  --muted: #5b716b;
-  --line: #dce8e2;
-  --bg: #f5f8f5;
-  --card: #fffefa;
-  --surface-subtle: #edf4ef;
+  --brand: #087b83;
+  --brand-2: #05636c;
+  --brand-dark: #084852;
+  --brand-soft: #e4f5f5;
+  --accent: #ac432d;
+  --accent-soft: #fff0e8;
+  --text: #173640;
+  --muted: #526b75;
+  --line: #d9e6e9;
+  --bg: #f7fafb;
+  --card: #ffffff;
+  --surface-subtle: #edf5f7;
   --success: #247a57;
   --warning: #936314;
-  --danger: #b64d4d;
-  --focus-ring: 0 0 0 4px rgba(11, 120, 111, 0.18);
-  --shadow: 0 10px 28px rgba(25, 68, 59, 0.07);
-  --shadow-lg: 0 18px 42px rgba(25, 68, 59, 0.12);
+  --danger: #b12f38;
+  --focus-ring: 0 0 0 4px rgba(8, 123, 131, 0.18);
+  --shadow: 0 5px 22px rgba(23, 54, 64, 0.05);
+  --shadow-lg: 0 14px 36px rgba(23, 54, 64, 0.10);
   --radius: 12px;
   --radius-control: 12px;
-  --radius-lg: 18px;
+  --radius-lg: 22px;
+  --space-section: clamp(32px, 5vw, 64px);
   --font-base: 16px;
   --font-sm: 14px;
-  --font-xs: 12px;
+  --font-xs: 14px;
 }

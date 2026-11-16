@@ -101,7 +101,7 @@ export default function Notifications() {
     if (
       remove &&
       !window.confirm(
-        "Xóa thông báo này? Thao tác không xóa bài viết hoặc tin nhắn liên quan.",
+        `Xóa thông báo “${item.title}”? Thao tác không xóa bài viết hoặc tin nhắn liên quan.`,
       )
     )
       return;
@@ -152,6 +152,7 @@ export default function Notifications() {
       <button
         className="secondary-btn"
         disabled={loading || busy || Boolean(loadError) || unreadCount === 0}
+        aria-busy={busy}
         onClick={read}
       >
         {busy ? "Đang cập nhật..." : "Đánh dấu tất cả đã đọc"}
@@ -191,6 +192,7 @@ export default function Notifications() {
                 <button
                   className="text-button"
                   disabled={busy || loading}
+                aria-busy={busy}
                   aria-label={"Đánh dấu đã đọc: " + item.title}
                   onClick={() => void change(item, false)}
                 >
@@ -200,6 +202,7 @@ export default function Notifications() {
               <button
                 className="text-button"
                 disabled={busy || loading}
+                aria-busy={busy}
                 aria-label={"Xóa thông báo: " + item.title}
                 onClick={() => void change(item, true)}
               >

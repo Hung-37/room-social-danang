@@ -43,7 +43,7 @@
   position: relative;
   z-index: 1;
   color: #c3ded5;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 650;
   letter-spacing: .02em;
 }
@@ -52,7 +52,7 @@
   z-index: 1;
   display: block;
   margin-top: 12px;
-  color: #fffefa;
+  color: var(--card);
   font-size: clamp(24px, 3vw, 32px);
   letter-spacing: -.04em;
   font-variant-numeric: tabular-nums;
@@ -70,7 +70,7 @@
   border-radius: 18px;
   background:
     radial-gradient(ellipse at 100% 0, rgba(11, 120, 111, .10), transparent 42%),
-    linear-gradient(145deg, #fffefa, #f3f8f4);
+    linear-gradient(145deg, var(--card), #f3f8f4);
   box-shadow: 0 16px 36px rgba(27, 73, 62, .08);
 }
 .admin-overview-heading {
@@ -88,7 +88,7 @@
 }
 .admin-card-kicker {
   color: #548076;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -99,7 +99,7 @@
   border-radius: 999px;
   color: #17685d;
   background: rgba(11, 120, 111, .07);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 750;
   white-space: nowrap;
 }
@@ -119,8 +119,8 @@
 .admin-status-chart-label {
   justify-content: space-between;
   gap: 12px;
-  color: #52675f;
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 14px;
 }
 .admin-status-chart-label > span {
   gap: 8px;
@@ -153,7 +153,7 @@
 .admin-chart-empty {
   margin: 26px 0;
   color: #9eacc2;
-  font-size: 13px;
+  font-size: 14px;
 }
 .admin-live-indicator {
   display: inline-flex;
@@ -162,9 +162,9 @@
   padding: 6px 10px;
   border: 1px solid #d5e5de;
   border-radius: 999px;
-  color: #52675f;
+  color: var(--muted);
   background: rgba(255, 255, 255, .72);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 750;
   white-space: nowrap;
 }
@@ -199,8 +199,8 @@
   background: rgba(255, 255, 255, .72);
 }
 .admin-collector-metrics span {
-  color: #52675f;
-  font-size: 11px;
+  color: var(--muted);
+  font-size: 14px;
 }
 .admin-collector-metrics strong {
   color: var(--text);
@@ -208,19 +208,19 @@
   font-variant-numeric: tabular-nums;
 }
 .admin-collector-metrics small {
-  color: #52675f;
-  font-size: 13px;
+  color: var(--muted);
+  font-size: 14px;
 }
 .admin-overview-footnote {
   margin: 16px 0 0;
-  color: #52675f;
-  font-size: 11px;
+  color: var(--muted);
+  font-size: 14px;
   line-height: 1.5;
 }
 .admin-auto-run-note {
   align-self: center;
   color: #9eacc2;
-  font-size: 11px;
+  font-size: 14px;
 }
 .admin-main .admin-section-head {
   margin: 26px 0 14px;
@@ -244,7 +244,7 @@
   padding: 7px 10px;
   border: 1px solid rgba(234, 183, 90, .22);
   border-radius: 999px;
-  color: #e8c67f;
+  color: #795118;
   background: rgba(234, 183, 90, .08);
 }
 .admin-main .admin-status-note {
@@ -314,7 +314,7 @@
   border-radius: 11px;
   color: var(--muted);
   background: transparent;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -361,7 +361,7 @@
 }
 .chat-report-stat span {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 .chat-report-stat strong {
@@ -387,7 +387,7 @@
   display: grid;
   gap: 6px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
 }
 .chat-report-toolbar input {
@@ -420,7 +420,7 @@
   border-radius: 8px;
   color: var(--muted);
   background: transparent;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -458,13 +458,13 @@
 }
 .chat-report-card-head time {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 .chat-report-reference {
   display: block;
   margin-top: 3px;
-  color: #74877f;
-  font-size: 10px;
+  color: var(--muted);
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 .chat-report-status {
@@ -472,7 +472,7 @@
   align-items: center;
   padding: 5px 10px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 800;
 }
 .chat-report-status.is-pending {
@@ -495,7 +495,7 @@
 }
 .chat-report-reason > span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 750;
 }
 .chat-report-reason p {
@@ -527,11 +527,11 @@
 }
 .chat-report-reporter small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
 }
 .chat-report-reporter strong {
   color: var(--text);
-  font-size: 13px;
+  font-size: 14px;
 }
 .chat-report-actions {
   display: flex;
@@ -571,7 +571,7 @@
 .chat-report-privacy {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .chat-report-error p { margin-bottom: 12px; }
@@ -602,7 +602,7 @@
 .admin-main .listing-content span,
 .admin-main .listing-content small {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
@@ -620,7 +620,7 @@
   border-radius: 999px;
   color: #80530c;
   background: #fff3d4;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 800;
   white-space: nowrap;
 }

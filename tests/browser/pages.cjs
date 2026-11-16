@@ -218,9 +218,14 @@ fs.mkdirSync(out, { recursive: true });
             }
             const actual = new URL(p.url()).pathname;
             item.actual = actual;
-            if (role === "guest" && url.startsWith("/admin"))
-              assert.equal(actual, "/dang-nhap");
-            else assert.equal(actual, new URL(url, base).pathname);
+            const opensAuth = url === '/dang-nhap' || url === '/dang-ky' ||
+              (role === 'guest' && url.startsWith('/admin'));
+            if (opensAuth) {
+              assert.equal(actual, '/');
+              const query = new URL(p.url()).searchParams;
+              assert.equal(query.get(url === '/dang-ky' ? 'openRegister' : 'openLogin'), 'true');
+              await p.locator('.modal-container').waitFor();
+            } else assert.equal(actual, new URL(url, base).pathname);
             assert.equal(await p.locator("html").getAttribute("lang"), "vi");
             assert.equal(await p.locator("main").count(), 1);
             const size = await p.evaluate(() => ({
@@ -237,6 +242,7 @@ fs.mkdirSync(out, { recursive: true });
               ),
             );
             if (!scanned.has(actual)) {
+              await p.waitForLoadState('networkidle');
               const a = await new AxeBuilder({ page: p })
                 .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
                 .analyze();

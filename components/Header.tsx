@@ -243,8 +243,8 @@ export default function Header() {
   return (
     <header className="topbar site-header">
       <div className="container topbar-inner site-header-row">
-        <Link href="/" className="brand site-header-brand" title={siteName} onClick={closeMenus}>
-          <span className="brand-mark site-header-mark">R</span>
+        <Link href="/" className="brand site-header-brand" aria-label={`R${siteName}`} onClick={closeMenus}>
+          <span className="brand-mark site-header-mark" aria-hidden="true">R</span>
           <span className="site-header-name">{siteName}</span>
         </Link>
         <nav className="nav-links site-header-nav" aria-label="Điều hướng chính">
