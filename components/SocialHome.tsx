@@ -85,7 +85,7 @@ export default function SocialHome() {
         <HomeAuthQueryTrigger authenticated={authenticated} />
       </Suspense>
       <Header />
-      <main className="public-home">
+      <main id="main-content" tabIndex={-1} className="public-home">
         {/* Hero Section */}
         <section className="hero-section">
           <div className="container">
@@ -95,6 +95,13 @@ export default function SocialHome() {
               <p className="hero-subtitle">
                 Nền tảng tin đăng phòng trọ được kiểm chứng bởi cộng đồng sinh viên
               </p>
+              <form action="/bang-tin" role="search" className="home-room-search">
+                <label>
+                  Tìm phòng
+                  <input type="search" name="q" placeholder="Tên đường, khu vực, trường học…" />
+                </label>
+                <button type="submit" className="primary-btn">Tìm phòng</button>
+              </form>
               <div className="hero-stats">
                 <div className="stat-item">
                   <span className="stat-number">{clusters.length}</span>
@@ -110,9 +117,6 @@ export default function SocialHome() {
                 </div>
               </div>
               <div className="hero-actions">
-                <Link href="/bang-tin" className="btn btn-primary btn-lg">
-                  🏠 Xem tin phòng
-                </Link>
                 <Link href="/thao-luan" className="btn btn-secondary btn-lg">
                   💬 Thảo luận
                 </Link>
