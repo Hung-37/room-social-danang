@@ -204,15 +204,16 @@ export default function Header() {
         <div className="header-actions">
           <button
             ref={menuToggleRef}
+            type="button"
             className={`mobile-menu-btn ${showMobileNav ? "is-open" : ""}`}
             aria-label={showMobileNav ? "Đóng menu" : "Mở menu"}
             aria-expanded={showMobileNav}
             aria-controls="mobile-navigation"
             onClick={() => setShowMobileNav((value) => !value)}
           >
-            <span></span>
-            <span></span>
-            <span></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
           </button>
           {authenticated && (
             <div className="notification-wrapper" ref={notificationRef}>

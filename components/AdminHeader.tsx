@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const navItems: { href: string; label: string; tab?: string }[] = [
@@ -21,6 +21,7 @@ export default function AdminHeader() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [showMobileNav, setShowMobileNav] = useState(false);
+  const menuToggle = useRef<HTMLButtonElement>(null);
   const selectedTab = searchParams.get("tab");
   function isActive(item: (typeof navItems)[number]) {
     if (item.tab) return pathname === "/admin" && selectedTab === item.tab;
@@ -53,7 +54,14 @@ export default function AdminHeader() {
   }
 
   return (
-    <header className="admin-topbar">
+    <header
+      className="admin-topbar"
+      onKeyDown={(event) => {
+        if (event.key !== "Escape" || !showMobileNav) return;
+        setShowMobileNav(false);
+        menuToggle.current?.focus();
+      }}
+    >
       <div className="container admin-topbar-inner">
         <Link href="/" className="brand" aria-label="Về trang chủ">
           <span className="brand-mark">R</span>
@@ -80,6 +88,7 @@ export default function AdminHeader() {
         <div className="admin-header-actions">
           <button
             type="button"
+            ref={menuToggle}
             className="admin-menu-toggle"
             aria-label={showMobileNav ? "Đóng menu" : "Mở menu"}
             aria-expanded={showMobileNav}

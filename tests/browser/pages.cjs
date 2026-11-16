@@ -6,6 +6,7 @@ const fs = require("node:fs"),
   path = require("node:path");
 const base = process.env.TEST_BASE_URL,
   out = process.env.TEST_SCREENSHOT_DIR || "work/pages";
+const layoutAudit = process.argv.includes("--layout-audit");
 if (
   process.env.TEST_ISOLATED_DB !== "1" ||
   !base ||
@@ -25,7 +26,10 @@ fs.mkdirSync(out, { recursive: true });
   try {
     const contexts = {};
     for (const name of ["guest", "student", "owner", "admin"]) {
-      contexts[name] = await browser.newContext({ baseURL: base });
+      contexts[name] = await browser.newContext({
+        baseURL: base,
+        serviceWorkers: layoutAudit ? "block" : "allow",
+      });
       contexts[name].setDefaultTimeout(10000);
     }
     async function api(role, url, method = "GET", data, status = 200) {
@@ -140,6 +144,11 @@ fs.mkdirSync(out, { recursive: true });
       },
       201,
     );
+    if (layoutAudit) {
+      const { auditLayout } = require("./layout-audit.cjs");
+      await auditLayout({ contexts, api, stamp, room, post, chat, out });
+      return;
+    }
     const publicPaths = [
       "/bang-tin",
       "/thao-luan",
@@ -354,10 +363,12 @@ fs.mkdirSync(out, { recursive: true });
       JSON.stringify(report.pages.filter((p) => !p.passed)),
     );
   } finally {
-    fs.writeFileSync(
-      path.join(out, "results.json"),
-      JSON.stringify(report, null, 2),
-    );
+    if (!layoutAudit) {
+      fs.writeFileSync(
+        path.join(out, "results.json"),
+        JSON.stringify(report, null, 2),
+      );
+    }
     await browser.close();
   }
   console.log(

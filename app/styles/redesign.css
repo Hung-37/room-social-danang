@@ -143,6 +143,59 @@ textarea::placeholder {
   letter-spacing: -0.035em;
 }
 
+.public-home .hero-section {
+  padding-block: clamp(24px, 5vw, 64px) clamp(32px, 6vw, 60px);
+}
+
+.home-room-search {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px;
+  width: min(100%, 560px);
+  margin: 0 auto 24px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--card);
+  color: var(--text);
+  text-align: left;
+}
+
+.home-room-search label {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  font-weight: 700;
+}
+
+.home-room-search input {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 16px;
+}
+
+.home-room-search button {
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .public-home .hero-badge {
+    margin-bottom: 12px;
+  }
+  .public-home .hero-title,
+  .public-home .hero-subtitle {
+    margin-bottom: 12px;
+  }
+  .home-room-search {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .hero-auth {
   border: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(255, 255, 255, 0.11);
