@@ -1,0 +1,244 @@
+{
+  "pages": [
+    {
+      "name": "home",
+      "width": 375,
+      "url": "http://127.0.0.1:3034/",
+      "overflow": false
+    },
+    {
+      "name": "feed",
+      "width": 375,
+      "url": "http://127.0.0.1:3034/bang-tin",
+      "overflow": false
+    },
+    {
+      "name": "search",
+      "width": 375,
+      "url": "http://127.0.0.1:3034/bang-tin?q=Hai%20Chau",
+      "overflow": false
+    },
+    {
+      "name": "detail",
+      "width": 375,
+      "url": "http://127.0.0.1:3034/bai/ui-audit-missing",
+      "overflow": false
+    },
+    {
+      "name": "management",
+      "width": 375,
+      "url": "http://127.0.0.1:3034/quan-ly-phong",
+      "overflow": false
+    },
+    {
+      "name": "appointments",
+      "width": 375,
+      "url": "http://127.0.0.1:3034/lich-xem-phong",
+      "overflow": false
+    },
+    {
+      "name": "notifications",
+      "width": 375,
+      "url": "http://127.0.0.1:3034/thong-bao",
+      "overflow": false
+    },
+    {
+      "name": "profile",
+      "width": 375,
+      "url": "http://127.0.0.1:3034/profile",
+      "overflow": false
+    },
+    {
+      "name": "admin",
+      "width": 375,
+      "url": "http://127.0.0.1:3034/?openLogin=true",
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "width": 768,
+      "url": "http://127.0.0.1:3034/",
+      "overflow": false
+    },
+    {
+      "name": "feed",
+      "width": 768,
+      "url": "http://127.0.0.1:3034/bang-tin",
+      "overflow": false
+    },
+    {
+      "name": "search",
+      "width": 768,
+      "url": "http://127.0.0.1:3034/bang-tin?q=Hai%20Chau",
+      "overflow": false
+    },
+    {
+      "name": "detail",
+      "width": 768,
+      "url": "http://127.0.0.1:3034/bai/ui-audit-missing",
+      "overflow": false
+    },
+    {
+      "name": "management",
+      "width": 768,
+      "url": "http://127.0.0.1:3034/quan-ly-phong",
+      "overflow": false
+    },
+    {
+      "name": "appointments",
+      "width": 768,
+      "url": "http://127.0.0.1:3034/lich-xem-phong",
+      "overflow": false
+    },
+    {
+      "name": "notifications",
+      "width": 768,
+      "url": "http://127.0.0.1:3034/thong-bao",
+      "overflow": false
+    },
+    {
+      "name": "profile",
+      "width": 768,
+      "url": "http://127.0.0.1:3034/profile",
+      "overflow": false
+    },
+    {
+      "name": "admin",
+      "width": 768,
+      "url": "http://127.0.0.1:3034/?openLogin=true",
+      "overflow": false
+    },
+    {
+      "name": "home",
+      "width": 1280,
+      "url": "http://127.0.0.1:3034/",
+      "overflow": false
+    },
+    {
+      "name": "feed",
+      "width": 1280,
+      "url": "http://127.0.0.1:3034/bang-tin",
+      "overflow": false
+    },
+    {
+      "name": "search",
+      "width": 1280,
+      "url": "http://127.0.0.1:3034/bang-tin?q=Hai%20Chau",
+      "overflow": false
+    },
+    {
+      "name": "detail",
+      "width": 1280,
+      "url": "http://127.0.0.1:3034/bai/ui-audit-missing",
+      "overflow": false
+    },
+    {
+      "name": "management",
+      "width": 1280,
+      "url": "http://127.0.0.1:3034/quan-ly-phong",
+      "overflow": false
+    },
+    {
+      "name": "appointments",
+      "width": 1280,
+      "url": "http://127.0.0.1:3034/lich-xem-phong",
+      "overflow": false
+    },
+    {
+      "name": "notifications",
+      "width": 1280,
+      "url": "http://127.0.0.1:3034/thong-bao",
+      "overflow": false
+    },
+    {
+      "name": "profile",
+      "width": 1280,
+      "url": "http://127.0.0.1:3034/profile",
+      "overflow": false
+    },
+    {
+      "name": "admin",
+      "width": 1280,
+      "url": "http://127.0.0.1:3034/?openLogin=true",
+      "overflow": false
+    }
+  ],
+  "axe": [
+    {
+      "name": "home",
+      "violations": []
+    },
+    {
+      "name": "feed",
+      "violations": []
+    },
+    {
+      "name": "search",
+      "violations": []
+    },
+    {
+      "name": "detail",
+      "violations": []
+    },
+    {
+      "name": "management",
+      "violations": []
+    },
+    {
+      "name": "appointments",
+      "violations": []
+    },
+    {
+      "name": "notifications",
+      "violations": []
+    },
+    {
+      "name": "profile",
+      "violations": []
+    },
+    {
+      "name": "fixture-feed-375",
+      "violations": []
+    },
+    {
+      "name": "fixture-detail-375",
+      "violations": []
+    },
+    {
+      "name": "fixture-reference-375",
+      "violations": []
+    },
+    {
+      "name": "fixture-feed-768",
+      "violations": []
+    },
+    {
+      "name": "fixture-detail-768",
+      "violations": []
+    },
+    {
+      "name": "fixture-reference-768",
+      "violations": []
+    },
+    {
+      "name": "fixture-feed-1280",
+      "violations": []
+    },
+    {
+      "name": "fixture-detail-1280",
+      "violations": []
+    },
+    {
+      "name": "fixture-reference-1280",
+      "violations": []
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "reference safeguards at 3 widths",
+    "save pending/disabled/success/error preserves confirmed state",
+    "mobile menu keyboard/focus/44px target and favicon",
+    "home search preserves Vietnamese query",
+    "reduced motion"
+  ]
+}
