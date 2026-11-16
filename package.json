@@ -54,6 +54,7 @@
     "test:workflow-conflicts": "node tests/integration/workflow-conflicts.mjs",
     "test:workflow-conflicts:browser": "node tests/browser/workflow-conflicts.cjs",
     "test:notification-concurrency": "node tests/integration/notification-concurrency.mjs",
+    "test:layout": "node tests/browser/pages.cjs --layout-audit",
     "test:pages": "node tests/browser/pages.cjs",
     "test:landlord-pagination": "node tests/integration/landlord-pagination.mjs",
     "test:landlord-pagination:browser": "node tests/browser/landlord-pagination.cjs",
