@@ -244,8 +244,8 @@
   padding: 7px 10px;
   border: 1px solid rgba(234, 183, 90, .22);
   border-radius: 999px;
-  color: #e8c67f;
-  background: rgba(234, 183, 90, .08);
+  color: #684900;
+  background: #fff3d6;
 }
 .admin-main .admin-status-note {
   line-height: 1.6;
