@@ -111,14 +111,6 @@ button[type="submit"]:hover {
   background: var(--brand-2);
 }
 
-input:not([type="checkbox"]):not([type="radio"]),
-select,
-textarea {
-  border-color: var(--line);
-  border-radius: var(--radius-control);
-  color: var(--text);
-}
-
 input::placeholder,
 textarea::placeholder {
   color: var(--muted);
