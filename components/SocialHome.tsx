@@ -93,16 +93,12 @@ export default function SocialHome() {
               <div className="hero-badge">🏠 RoomĐàNẵng</div>
               <h1 className="hero-title">Tìm phòng trọ uy tín tại Đà Nẵng</h1>
               <p className="hero-subtitle">
-                Nền tảng tin đăng phòng trọ được kiểm chứng bởi cộng đồng sinh viên
+                Xem tin phòng theo khu vực và tham gia thảo luận cùng cộng đồng.
               </p>
               <div className="hero-stats">
                 <div className="stat-item">
                   <span className="stat-number">{clusters.length}</span>
                   <span className="stat-label">Khu vực</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">100%</span>
-                  <span className="stat-label">Tin được kiểm duyệt</span>
                 </div>
                 <div className="stat-item">
                   <span className="stat-number">Miễn phí</span>
