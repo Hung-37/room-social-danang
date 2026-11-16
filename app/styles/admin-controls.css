@@ -329,6 +329,7 @@
     width: calc(100% - 24px);
     min-height: 64px;
     gap: 8px;
+    padding-block: 6px;
   }
   .admin-topbar .brand {
     min-width: 0;
