@@ -309,7 +309,7 @@
 }
 .inbox-list-heading > div > span,
 .chat-title-kicker {
-  color: #638077;
+  color: #50645b;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: .09em;
@@ -500,7 +500,7 @@
 .chat-message-sender {
   display: block;
   margin-bottom: 4px;
-  color: #648076;
+  color: #50645b;
   font-size: 10px;
   font-weight: 750;
 }
@@ -510,7 +510,7 @@
   line-height: 1.6;
 }
 .chat-message time {
-  color: #60766d;
+  color: #50645b;
   font-size: 10px;
 }
 .chat-empty {

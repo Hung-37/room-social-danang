@@ -78,11 +78,12 @@ await api("/api/auth/register", {
     password: "StrongTest123!",
   },
 });
-await api("/api/auth/register", {
+const duplicate = await api("/api/auth/register", {
   method: "POST",
-  status: 400,
+  status: 409,
   body: { name: "Kiểm thử trùng", email, password: "StrongTest123!" },
 });
+assert.equal(duplicate.code, "EMAIL_TAKEN");
 for (const path of [
   "/api/auth/user-login",
   "/api/auth/register",

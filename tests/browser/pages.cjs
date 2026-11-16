@@ -25,7 +25,10 @@ fs.mkdirSync(out, { recursive: true });
   try {
     const contexts = {};
     for (const name of ["guest", "student", "owner", "admin"]) {
-      contexts[name] = await browser.newContext({ baseURL: base });
+      contexts[name] = await browser.newContext({
+        baseURL: base,
+        serviceWorkers: "block",
+      });
       contexts[name].setDefaultTimeout(10000);
     }
     async function api(role, url, method = "GET", data, status = 200) {
@@ -216,11 +219,24 @@ fs.mkdirSync(out, { recursive: true });
               if (!/Đang tải(?:\s|\.|…)|Đang mở phòng/.test(text)) break;
               await p.waitForTimeout(120);
             }
-            const actual = new URL(p.url()).pathname;
-            item.actual = actual;
-            if (role === "guest" && url.startsWith("/admin"))
-              assert.equal(actual, "/dang-nhap");
-            else assert.equal(actual, new URL(url, base).pathname);
+            const actual = new URL(p.url());
+            item.actual = actual.pathname;
+            const loginRedirect = role === "guest" && url.startsWith("/admin");
+            if (loginRedirect || url === "/dang-nhap" || url === "/dang-ky") {
+              const register = url === "/dang-ky";
+              assert.equal(actual.pathname, "/");
+              assert.equal(actual.searchParams.get(register ? "openRegister" : "openLogin"), "true");
+              await p.locator(".modal-header").getByRole("heading", {
+                name: register ? "Đăng ký" : "Đăng nhập",
+                exact: true,
+              }).waitFor();
+              await p.locator(".modal-container").getByRole("button", {
+                name: "Đóng",
+                exact: true,
+              }).click();
+            } else {
+              assert.equal(actual.pathname, new URL(url, base).pathname);
+            }
             assert.equal(await p.locator("html").getAttribute("lang"), "vi");
             assert.equal(await p.locator("main").count(), 1);
             const size = await p.evaluate(() => ({
