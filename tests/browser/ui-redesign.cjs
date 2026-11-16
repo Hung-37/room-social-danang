@@ -37,7 +37,9 @@ async function main(){
   }
   await context.close();
   const fixture=await browser.newContext({baseURL:base,serviceWorkers:'block'});
-  let saved=false,saveCount=0,failSave=false;
+  let saved=false,saveCount=0,failSave=false,failComment=true,cancelled=false,read=false;
+  let comments=[];
+  const visit={id:'ui-visit',conversationId:'ui-chat',buyerId:1,sellerId:2,status:'confirmed',version:1,note:'',startsAt:new Date(Date.now()+86400000).toISOString(),endsAt:new Date(Date.now()+88200000).toISOString(),title:room.title,otherName:'Chủ phòng kiểm thử'};
   const reference={...room,id:'ui-reference',externalId:'ui-reference',title:'[UI mẫu] Tin tham khảo thiếu giá',verificationStatus:'needs_review',status:'Cần kiểm chứng',isReference:true,price:null,imageUrl:'https://example.com/unlicensed.jpg'};
   await fixture.route('**/api/**',async r=>{
    const path=new URL(r.request().url()).pathname;
@@ -47,6 +49,24 @@ async function main(){
    else if(path==='/api/listings'){data=[room,reference];meta.count=2;}
    else if(path==='/api/community/posts/ui-room') data={...room,price:'2.500.000đ/tháng',area:'25m²'};
    else if(path==='/api/community/posts/ui-reference') data={...reference,price:'',area:'25m²'};
+   else if(path==='/api/community/posts/ui-room/comments'){
+    if(r.request().method()==='POST'){
+     await new Promise(resolve=>setTimeout(resolve,350));
+     if(failComment) return r.fulfill({status:503,json:{error:'Chưa gửi được bình luận. Vui lòng thử lại.'}});
+     const comment={id:'ui-comment',authorName:'Người kiểm thử UI',text:r.request().postDataJSON().text,createdAt:new Date().toISOString()};
+     comments=[comment];return r.fulfill({json:{data:comment,count:1}});
+    }
+    data=comments;meta.total=comments.length;
+   }
+   else if(path==='/api/appointments') data=cancelled?[]:[visit];
+   else if(path==='/api/appointments/ui-visit'){
+    await new Promise(resolve=>setTimeout(resolve,350));cancelled=true;data={...visit,status:'cancelled'};
+   }
+   else if(path==='/api/notifications'){
+    if(r.request().method()==='PATCH'){await new Promise(resolve=>setTimeout(resolve,350));read=true;}
+    data=[{id:1,title:'[UI mẫu] Lịch hẹn mới',body:'Thông báo kiểm thử',href:'/lich-xem-phong',isRead:read,createdAt:'2026-11-15T03:00:00Z'}];
+    meta.unreadCount=read?0:1;
+   }
    else if(path==='/api/favorites'){
     if(r.request().method()==='PUT'){
      saveCount++;
@@ -92,6 +112,33 @@ async function main(){
   await p.getByText('Chưa thể lưu phòng. Vui lòng thử lại.',{exact:true}).waitFor();
   assert.equal(await p.getByRole('button',{name:'Bỏ lưu: '+room.title,exact:true}).getAttribute('aria-pressed'),'true');
   report.checks.push('reference safeguards at 3 widths','save pending/disabled/success/error preserves confirmed state');
+  await p.goto('/bai/ui-room',{waitUntil:'networkidle'});
+  await p.locator('#comment-text').fill('Mình muốn hỏi về giờ giấc.');
+  await p.getByRole('button',{name:'Gửi bình luận',exact:true}).click();
+  assert(await p.getByRole('button',{name:'Đang gửi...',exact:true}).isDisabled());
+  await p.getByText('Chưa gửi được bình luận. Vui lòng thử lại.',{exact:true}).waitFor();
+  assert.equal(await p.locator('#comment-text').inputValue(),'Mình muốn hỏi về giờ giấc.');
+  failComment=false;
+  await p.getByRole('button',{name:'Gửi bình luận',exact:true}).click();
+  await p.getByText('Đã gửi bình luận. Cảm ơn bạn đã chia sẻ!',{exact:true}).waitFor();
+  assert.equal(await p.locator('#comment-text').inputValue(),'');
+  report.checks.push('comment pending, failure retains input, retry succeeds');
+  await p.goto('/lich-xem-phong',{waitUntil:'networkidle'});
+  await p.getByRole('button',{name:'Hủy lịch',exact:true}).click();
+  const confirm=p.getByRole('region',{name:'Xác nhận cập nhật lịch',exact:true});
+  assert(await confirm.getByText(room.title,{exact:true}).isVisible());
+  await confirm.getByRole('button',{name:'Quay lại',exact:true}).click();
+  assert.equal(cancelled,false);
+  await p.getByRole('button',{name:'Hủy lịch',exact:true}).click();
+  const cancel=confirm.getByRole('button',{name:'Hủy lịch xem phòng',exact:true});
+  assert((await cancel.getAttribute('class')).includes('danger-btn'));
+  await cancel.click();
+  await p.getByText('Chưa có lịch xem phòng trong mục này.',{exact:true}).waitFor();
+  report.checks.push('cancel appointment names target, back does not write, confirm updates UI');
+  await p.goto('/thong-bao',{waitUntil:'networkidle'});
+  await p.getByRole('button',{name:'Đánh dấu tất cả đã đọc',exact:true}).click();
+  await p.getByText('Đã đánh dấu tất cả thông báo là đã đọc.',{exact:true}).waitFor();
+  report.checks.push('notification read success');
   await p.goto('/',{waitUntil:'networkidle'});
   await p.setViewportSize({width:375,height:900});
   const menu=p.getByRole('button',{name:'Mở menu',exact:true});

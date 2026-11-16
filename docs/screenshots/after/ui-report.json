@@ -237,6 +237,9 @@
   "checks": [
     "reference safeguards at 3 widths",
     "save pending/disabled/success/error preserves confirmed state",
+    "comment pending, failure retains input, retry succeeds",
+    "cancel appointment names target, back does not write, confirm updates UI",
+    "notification read success",
     "mobile menu keyboard/focus/44px target and favicon",
     "home search preserves Vietnamese query",
     "reduced motion"
