@@ -172,6 +172,7 @@ export default function FeedExplorer({
   ]);
   async function publish(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (sending) return;
     const form = event.currentTarget;
     setSending(true);
     setMessage("");
@@ -317,7 +318,7 @@ export default function FeedExplorer({
                 </div>
                 <div className="composer-footer">
                   <p>Bài viết sẽ được duyệt trước khi xuất hiện công khai.</p>
-                  <button className="primary-btn" disabled={sending}>
+                  <button className="primary-btn" disabled={sending} aria-busy={sending}>
                     {sending ? "Đang gửi..." : "Gửi bài chờ duyệt"}
                     <Icon name="arrow" />
                   </button>
@@ -516,15 +517,6 @@ export default function FeedExplorer({
                   ? "Hỏi kinh nghiệm trong cộng đồng →"
                   : "Xem bảng tin phòng trọ →"}
               </Link>
-            </section>
-            <section className="neighborhood-note">
-              <span className="section-eyebrow">Lần đầu ghé RoomĐàNẵng?</span>
-              <h3>Bắt đầu thật đơn giản</h3>
-              <ol>
-                <li>Tìm khu vực bạn muốn ở</li>
-                <li>Đọc tin và hỏi điều còn băn khoăn</li>
-                <li>Xem phòng trước khi đặt cọc</li>
-              </ol>
             </section>
           </aside>
         </div>

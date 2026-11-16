@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Header from "./Header";
 import PostCard from "./PostCard";
+import Icon from "./Icons";
 import { clusters, normalizeToRoomPost, type RoomPost } from "@/lib/data";
 
 function useHomeFeed(kind: "rooms" | "discussions", accountRevision: number) {
@@ -65,7 +66,6 @@ function HomeAuthQueryTrigger({ authenticated }: { authenticated: boolean }) {
 
 export default function SocialHome() {
   const { authenticated, revision: accountRevision } = useAccountStatus();
-  const { openLoginModal } = useLoginModal();
   const {
     items: rooms,
     loading: loadingRooms,
@@ -85,46 +85,32 @@ export default function SocialHome() {
         <HomeAuthQueryTrigger authenticated={authenticated} />
       </Suspense>
       <Header />
-      <main className="public-home">
+      <main id="main-content" tabIndex={-1} className="public-home">
         {/* Hero Section */}
         <section className="hero-section">
           <div className="container">
             <div className="hero-content">
-              <div className="hero-badge">🏠 RoomĐàNẵng</div>
-              <h1 className="hero-title">Tìm phòng trọ uy tín tại Đà Nẵng</h1>
+              <div className="hero-badge"><Icon name="pin" /> Sống & học tại Đà Nẵng</div>
+              <h1 className="hero-title">Một căn phòng.<br /><em>Một khởi đầu mới.</em></h1>
               <p className="hero-subtitle">
-                Nền tảng tin đăng phòng trọ được kiểm chứng bởi cộng đồng sinh viên
+                Tìm nơi ở hợp túi tiền, gần trường và gần những điều bạn yêu.
               </p>
-              <div className="hero-stats">
-                <div className="stat-item">
-                  <span className="stat-number">{clusters.length}</span>
-                  <span className="stat-label">Khu vực</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">100%</span>
-                  <span className="stat-label">Tin được kiểm duyệt</span>
-                </div>
-                <div className="stat-item">
-                  <span className="stat-number">Miễn phí</span>
-                  <span className="stat-label">Không phí dịch vụ</span>
-                </div>
+              <form className="home-search" action="/bang-tin" role="search" aria-label="Tìm phòng trọ">
+                <label htmlFor="home-query">Bạn muốn ở đâu?
+                  <input id="home-query" name="q" type="search" placeholder="Tên đường, khu vực, trường học…" />
+                </label>
+                <label htmlFor="home-cluster">Khu vực
+                  <select id="home-cluster" name="cluster" defaultValue="">
+                    <option value="">Tất cả khu vực</option>
+                    {clusters.filter(c => c.id !== "chua-phan-cum").map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </label>
+                <button className="primary-btn" type="submit"><Icon name="search" /> Tìm phòng</button>
+              </form>
+              <div className="home-shortcuts">
+                <span>Khám phá</span>
+                {clusters.filter(c => ["hai-chau", "son-tra", "ngu-hanh-son"].includes(c.id)).map(c => <Link key={c.id} href={`/bang-tin?cluster=${c.id}`}>{c.name} ↗</Link>)}
               </div>
-              <div className="hero-actions">
-                <Link href="/bang-tin" className="btn btn-primary btn-lg">
-                  🏠 Xem tin phòng
-                </Link>
-                <Link href="/thao-luan" className="btn btn-secondary btn-lg">
-                  💬 Thảo luận
-                </Link>
-              </div>
-              {!authenticated && (
-                <div className="hero-auth">
-                  <p>Đăng nhập để đăng tin và tham gia cộng đồng</p>
-                  <button className="btn btn-outline" onClick={() => openLoginModal("login", "/")}>
-                    Đăng nhập ngay
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         </section>
@@ -195,7 +181,8 @@ export default function SocialHome() {
               <div className="empty-state">
                 <div className="empty-icon">📭</div>
                 <h3>Chưa có tin đăng nào</h3>
-                <p>Tin sẽ xuất hiện sau khi được hệ thống thu thập và kiểm duyệt.</p>
+                <p>Khám phá khu vực trong lúc chờ tin mới.</p>
+                <Link className="secondary-btn" href="/khu-vuc">Khám phá khu vực</Link>
               </div>
             )}
           </div>
@@ -244,7 +231,7 @@ export default function SocialHome() {
                   Chia sẻ kinh nghiệm, hỏi đáp về phòng trọ, cùng nhau xây dựng
                   một cộng đồng hữu ích cho sinh viên Đà Nẵng.
                 </p>
-                <Link href="/thao-luan" className="btn btn-primary">
+                <Link href="/thao-luan" className="btn btn-secondary">
                   Tham gia ngay →
                 </Link>
               </div>
@@ -285,10 +272,9 @@ export default function SocialHome() {
             <div className="cta-content">
               <h2>Bạn có phòng trọ cho thuê?</h2>
               <p>
-                Đăng tin miễn phí, tiếp cận hàng ngàn sinh viên đang tìm phòng
-                tại Đà Nẵng.
+                Kết nối với người tìm phòng tại Đà Nẵng.
               </p>
-              <Link href="/dang-phong" className="btn btn-primary btn-lg">
+              <Link href="/dang-phong" className="btn btn-secondary btn-lg">
                 Đăng tin ngay
               </Link>
             </div>
