@@ -1,12 +1,11 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { getAdminCredentials } from './runtime-credentials.js';
 
 export const ADMIN_SESSION_COOKIE = "room-danang-admin-session";
 const SESSION_MAX_AGE = 8 * 60 * 60;
 const DEVELOPMENT_ADMIN = {
-  email: "admin@roomdanang.com",
-  password: "admin123",
-  name: "System Admin",
+  name: "Local Developer",
 };
 
 type AdminSession = { email: string; name: string; role: "admin"; exp: number };
@@ -14,9 +13,9 @@ type AdminSession = { email: string; name: string; role: "admin"; exp: number };
 function getSecret() {
   return (
     process.env.ADMIN_SESSION_SECRET ||
-    (process.env.NODE_ENV === "production"
-      ? ""
-      : "room-danang-development-secret")
+    (process.env.NODE_ENV === "development"
+      ? "room-danang-development-secret"
+      : "")
   );
 }
 
@@ -25,12 +24,7 @@ function sign(payload: string) {
 }
 
 export function isValidAdminCredentials(email: string, password: string) {
-  const expectedEmail =
-    process.env.ADMIN_EMAIL ||
-    (process.env.NODE_ENV === "production" ? "" : DEVELOPMENT_ADMIN.email);
-  const expectedPassword =
-    process.env.ADMIN_PASSWORD ||
-    (process.env.NODE_ENV === "production" ? "" : DEVELOPMENT_ADMIN.password);
+  const { email: expectedEmail, password: expectedPassword } = getAdminCredentials();
   return Boolean(
     getSecret() &&
     expectedEmail &&

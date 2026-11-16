@@ -25,7 +25,13 @@ for (const [source, destination] of [
   ["database", "database"],
 ]) {
   await mkdir(join(target, destination), { recursive: true });
-  await cp(source, join(target, destination), { recursive: true, filter: (file) => !file.replaceAll("\\", "/").split("/").includes("mysql-data") });
+  await cp(source, join(target, destination), {
+    recursive: true,
+    filter: (file) => {
+      const parts = file.replaceAll("\\", "/").split("/");
+      return !parts.includes("mysql-data") && parts.at(-1) !== "setup_admin.sql";
+    },
+  });
 }
 await mkdir(join(target, "data", "fixtures"), { recursive: true });
 await copyFile(

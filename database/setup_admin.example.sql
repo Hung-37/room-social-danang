@@ -1,0 +1,8 @@
+-- Example only. No real email, password or password hash is included.
+-- Do not initialize or reset an existing database with this file.
+-- Generate a salt:hash using scripts/generate-admin-hash.mjs with ADMIN_PASSWORD.
+-- After reviewing the target account and obtaining approval, replace placeholders.
+-- The statement remains commented to prevent accidental account changes.
+-- UPDATE users
+-- SET password_hash = '<GENERATED_SALT_AND_HASH>'
+-- WHERE email = 'admin@example.invalid';
