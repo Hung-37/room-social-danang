@@ -106,6 +106,7 @@ export default function DeleteRejectedListing({
               type="submit"
               className="danger-btn"
               disabled={busy || reason.trim().length < 10}
+              aria-busy={busy}
             >
               {busy ? "Đang xóa..." : "Xác nhận xóa tin"}
             </button>

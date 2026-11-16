@@ -309,7 +309,7 @@ export default function LandlordListingForm({
           <Link className="secondary-btn" href="/quan-ly-phong">
             Quay lại
           </Link>
-          <button className="primary-btn" disabled={busy}>
+          <button className="primary-btn" disabled={busy} aria-busy={busy}>
             {loading
               ? "Đang lưu..."
               : initial

@@ -207,6 +207,7 @@ export default function CommentThread({
             <button
               className="primary-btn"
               disabled={sending || loading}
+              aria-busy={sending}
               type="submit"
             >
               {sending ? "Đang gửi..." : "Gửi bình luận"}

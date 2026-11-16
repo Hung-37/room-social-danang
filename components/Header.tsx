@@ -6,11 +6,16 @@ import { useState, useEffect, useRef } from "react";
 import { signOut } from "@/lib/client/client-session";
 import { useRouter, usePathname } from "next/navigation";
 import { useLoginModal } from "./LoginModalProvider";
+import { useToast } from "./Toast";
 
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const { openLoginModal } = useLoginModal();
+  const { showToast } = useToast();
+  const [reading, setReading] = useState(false);
+  const readPending = useRef(false);
+  const [signingOut, setSigningOut] = useState(false);
   const [siteName, setSiteName] = useState("RoomĐàNẵng");
   useEffect(() => {
     fetch("/api/site/settings", { cache: "no-store" })
@@ -150,11 +155,15 @@ export default function Header() {
   }, []);
 
   async function handleLogout() {
+    if (signingOut) return;
+    setSigningOut(true);
     try {
       await signOut();
     } catch {
       setSessionError("Chưa thể đăng xuất. Hãy kiểm tra kết nối và thử lại.");
       return;
+    } finally {
+      setSigningOut(false);
     }
     setAuthenticated(false);
     setCurrentUser(null);
@@ -248,7 +257,12 @@ export default function Header() {
                     <strong>Thông báo</strong>
                     <button
                       className="mark-read-btn"
+                      disabled={reading || unreadCount === 0}
+                      aria-busy={reading}
                       onClick={async () => {
+                        if (readPending.current) return;
+                        readPending.current = true;
+                        setReading(true);
                         try {
                           const response = await fetch("/api/notifications", {
                             method: "PATCH",
@@ -258,6 +272,7 @@ export default function Header() {
                             items.map((item) => ({ ...item, isRead: true })),
                           );
                           setUnreadCount(0);
+                          showToast("Đã đánh dấu tất cả thông báo là đã đọc.", "success");
                           window.dispatchEvent(
                             new Event("notifications-updated"),
                           );
@@ -265,10 +280,13 @@ export default function Header() {
                           setSessionError(
                             "Chưa thể đánh dấu thông báo. Vui lòng thử lại.",
                           );
+                        } finally {
+                          readPending.current = false;
+                          setReading(false);
                         }
                       }}
                     >
-                      Đánh dấu đã đọc
+                      {reading ? "Đang cập nhật…" : "Đánh dấu đã đọc"}
                     </button>
                   </div>
                   <div className="notification-list">
@@ -362,7 +380,7 @@ export default function Header() {
                   >
                     <span aria-hidden="true">⚙️</span> Cài đặt
                   </Link>
-                  <button onClick={handleLogout}>
+                  <button onClick={handleLogout} disabled={signingOut} aria-busy={signingOut}>
                     <span aria-hidden="true">🚪</span> Đăng xuất
                   </button>
                 </div>
@@ -433,7 +451,7 @@ export default function Header() {
                   Quản lý phòng <span>↗</span>
                 </Link>
               )}
-              <button className="mobile-logout" onClick={handleLogout}>
+              <button className="mobile-logout" onClick={handleLogout} disabled={signingOut} aria-busy={signingOut}>
                 Đăng xuất
               </button>
             </>

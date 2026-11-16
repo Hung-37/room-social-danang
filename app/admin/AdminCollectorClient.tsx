@@ -173,6 +173,8 @@ export default function AdminCollectorClient({
 }) {
   const [sources, setSources] = useState<Source[]>([]);
   const [savingSourceId, setSavingSourceId] = useState<string | null>(null);
+  const [reviewing, setReviewing] = useState(false);
+  const reviewPending = useRef(false);
   const [run, setRun] = useState<RunResponse | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [autoRun, setAutoRun] = useState(false);
@@ -392,28 +394,41 @@ export default function AdminCollectorClient({
     id: string,
     status: "resolved" | "dismissed" | "pending",
   ) {
+    if (reviewPending.current) return;
     if (status === "dismissed" && !window.confirm("Bỏ qua báo cáo này?"))
       return;
-    const response = await fetch("/api/admin/reports", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status }),
-    });
-    if (response.ok) {
-      setMessage("Đã cập nhật báo cáo.");
-      loadReports();
-    } else setMessage("Không thể cập nhật báo cáo.");
+    reviewPending.current = true;
+    setReviewing(true);
+    try {
+      const response = await fetch("/api/admin/reports", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status }),
+      });
+      if (response.ok) {
+        setMessage("Đã cập nhật báo cáo.");
+        await loadReports();
+      } else setMessage("Không thể cập nhật báo cáo. Vui lòng thử lại.");
+    } catch {
+      setMessage("Chưa thể cập nhật báo cáo. Kiểm tra kết nối và thử lại.");
+    } finally {
+      reviewPending.current = false;
+      setReviewing(false);
+    }
   }
 
   async function updateCommunityStatus(
     id: string,
     status: "verified" | "rejected" | "needs_review",
   ) {
+    if (reviewPending.current) return;
     if (
       status === "rejected" &&
       !window.confirm("Bạn chắc chắn muốn từ chối bài viết này?")
     )
       return;
+    reviewPending.current = true;
+    setReviewing(true);
     try {
       const response = await fetch(
         `/api/community/posts/${encodeURIComponent(id)}/status`,
@@ -438,9 +453,12 @@ export default function AdminCollectorClient({
             ? "Đã từ chối bài cộng đồng."
             : "Đã đưa bài về chờ duyệt.",
       );
-      loadCommunityPosts();
+      await loadCommunityPosts();
     } catch {
-      setMessage("Lỗi khi cập nhật bài cộng đồng.");
+      setMessage("Chưa thể cập nhật bài cộng đồng. Vui lòng thử lại.");
+    } finally {
+      reviewPending.current = false;
+      setReviewing(false);
     }
   }
 
@@ -599,6 +617,9 @@ export default function AdminCollectorClient({
     status: string,
     reviewRevision: string,
   ) {
+    if (reviewPending.current) return;
+    reviewPending.current = true;
+    setReviewing(true);
     try {
       const response = await fetch(`/api/listings/${externalId}/status`, {
         method: "POST",
@@ -612,17 +633,21 @@ export default function AdminCollectorClient({
             ? "Đã lưu trạng thái vào cache cục bộ; MySQL hiện chưa kết nối."
             : "Đã cập nhật trạng thái.",
         );
-        loadListings();
+        await loadListings();
       } else {
         const payload = await response.json();
         setMessage(payload.error || "Không thể cập nhật trạng thái.");
       }
     } catch {
-      setMessage("Lỗi khi cập nhật trạng thái.");
+      setMessage("Chưa thể cập nhật trạng thái. Vui lòng thử lại.");
+    } finally {
+      reviewPending.current = false;
+      setReviewing(false);
     }
   }
 
   async function batchUpdateStatus(status: string) {
+    if (reviewPending.current || batchAction !== null) return;
     if (selectedListings.size === 0) {
       setMessage("Vui lòng chọn ít nhất một bài.");
       return;
@@ -1404,7 +1429,7 @@ export default function AdminCollectorClient({
                     <button
                       className="success-btn"
                       onClick={() => batchUpdateStatus("verified")}
-                      disabled={batchAction !== null}
+                      disabled={reviewing || batchAction !== null}
                     >
                       {batchAction === "verified"
                         ? "Đang xử lý..."
@@ -1413,7 +1438,7 @@ export default function AdminCollectorClient({
                     <button
                       className="danger-btn"
                       onClick={() => batchUpdateStatus("rejected")}
-                      disabled={batchAction !== null}
+                      disabled={reviewing || batchAction !== null}
                     >
                       {batchAction === "rejected"
                         ? "Đang xử lý..."
@@ -1424,7 +1449,7 @@ export default function AdminCollectorClient({
                 <button
                   className="secondary-btn"
                   onClick={autoRecluster}
-                  disabled={batchAction !== null}
+                  disabled={reviewing || batchAction !== null}
                 >
                   {batchAction === "recluster"
                     ? "Đang phân cụm..."
@@ -1587,6 +1612,8 @@ export default function AdminCollectorClient({
                             )
                           }
                           className="status-select"
+                          disabled={reviewing || batchAction !== null}
+                          aria-busy={reviewing}
                           aria-label={`Trạng thái duyệt: ${listing.title}`}
                         >
                           <option
@@ -1709,14 +1736,18 @@ export default function AdminCollectorClient({
                       </span>
                       <button
                         className="success-btn"
+                        disabled={reviewing}
+                        aria-busy={reviewing}
                         onClick={() =>
                           updateCommunityStatus(post.id, "verified")
                         }
                       >
-                        Duyệt
+                        {reviewing ? "Đang cập nhật…" : "Duyệt"}
                       </button>
                       <button
                         className="danger-btn"
+                        disabled={reviewing}
+                        aria-busy={reviewing}
                         onClick={() =>
                           updateCommunityStatus(post.id, "rejected")
                         }
@@ -1786,12 +1817,16 @@ export default function AdminCollectorClient({
                         <>
                           <button
                             className="success-btn"
+                            disabled={reviewing}
+                            aria-busy={reviewing}
                             onClick={() => updateReport(report.id, "resolved")}
                           >
                             Đã xử lý
                           </button>
                           <button
                             className="secondary-btn"
+                            disabled={reviewing}
+                            aria-busy={reviewing}
                             onClick={() => updateReport(report.id, "dismissed")}
                           >
                             Bỏ qua

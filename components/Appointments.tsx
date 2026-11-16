@@ -234,6 +234,7 @@ export default function Appointments({
                   : "Đánh dấu đã xem phòng?"}
           </h3>
           <p>
+            {confirm.item.title && <strong>{confirm.item.title}<br /></strong>}
             {new Date(confirm.item.startsAt).toLocaleString("vi-VN", {
               timeZone: "Asia/Ho_Chi_Minh",
               dateStyle: "medium",
@@ -248,8 +249,8 @@ export default function Appointments({
             >
               Quay lại
             </button>
-            <button className="primary-btn" disabled={busy} onClick={change}>
-              Đồng ý cập nhật
+            <button className={confirm.action === "cancel" || confirm.action === "decline" ? "danger-btn" : "primary-btn"} disabled={busy} aria-busy={busy} onClick={change}>
+              {busy ? "Đang cập nhật…" : confirm.action === "cancel" ? "Hủy lịch xem phòng" : confirm.action === "decline" ? "Từ chối lịch hẹn" : confirm.action === "confirm" ? "Xác nhận lịch hẹn" : "Đánh dấu đã xem"}
             </button>
           </div>
         </div>
@@ -388,7 +389,7 @@ export default function Appointments({
                   placeholder="Số người đi xem, lưu ý khi liên hệ..."
                 />
               </label>
-              <button className="primary-btn" disabled={busy}>
+              <button className="primary-btn" disabled={busy} aria-busy={busy}>
                 Gửi đề xuất lịch
               </button>
             </form>
