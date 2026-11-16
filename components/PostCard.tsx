@@ -76,6 +76,7 @@ function PostCard({
     return () => controller.abort();
   }, [post.id, room, post.interactionSummary, retryInteraction]);
   async function save() {
+    if (saving || favorites.loading) return;
     setSaving(true);
     try {
       await favorites.toggle(post.id, !saved);
@@ -137,7 +138,7 @@ function PostCard({
         <Link href={href} className="room-cover">
           <span className="sr-only">Xem phòng: {post.title}</span>
           <RoomPhoto src={display.showImages ? roomPhotos(post.imageUrl, post.imageUrls)[0] : undefined} />
-          <span className="cover-badge">
+          <span className={`cover-badge${display.isReference ? " is-reference" : ""}`}>
             {!display.isReference && <Icon name="check" />} {display.label}
           </span>
         </Link>
@@ -220,11 +221,13 @@ function PostCard({
             <button
               className={`quiet-icon ${saved ? "is-selected" : ""}`}
               disabled={saving || favorites.loading}
+              aria-busy={saving}
               aria-pressed={saved}
               aria-label={`${saved ? "Bỏ lưu" : "Lưu"}: ${post.title}`}
               onClick={save}
             >
               <Icon name="bookmark" />
+              <span>{saving ? "Đang lưu…" : saved ? "Đã lưu" : "Lưu"}</span>
             </button>
           ) : (
             <button
@@ -240,11 +243,13 @@ function PostCard({
               <button
                 className={`quiet-icon ${liked ? "is-selected" : ""}`}
                 disabled={busy || interactionLoading || interactionError}
+                aria-busy={busy}
                 aria-pressed={liked}
                 aria-label={`Thích: ${post.title}${votes > 0 ? `, ${votes} lượt tương tác` : ""}`}
                 onClick={like}
               >
                 <Icon name="heart" />
+                {liked && <span>Đã thích</span>}
                 {votes > 0 && votes}
               </button>
             ) : (
