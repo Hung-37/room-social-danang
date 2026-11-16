@@ -3,10 +3,9 @@ FROM node:24-alpine AS build
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY . .
-# Optional CA for the managed cloud builder; ordinary hosting uses system trust.
-RUN --mount=type=secret,id=proxy_ca \
-    if [ -f /run/secrets/proxy_ca ]; then export NODE_EXTRA_CA_CERTS=/run/secrets/proxy_ca; fi; \
-    npm ci --cache /tmp/npm-cache && npm run build && rm -rf /tmp/npm-cache
+RUN npm ci --cache /tmp/npm-cache \
+    && npm run build \
+    && rm -rf /tmp/npm-cache
 
 FROM node:24-alpine AS runtime
 WORKDIR /app
