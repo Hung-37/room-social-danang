@@ -19,3 +19,6 @@ database/seeds/collected-listings.sql
 .ollama/
 *.gguf
 *.pem
+
+# Private administrator setup; use the example as a reference only
+database/setup_admin.sql
