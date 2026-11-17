@@ -59,6 +59,26 @@ textarea {
   --control-height: var(--field-height-compact);
 }
 
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: var(--space-16);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.btn-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+}
+
 :is(
     .home-room-search,
     .explorer-filters,
@@ -87,9 +107,10 @@ label.ui-field,
     .visit-request
   )
   label:not(.settings-check):not(.role-option) {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
-  gap: var(--space-4);
+  gap: var(--space-6);
   font-size: var(--font-sm);
 }
 
