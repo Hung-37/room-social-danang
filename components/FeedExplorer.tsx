@@ -275,8 +275,7 @@ export default function FeedExplorer({
             </div>
             {authenticated ? (
               <form className="auth-form discussion-form" onSubmit={publish}>
-                <label>
-                  Tiêu đề
+                <FormField label="Tiêu đề">
                   <input
                     name="title"
                     required
@@ -284,9 +283,8 @@ export default function FeedExplorer({
                     maxLength={120}
                     placeholder="Ví dụ: Cần hỏi gì trước khi đặt cọc?"
                   />
-                </label>
-                <label>
-                  Nội dung
+                </FormField>
+                <FormField label="Nội dung">
                   <textarea
                     name="summary"
                     required
@@ -295,18 +293,16 @@ export default function FeedExplorer({
                     rows={4}
                     placeholder="Chia sẻ thêm tình huống để mọi người dễ hỗ trợ bạn..."
                   />
-                </label>
-                <div className="form-row">
-                  <label>
-                    Chủ đề bài viết
+                </FormField>
+                <div className="form-row form-grid discussion-topic-fields">
+                  <FormField label="Chủ đề bài viết">
                     <select aria-label="Chủ đề bài viết" name="postKind">
                       <option value="question">Hỏi đáp</option>
                       <option value="experience">Trải nghiệm</option>
                       <option value="warning">Cảnh báo</option>
                     </select>
-                  </label>
-                  <label>
-                    Khu vực bài viết
+                  </FormField>
+                  <FormField label="Khu vực bài viết">
                     <select aria-label="Khu vực bài viết" name="clusterId">
                       {clusters.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -314,7 +310,7 @@ export default function FeedExplorer({
                         </option>
                       ))}
                     </select>
-                  </label>
+                  </FormField>
                 </div>
                 <div className="composer-footer">
                   <p>Bài viết sẽ được duyệt trước khi xuất hiện công khai.</p>
