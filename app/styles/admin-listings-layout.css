@@ -1,0 +1,57 @@
+.admin-main .admin-listing-filters {
+  --control-height: var(--field-height);
+  justify-content: flex-start;
+  gap: var(--space-12);
+}
+
+.admin-listing-filters > input {
+  flex: 1 1 280px;
+  width: auto;
+  max-width: 420px;
+}
+
+.admin-listing-filters > select {
+  flex: 0 1 220px;
+  width: auto;
+  min-width: 180px;
+  max-width: 100%;
+}
+
+.admin-listings-status {
+  margin: var(--space-16) 0 var(--space-12);
+}
+
+.admin-listings-status .button-row {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.admin-listings-status .button-row > button {
+  width: 128px;
+}
+
+.admin-listings-batch {
+  display: flex;
+  align-items: center;
+  margin: var(--space-12) 0 var(--space-16);
+}
+
+.admin-listings-batch .toggle-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.admin-listings-batch input[type="checkbox"] {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 520px) {
+  .admin-listing-filters > input,
+  .admin-listing-filters > select {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: none;
+  }
+}
