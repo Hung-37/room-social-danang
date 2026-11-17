@@ -1,0 +1,62 @@
+.url-crawl-panel {
+  display: grid;
+  gap: var(--space-16);
+  margin-bottom: var(--space-24);
+}
+
+.url-crawl-fields {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 720px;
+}
+
+.url-crawl-fields .crawl-source-field {
+  max-width: 720px;
+}
+
+.url-crawl-fields .crawl-pages-field {
+  max-width: 240px;
+}
+
+.url-crawl-actions {
+  margin-top: 0;
+}
+
+.collector-run-controls {
+  justify-content: flex-start;
+  gap: var(--space-16);
+}
+
+.collector-auto-run {
+  display: grid;
+  flex: 0 1 280px;
+  gap: var(--space-4);
+  min-width: 220px;
+  max-width: 360px;
+}
+
+.collector-auto-run .toggle-control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.collector-auto-run .toggle-control input {
+  flex: 0 0 auto;
+}
+
+.collector-auto-run .admin-auto-run-note {
+  display: block;
+  align-self: auto;
+  padding-left: 28px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.html-source-form {
+  margin-top: var(--space-16);
+}
+
+.html-source-form > button[type="submit"] {
+  justify-self: start;
+  align-self: end;
+}

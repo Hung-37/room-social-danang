@@ -1,5 +1,57 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { runDynamicLayoutAudit } = require("./layout-contract.cjs");
+
+async function collectFormControls(page) {
+  return page.evaluate(() => {
+    const excluded = new Set([
+      "checkbox",
+      "radio",
+      "file",
+      "hidden",
+      "color",
+      "range",
+      "button",
+      "submit",
+      "reset",
+      "image",
+    ]);
+    return Array.from(
+      document.querySelectorAll(
+        "main input, main select, main textarea, .modal-form input",
+      ),
+    )
+      .filter(
+        (control) =>
+          !(control instanceof HTMLInputElement && excluded.has(control.type)),
+      )
+      .map((control) => {
+        const rect = control.getBoundingClientRect();
+        const css = getComputedStyle(control);
+        return {
+          field:
+            control.id ||
+            control.name ||
+            control.getAttribute("aria-label") ||
+            control.type ||
+            control.localName,
+          kind: control.localName,
+          compact: Boolean(
+            control.closest(
+              ".user-filters, .chat-report-toolbar",
+            ),
+          ),
+          height: Math.round(rect.height * 10) / 10,
+          width: Math.round(rect.width),
+          font: parseFloat(css.fontSize),
+          paddingInline: [css.paddingInlineStart, css.paddingInlineEnd],
+          radius: css.borderTopLeftRadius,
+          hidden: !rect.width || !rect.height || css.visibility === "hidden",
+        };
+      })
+      .filter((control) => !control.hidden);
+  });
+}
 
 async function auditLayout({ contexts, api, stamp, room, post, chat, out }) {
   const visitRoom = await api(
@@ -119,6 +171,7 @@ async function auditLayout({ contexts, api, stamp, room, post, chat, out }) {
           errors.add(r.resourceType() + " " + r.failure()?.errorText);
       });
       const issues = [];
+      let controls = [];
       try {
         const res = await page.goto(url, { waitUntil: "domcontentloaded" });
         await page.locator("main").waitFor();
@@ -190,6 +243,20 @@ async function auditLayout({ contexts, api, stamp, room, post, chat, out }) {
           await page
             .getByRole("button", { name: "Gửi đề xuất lịch" })
             .click({ trial: true });
+        }
+        controls = await collectFormControls(page);
+        if (process.env.TEST_FORM_MEASURE_ONLY !== "1") {
+          for (const field of controls) {
+            const height = width >= 768 && field.compact ? 36 : 40;
+            if (
+              field.kind === "textarea"
+                ? field.height < 88
+                : field.height !== height
+            )
+              issues.push(`control height ${field.field}: ${field.height}px`);
+            if (field.font !== (width < 768 ? 16 : 14))
+              issues.push(`control font ${field.field}: ${field.font}px`);
+          }
         }
         if (
           role !== "admin" &&
@@ -278,10 +345,20 @@ async function auditLayout({ contexts, api, stamp, room, post, chat, out }) {
         width,
         height,
         role,
+        controls,
         issues: [...issues, ...errors],
       });
       await page.close();
     }
+    report.pages.push(
+      ...(await runDynamicLayoutAudit({
+        contexts,
+        api,
+        width,
+        height,
+        out,
+      })),
+    );
     fs.writeFileSync(
       path.join(out, "results.json"),
       JSON.stringify(report.pages, null, 2),

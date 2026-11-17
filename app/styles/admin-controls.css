@@ -52,28 +52,23 @@
 .user-filters {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  gap: 16px;
-  margin: 28px 0;
+  gap: var(--space-16);
+  margin: var(--space-24) 0;
 }
 .user-filters label,
 .user-action label {
   display: grid;
-  gap: 8px;
+  gap: var(--space-8);
   font-weight: 650;
   font-size: 0.9rem;
 }
 .user-filters input,
 .user-filters select,
 .user-action textarea {
-  font: inherit;
-  border: 1px solid #b5c9bf;
-  border-radius: 10px;
-  padding: 12px;
   color: #244c40;
   background: #fff;
   width: 100%;
   min-width: 0;
-  box-sizing: border-box;
 }
 .user-grid {
   display: grid;
@@ -115,7 +110,7 @@
 .user-action {
   border-color: #c6a65b;
   background: #fff9e9;
-  margin-bottom: 24px;
+  margin-bottom: var(--space-24);
 }
 .pagination-controls {
   display: flex;
@@ -189,12 +184,7 @@
 .delete-listing-dialog textarea {
   display: block;
   width: 100%;
-  min-height: 110px;
-  padding: 12px;
   resize: vertical;
-  font: inherit;
-  font-size: 16px;
-  border-radius: 10px;
 }
 .delete-listing-actions {
   display: flex;

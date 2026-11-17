@@ -139,7 +139,6 @@ export function normalizeToRoomPost(input: Record<string, unknown>): RoomPost {
   const hasPrice =
     item.price !== null && item.price !== undefined && item.price > 0;
 
-  // Xác định trạng thái dựa trên verificationStatus
   let status: "Còn phòng" | "Cần kiểm chứng" | "Đã có báo cáo" | "Đã từ chối";
   if (verificationStatus === "verified") {
     status = "Còn phòng";
@@ -151,18 +150,14 @@ export function normalizeToRoomPost(input: Record<string, unknown>): RoomPost {
     status = "Cần kiểm chứng";
   }
 
-  // Format giá nếu có
   const price = hasPrice
     ? `${Number(item.price).toLocaleString("vi-VN")}đ/tháng`
     : "";
 
-  // Format diện tích nếu có
   const area = item.area ? `${item.area}m²` : "";
 
-  // Xác định image icon dựa trên loại bài
   const image = hasPrice ? "🏠" : "💬";
 
-  // Tags mặc định dựa trên loại bài
   const defaultTags = hasPrice
     ? []
     : item.postKind === "question"

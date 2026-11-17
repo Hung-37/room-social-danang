@@ -23,4 +23,16 @@
   --font-base: 16px;
   --font-sm: 14px;
   --font-xs: 12px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --field-height: 40px;
+  --field-height-compact: 36px;
+  --field-font: var(--font-sm);
+  --field-border: #9bb8ac;
+  --field-textarea-min: 88px;
 }

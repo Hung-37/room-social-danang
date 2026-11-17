@@ -1,4 +1,3 @@
-/* Admin-only interaction states. */
 .admin-main [aria-busy='true'] { cursor: wait; opacity: .72; }
 .admin-main button:disabled { cursor: not-allowed; opacity: .6; }
 .admin-main .admin-message[role='alert'] { color: #fca5a5; }
@@ -377,15 +376,15 @@
   display: grid;
   grid-template-columns: minmax(220px, 1fr) auto auto;
   align-items: end;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--space-12);
+  padding: var(--space-16);
   border: 1px solid var(--line);
   border-radius: 17px;
   background: rgba(255, 254, 250, .9);
 }
 .chat-report-toolbar > label {
   display: grid;
-  gap: 6px;
+  gap: var(--space-4);
   color: var(--muted);
   font-size: 12px;
   font-weight: 700;
@@ -393,13 +392,8 @@
 .chat-report-toolbar input {
   width: 100%;
   min-width: 0;
-  min-height: 42px;
-  padding: 9px 12px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
   color: var(--text);
   background: #fff;
-  font: inherit;
 }
 .chat-report-filters {
   display: flex;
@@ -669,7 +663,7 @@
   .chat-report-toolbar {
     grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
-    padding: 12px;
+    padding: var(--space-12);
   }
   .chat-report-toolbar > label {
     grid-column: auto;

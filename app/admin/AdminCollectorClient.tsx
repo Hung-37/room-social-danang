@@ -1,6 +1,7 @@
 "use client";
 import ListingReviewPreview from "@/components/ListingReviewPreview";
 import DeleteRejectedListing from "@/components/DeleteRejectedListing";
+import FormField from "@/components/FormField";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -513,7 +514,6 @@ export default function AdminCollectorClient({
             ? "Chưa lưu đầy đủ dữ liệu vào MySQL. Kiểm tra kết nối rồi thử lại."
             : `Đã lưu ${payload.saved ?? 0} tin vào MySQL; tin đang chờ Admin kiểm duyệt.`),
       );
-      // Reload listings after import
       loadListings();
     } catch {
       setMessage("Không thể xử lý dữ liệu nhập.");
@@ -1010,7 +1010,6 @@ export default function AdminCollectorClient({
               kín và mọi bài mới đều cần kiểm chứng.
             </div>
 
-            {/* Thông báo hướng dẫn khi chưa có nguồn */}
             {sources.filter((s) => s.enabled).length === 0 && (
               <div className="admin-notice guide-notice">
                 <strong>📋 Hướng dẫn bắt đầu:</strong>
@@ -1099,8 +1098,8 @@ export default function AdminCollectorClient({
                   </p>
                 </div>
               </div>
-              <div className="form-group">
-                <label htmlFor="crawl-url">URL nguồn công khai</label>
+              <div className="form-grid url-crawl-fields">
+                <FormField label="URL nguồn công khai" className="crawl-source-field">
                 <input
                   id="crawl-url"
                   value={crawlUrl}
@@ -1113,9 +1112,8 @@ export default function AdminCollectorClient({
                     }
                   }}
                 />
-              </div>
-              <div className="form-group">
-                <label htmlFor="crawl-pages">Số trang tối đa</label>
+                </FormField>
+                <FormField label="Số trang tối đa" className="crawl-pages-field">
                 <select
                   id="crawl-pages"
                   value={crawlMaxPages}
@@ -1131,8 +1129,9 @@ export default function AdminCollectorClient({
                   <option value={30}>30 trang</option>
                   <option value={50}>50 trang</option>
                 </select>
+                </FormField>
               </div>
-              <div className="admin-controls">
+              <div className="admin-controls toolbar url-crawl-actions">
                 <button
                   className="primary-btn"
                   onClick={previewUrl}
@@ -1229,18 +1228,20 @@ export default function AdminCollectorClient({
                   phép chỉ dùng để tham khảo.
                 </p>
               </div>
-              <div className="admin-controls">
-                <label className="toggle-control">
-                  <input
-                    type="checkbox"
-                    checked={autoRun}
-                    onChange={(event) => setAutoRun(event.target.checked)}
-                  />
-                  <span>Tự chạy mỗi 6 giờ</span>
-                </label>
-                <small className="admin-auto-run-note">
-                  Chỉ hoạt động khi trang Admin đang mở
-                </small>
+              <div className="admin-controls toolbar collector-run-controls">
+                <div className="collector-auto-run">
+                  <label className="toggle-control">
+                    <input
+                      type="checkbox"
+                      checked={autoRun}
+                      onChange={(event) => setAutoRun(event.target.checked)}
+                    />
+                    <span>Tự chạy mỗi 6 giờ</span>
+                  </label>
+                  <small className="admin-auto-run-note">
+                    Chỉ hoạt động khi trang Admin đang mở
+                  </small>
+                </div>
                 <button
                   className="primary-btn"
                   onClick={() => runCollector()}
@@ -1398,7 +1399,7 @@ export default function AdminCollectorClient({
                 <h2>Quản lý bài đăng</h2>
                 <p>Xem xét và duyệt các bài đăng từ hệ thống.</p>
               </div>
-              <div className="admin-controls">
+              <div className="admin-controls toolbar">
                 {selectedListings.size > 0 && (
                   <>
                     <button
@@ -1446,7 +1447,7 @@ export default function AdminCollectorClient({
               thay đổi.
             </p>
 
-            <div className="feed-filters admin-listing-filters">
+            <div className="feed-filters admin-listing-filters toolbar">
               <input
                 value={listingQuery}
                 onChange={(event) => {
@@ -1473,13 +1474,16 @@ export default function AdminCollectorClient({
               </select>
             </div>
 
-            <div className="admin-section-head" aria-live="polite">
+            <div
+              className="admin-section-head admin-listings-status"
+              aria-live="polite"
+            >
               <p>
                 {loadingListings
                   ? "Đang tải danh sách…"
                   : `${listingTotal} tin đăng · ${Math.ceil(listingTotal / 20)} trang cần xử lý${listingTotal ? ` · Trang ${Math.floor(listingOffset / 20) + 1}/${Math.ceil(listingTotal / 20)}` : ""} · 20 tin/trang.`}
               </p>
-              <div className="button-row">
+              <div className="button-row btn-group">
                 <button
                   className="secondary-btn"
                   disabled={loadingListings || listingOffset === 0}
@@ -1516,7 +1520,7 @@ export default function AdminCollectorClient({
             ) : (
               <>
                 {listings.length > 0 && (
-                  <div className="batch-actions-bar">
+                  <div className="batch-actions-bar admin-listings-batch">
                     <label className="toggle-control">
                       <input
                         type="checkbox"
@@ -1664,7 +1668,7 @@ export default function AdminCollectorClient({
             {communityError && <p role="alert">{communityError}</p>}
             <div className="admin-section-head">
               <p>Trang {Math.floor(communityOffset / 20) + 1}</p>
-              <div className="button-row">
+              <div className="button-row btn-group">
                 <button
                   className="secondary-btn"
                   disabled={loadingCommunity || communityOffset === 0}
@@ -1858,6 +1862,7 @@ export default function AdminCollectorClient({
                 </div>
               </div>
               <form
+                className="form-grid html-source-form"
                 onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.target as HTMLFormElement);
@@ -1879,66 +1884,58 @@ export default function AdminCollectorClient({
                   });
                 }}
               >
-                <div className="form-group">
-                  <label>Tên nguồn</label>
+                <FormField label="Tên nguồn">
                   <input name="name" placeholder="Ví dụ: CafeLand" required />
-                </div>
-                <div className="form-group">
-                  <label>URL</label>
+                </FormField>
+                <FormField label="URL">
                   <input
                     name="url"
                     placeholder="https://example.com/listings"
                     required
                   />
-                </div>
-                <div className="form-group">
-                  <label>Item Selector</label>
+                </FormField>
+                <FormField label="Item Selector">
                   <input
                     name="itemSelector"
                     placeholder="div.listing-item"
                     defaultValue="div.listing-item"
                   />
-                </div>
-                <div className="form-group">
-                  <label>Title Selector</label>
+                </FormField>
+                <FormField label="Title Selector">
                   <input
                     name="titleSelector"
                     placeholder="h2.title"
                     defaultValue="h2.title"
                   />
-                </div>
-                <div className="form-group">
-                  <label>Description Selector</label>
+                </FormField>
+                <FormField label="Description Selector">
                   <input
                     name="descriptionSelector"
                     placeholder="div.description"
                     defaultValue="div.description"
                   />
-                </div>
-                <div className="form-group">
-                  <label>Price Selector</label>
+                </FormField>
+                <FormField label="Price Selector">
                   <input
                     name="priceSelector"
                     placeholder="span.price"
                     defaultValue="span.price"
                   />
-                </div>
-                <div className="form-group">
-                  <label>Area Selector</label>
+                </FormField>
+                <FormField label="Area Selector">
                   <input
                     name="areaSelector"
                     placeholder="span.area"
                     defaultValue="span.area"
                   />
-                </div>
-                <div className="form-group">
-                  <label>Address Selector</label>
+                </FormField>
+                <FormField label="Address Selector">
                   <input
                     name="addressSelector"
                     placeholder="div.address"
                     defaultValue="div.address"
                   />
-                </div>
+                </FormField>
                 <button type="submit" className="primary-btn">
                   Tạo cấu hình
                 </button>
