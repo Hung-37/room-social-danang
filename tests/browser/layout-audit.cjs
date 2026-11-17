@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { runDynamicLayoutAudit } = require("./layout-contract.cjs");
 
 async function collectFormControls(page) {
   return page.evaluate(() => {
@@ -37,7 +38,7 @@ async function collectFormControls(page) {
           kind: control.localName,
           compact: Boolean(
             control.closest(
-              ".user-filters, .admin-listing-filters, .chat-report-toolbar",
+              ".user-filters, .chat-report-toolbar",
             ),
           ),
           height: Math.round(rect.height * 10) / 10,
@@ -349,6 +350,15 @@ async function auditLayout({ contexts, api, stamp, room, post, chat, out }) {
       });
       await page.close();
     }
+    report.pages.push(
+      ...(await runDynamicLayoutAudit({
+        contexts,
+        api,
+        width,
+        height,
+        out,
+      })),
+    );
     fs.writeFileSync(
       path.join(out, "results.json"),
       JSON.stringify(report.pages, null, 2),
