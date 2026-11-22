@@ -1504,24 +1504,34 @@ export default function AdminCollectorClient({
                   ? "Đang tải danh sách…"
                   : `${listingTotal} tin đăng · ${Math.ceil(listingTotal / 20)} trang cần xử lý${listingTotal ? ` · Trang ${Math.floor(listingOffset / 20) + 1}/${Math.ceil(listingTotal / 20)}` : ""} · 20 tin/trang.`}
               </p>
-              <div className="button-row">
+              <nav
+                className="button-row admin-pagination"
+                aria-label="Phân trang tin đăng"
+              >
                 <button
-                  className="secondary-btn"
+                  className="secondary-btn pagination-previous"
                   disabled={loadingListings || listingOffset === 0}
+                  aria-label="Trang trước"
                   onClick={() => setListingOffset((v) => Math.max(0, v - 20))}
                 >
                   Trang trước
                 </button>
+                {listingTotal > 0 && (
+                  <span className="pagination-current" aria-current="page">
+                    Trang {Math.floor(listingOffset / 20) + 1} / {Math.ceil(listingTotal / 20)}
+                  </span>
+                )}
                 <button
-                  className="secondary-btn"
+                  className="secondary-btn pagination-next"
                   disabled={
                     loadingListings || listingOffset + 20 >= listingTotal
                   }
+                  aria-label="Trang sau"
                   onClick={() => setListingOffset((v) => v + 20)}
                 >
                   Trang sau
                 </button>
-              </div>
+              </nav>
             </div>
             {listingError && <p role="alert">{listingError}</p>}
             {listings.length === 0 ? (
@@ -1691,24 +1701,32 @@ export default function AdminCollectorClient({
             {communityError && <p role="alert">{communityError}</p>}
             <div className="admin-section-head">
               <p>Trang {Math.floor(communityOffset / 20) + 1}</p>
-              <div className="button-row">
+              <nav
+                className="button-row admin-pagination"
+                aria-label="Phân trang bài viết cộng đồng"
+              >
                 <button
-                  className="secondary-btn"
+                  className="secondary-btn pagination-previous"
                   disabled={loadingCommunity || communityOffset === 0}
+                  aria-label="Trang trước"
                   onClick={() =>
                     void loadCommunityPosts(Math.max(0, communityOffset - 20))
                   }
                 >
                   Trang trước
                 </button>
+                <span className="pagination-current" aria-current="page">
+                  Trang {Math.floor(communityOffset / 20) + 1}
+                </span>
                 <button
-                  className="secondary-btn"
+                  className="secondary-btn pagination-next"
                   disabled={loadingCommunity || !communityHasMore}
+                  aria-label="Trang sau"
                   onClick={() => void loadCommunityPosts(communityOffset + 20)}
                 >
                   Trang sau
                 </button>
-              </div>
+              </nav>
             </div>
             {communityPosts.length === 0 ? (
               <div className="empty-state">

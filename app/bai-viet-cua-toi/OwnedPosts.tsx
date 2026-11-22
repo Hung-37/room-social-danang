@@ -238,10 +238,14 @@ export default function OwnedPosts() {
           ))}
         </div>
       )}
-      <div className="management-actions">
+      <nav
+        className="management-actions pagination-controls"
+        aria-label="Phân trang bài viết của tôi"
+      >
         <button
-          className="secondary-btn"
+          className="secondary-btn pagination-previous"
           disabled={busy || loading || offset === 0}
+          aria-label="Trang trước"
           onClick={() => {
             setEditing(null);
             setOffset((v) => Math.max(0, v - 20));
@@ -249,9 +253,13 @@ export default function OwnedPosts() {
         >
           Trang trước
         </button>
+        <span className="pagination-current" aria-current="page">
+          Trang {Math.floor(offset / 20) + 1}
+        </span>
         <button
-          className="secondary-btn"
+          className="secondary-btn pagination-next"
           disabled={busy || loading || !hasMore}
+          aria-label="Trang sau"
           onClick={() => {
             setEditing(null);
             setOffset((v) => v + 20);
@@ -259,7 +267,7 @@ export default function OwnedPosts() {
         >
           Trang sau
         </button>
-      </div>
+      </nav>
     </>
   );
 }

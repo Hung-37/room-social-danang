@@ -28,23 +28,40 @@ export default function ManagementPager({
           ? `Hiển thị ${meta.offset + 1}–${meta.offset + meta.count} / ${meta.total} kết quả. Trang ${page}/${pages}.`
           : "Không có kết quả."}
       </p>
-      <div className="inline-actions">
+      <div className="management-pagination-controls">
         <button
           className="secondary-btn"
           disabled={disabled || meta.offset === 0}
+          aria-label="Trang trước"
           onClick={() => onPage(Math.max(0, meta.offset - meta.limit))}
         >
           Trang trước
         </button>
-        {Array.from(new Set([1, pages, page - 1, page, page + 1].filter(n => n >= 1 && n <= pages))).sort((a, b) => a - b).map((n, index, numbers) => (
-          <span key={n} className="inline-actions">
-            {index > 0 && n - numbers[index - 1] > 1 && <span aria-hidden="true">…</span>}
-            <button className={n === page ? "primary-btn" : "secondary-btn"} aria-label={`Trang ${n}`} aria-current={n === page ? "page" : undefined} disabled={disabled || n === page} onClick={() => onPage((n - 1) * meta.limit)}>{n}</button>
+        {Array.from(
+          new Set([1, pages, page - 1, page, page + 1].filter(n => n >= 1 && n <= pages)),
+        ).sort((a, b) => a - b).map((n, index, numbers) => (
+          <span
+            key={n}
+            className={`management-page-item${n === page ? " is-current" : ""}`}
+          >
+            {index > 0 && n - numbers[index - 1] > 1 && (
+              <span className="management-page-ellipsis" aria-hidden="true">…</span>
+            )}
+            <button
+              className={n === page ? "primary-btn" : "secondary-btn"}
+              aria-label={`Trang ${n}`}
+              aria-current={n === page ? "page" : undefined}
+              disabled={disabled || n === page}
+              onClick={() => onPage((n - 1) * meta.limit)}
+            >
+              {n}
+            </button>
           </span>
         ))}
         <button
           className="secondary-btn"
           disabled={disabled || !meta.hasMore}
+          aria-label="Trang sau"
           onClick={() => onPage(meta.nextOffset)}
         >
           Trang sau
