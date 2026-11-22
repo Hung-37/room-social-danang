@@ -36,7 +36,6 @@ export default function RoomPhotoGallery({
         <button
           type="button"
           className="detail-cover photo-open"
-          aria-label={`Xem ảnh phòng ${index + 1} kích thước đầy đủ`}
           onClick={() => {
             dialog.current?.showModal();
             setOpen(true);
