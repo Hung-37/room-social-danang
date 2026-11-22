@@ -235,22 +235,27 @@ export default function UsersClient() {
             ))}
           </div>
           {!users.length && <p>Không tìm thấy tài khoản phù hợp.</p>}
-          <div className="pagination-controls">
+          <nav className="pagination-controls" aria-label="Phân trang người dùng">
             <button
-              className="secondary-btn"
+              className="secondary-btn pagination-previous"
               disabled={page === 0 || busy}
+              aria-label="Trang trước"
               onClick={() => setPage((v) => v - 1)}
             >
               Trang trước
             </button>
+            <span className="pagination-current" aria-current="page">
+              Trang {page + 1} / {Math.max(1, Math.ceil(total / 10))}
+            </span>
             <button
-              className="secondary-btn"
+              className="secondary-btn pagination-next"
               disabled={(page + 1) * 10 >= total || busy}
+              aria-label="Trang sau"
               onClick={() => setPage((v) => v + 1)}
             >
               Trang sau
             </button>
-          </div>
+          </nav>
         </>
       )}
     </>
