@@ -12,6 +12,7 @@ import './styles/appointments.css';
 import './styles/admin-controls.css';
 import './styles/room-photos.css';
 import './styles/header.css';
+import './styles/admin-forms.css';
 
 export const metadata: Metadata = {
   title: 'Room Đà Nẵng | Cộng đồng phòng trọ sinh viên',
