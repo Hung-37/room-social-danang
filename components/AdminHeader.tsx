@@ -55,7 +55,11 @@ export default function AdminHeader() {
   return (
     <header className="admin-topbar">
       <div className="container admin-topbar-inner">
-        <Link href="/" className="brand" aria-label="Về trang chủ">
+        <Link
+          href="/"
+          className="brand"
+          aria-label="RRoomĐàNẵngQuản trị"
+        >
           <span className="brand-mark">R</span>
           <span>
             Room<span>ĐàNẵng</span>
