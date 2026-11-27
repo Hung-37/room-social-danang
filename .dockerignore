@@ -4,7 +4,8 @@ node_modules
 .env
 .env.*
 !.env.example
-data
+data/**
+!data/fixtures/listings.json
 work
 tests
 *.zip
