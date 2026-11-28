@@ -89,8 +89,8 @@ export default function DuplicateReview() {
         </>
       )}
       <section aria-labelledby="similar-heading">
-        <h2 id="similar-heading">Tin có nội dung gần giống</h2>
-        <p>So sánh tối đa 200 tin mới cập nhật. Các cặp gợi ý cần được đối chiếu thủ công.</p>
+        <h2 id="similar-heading">AI gợi ý tin có nội dung gần giống</h2>
+        <p>Mô hình thử nghiệm so sánh tiêu đề, mô tả và địa chỉ của tối đa 200 tin mới cập nhật. Các cặp gợi ý cần được đối chiếu thủ công.</p>
         <button className="secondary-btn" disabled={scanning} onClick={scan}>{scanning ? "Đang so sánh…" : "So sánh nội dung"}</button>
         {similar && <p role="status">{similar.length} cặp gợi ý trong {scanned} tin.</p>}
         {similar && <ol>{similar.map(pair => <li key={JSON.stringify([pair.left, pair.right])}>
