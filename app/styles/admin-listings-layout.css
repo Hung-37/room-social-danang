@@ -23,12 +23,14 @@
 
 .admin-listings-status .button-row {
   display: inline-flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--space-8);
 }
 
-.admin-listings-status .button-row > button {
-  width: 128px;
+@media (width > 700px) {
+  .admin-listings-status .button-row > button {
+    width: 132px;
+  }
 }
 
 .admin-listings-batch {

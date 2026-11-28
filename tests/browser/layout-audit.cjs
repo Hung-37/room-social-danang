@@ -266,17 +266,10 @@ async function auditLayout({ contexts, api, stamp, room, post, chat, out }) {
           const menu = page.locator(".mobile-menu-btn");
           if (await menu.isVisible()) {
             const glyph = await menu
-              .locator("span")
-              .first()
-              .evaluate((el) => {
-                const css = getComputedStyle(el);
-                return (
-                  el.getBoundingClientRect().height > 0 &&
-                  css.backgroundColor !== "rgba(0, 0, 0, 0)"
-                );
-              });
+              .locator("svg")
+              .isVisible();
             if (!glyph)
-              issues.push("invisible hamburger .mobile-menu-btn span");
+              issues.push("invisible mobile menu icon");
             await menu.click();
             const nav = page.locator("#mobile-navigation");
             const findRooms = nav.getByRole("link", { name: /Tìm phòng/ });
@@ -291,7 +284,8 @@ async function auditLayout({ contexts, api, stamp, room, post, chat, out }) {
                 animations: "disabled",
               });
             }
-            await menu.click();
+            await page.keyboard.press("Escape");
+            await nav.waitFor({ state: "detached" });
           } else issues.push("missing user mobile toggle");
         }
         if (role === "admin" && width <= 768) {

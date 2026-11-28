@@ -696,8 +696,8 @@
 }
 .admin-main .status-select {
   min-width: 120px;
-  padding: 6px 10px;
-  font-size: 13px;
+  padding: 0 10px;
+  font-size: var(--field-font);
 }
 
 @media (max-width: 850px) {
@@ -790,6 +790,6 @@
   }
   .admin-main .status-select {
     min-width: 100px;
-    font-size: 12px;
+    font-size: var(--field-font);
   }
 }

@@ -30,9 +30,10 @@
   min-height: 120px;
 }
 
-.discussion-topic-fields {
+.discussion-form .discussion-topic-fields {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
+  gap: var(--space-16);
 }
 
 .discussion-form .composer-footer {
@@ -59,7 +60,7 @@
     padding: var(--space-16);
   }
 
-  .discussion-topic-fields {
+  .discussion-form .discussion-topic-fields {
     grid-template-columns: minmax(0, 1fr);
   }
 
