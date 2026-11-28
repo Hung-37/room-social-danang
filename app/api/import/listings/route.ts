@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { collectListings, DEFAULT_RELEVANCE_KEYWORDS } from '@/lib/server/collector/parser.js';
+import { canonicalListingUrl, collectListings, DEFAULT_RELEVANCE_KEYWORDS } from '@/lib/server/collector/parser.js';
 
 import { processListings } from '@/lib/server/listing-pipeline';
 import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
@@ -71,6 +71,8 @@ function mapItem(item: unknown) {
     url:
       value.url ??
       value.link ??
+      value.sourceUrl ??
+      value.source_url ??
       (value.source && typeof value.source === 'object'
         ? (value.source as { url?: unknown }).url
         : undefined),
@@ -139,12 +141,16 @@ export async function POST(request: Request) {
       }))
     );
     const listings = collected.listings.map((listing) => {
-      const metadata = inputItems.find(
-        (item) =>
-          (item.url && listing.source.url === item.url) ||
-          String(item.title ?? '').trim() === listing.title
-        );
-        return { ...listing, phone: metadata?.phone ?? null, imageUrl: metadata?.imageUrl ?? null };
+      const key = listing.source.originalUrlKey;
+      const metadata = inputItems.find((item) => {
+        if (key && typeof item.url === 'string' && item.url.trim()) {
+          try {
+            return canonicalListingUrl(new URL(item.url, sourceUrl || undefined).href) === key;
+          } catch { return false; }
+        }
+        return !key && String(item.title ?? '').trim() === listing.title;
+      });
+      return { ...listing, phone: metadata?.phone ?? null, imageUrl: metadata?.imageUrl ?? listing.imageUrl ?? null };
     }) as Array<
         (typeof collected.listings)[number] & {
           phone?: string | null;
@@ -160,7 +166,12 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         data: result.listings,
-        stats: { ...collected.stats, rejected: collected.stats.rejected + result.rejected.length },
+        stats: {
+          ...collected.stats,
+          duplicates: result.duplicates,
+          rejected: collected.stats.rejected + result.rejected.length,
+          needsReview: result.listings.filter((listing) => listing.verificationStatus === 'needs_review').length,
+        },
         saved: result.persistence.saved,
         storage: 'mysql',
         persistence: result.persistence,

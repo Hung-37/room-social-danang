@@ -3,7 +3,7 @@ import { deletedListingIds } from "./listing-deletions";
 import { listingRejectionReason } from "@/lib/policies/listing-policy.js";
 import type { NormalizedListing } from "@/lib/server/collector/parser.js";
 import { deduplicateListings } from "@/lib/server/collector/parser.js";
-import { saveListings } from "./db";
+import { filterStoredDuplicates, saveListings } from "./db";
 import { hasDatabaseConfig } from "./mysql-pool";
 import { getSiteSettings } from "./site-settings";
 import { recordCollectorRun } from "./collector-run-storage";
@@ -41,7 +41,7 @@ export async function processListings(
     title: l.title.slice(0, 255),
     summary: l.summary.slice(0, 10000),
   }));
-  const duplicateCount =
+  let duplicateCount =
     (options.duplicates || 0) + selected.length - listings.length;
   let saved = 0;
   const persistenceErrors: string[] = [];
@@ -62,6 +62,9 @@ export async function processListings(
           });
           return false;
         });
+        const candidates = await filterStoredDuplicates(connection, listings);
+        duplicateCount += listings.length - candidates.length;
+        listings = candidates;
         saved = await saveListings(listings, connection);
         if (saved !== listings.length)
           persistenceErrors.push("Không lưu đủ tin vào MySQL.");
