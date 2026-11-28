@@ -157,8 +157,9 @@ async function main(){
   assert(menuBox.width>=44 && menuBox.height>=44);
   assert(await p.locator('link[rel="icon"]').count()>0);
   report.checks.push('mobile menu keyboard/focus/44px target and favicon');
-  await p.getByLabel('Bạn muốn ở đâu?',{exact:true}).fill('Sơn Trà');
-  await p.getByRole('search',{name:'Tìm phòng trọ'}).getByRole('button',{name:'Tìm phòng',exact:true}).click();
+  const roomSearch=p.getByRole('search');
+  await roomSearch.getByRole('searchbox',{name:'Tìm phòng',exact:true}).fill('Sơn Trà');
+  await roomSearch.getByRole('button',{name:'Tìm phòng',exact:true}).click();
   await p.waitForURL('**/bang-tin?**');
   assert.equal(new URL(p.url()).searchParams.get('q'),'Sơn Trà');
   report.checks.push('home search preserves Vietnamese query');
