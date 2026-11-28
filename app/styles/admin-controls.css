@@ -195,6 +195,7 @@
 .admin-badge {
   margin-inline-start: 4px;
   padding-inline: 4px;
+  border-radius: 4px;
   background: #a83d27;
   color: #fff;
 }
