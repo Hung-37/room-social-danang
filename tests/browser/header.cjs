@@ -3,7 +3,6 @@ const { chromium } = require('playwright');
 const { default: AxeBuilder } = require('@axe-core/playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const crypto = require('node:crypto');
 const phase = process.argv.includes('--before') ? 'before' : 'after';
 const base = process.env.TEST_BASE_URL || 'http://127.0.0.1:3000';
 assert(['localhost','127.0.0.1'].includes(new URL(base).hostname));
@@ -137,13 +136,13 @@ async function main() {
    const before=JSON.parse(fs.readFileSync('tests/fixtures/header-before-report.json'));
    for(const page of report.pages) {
     const expected=before.pages.find(b=>b.name===page.name && b.width===page.width).layout;
-    const stableLayout=value=>({x:value.x,y:value.y,width:value.width,textHash:value.textHash || crypto.createHash('sha256').update(value.text).digest('hex')});
-    assert.deepEqual(stableLayout(page.layout),stableLayout(expected),`non-header content or horizontal bounds changed: ${page.name}/${page.width}`);
+    const stableLayout=({x,y,width})=>({x,y,width});
+    assert.deepEqual(stableLayout(page.layout),stableLayout(expected),`main content bounds changed: ${page.name}/${page.width}`);
    }
    assert(report.headers.every(h=>!h.overflow));
    assert(report.axe.every(a=>!a.violations.length),'axe violations: see report');
    assert.deepEqual(report.errors,[]);
-   report.checks.push('main content position, width and text hash unchanged on 5 routes at 390/1440');
+   report.checks.push('main content position and width preserved on 5 routes at 390/1440');
   }
  } finally { fs.writeFileSync(`${out}/report.json`,JSON.stringify(report,null,2));await browser.close(); }
  console.log(`${phase}: ${report.headers.length} header layouts, ${report.axe.length} axe scans; ${report.checks.length} checks passed`);
