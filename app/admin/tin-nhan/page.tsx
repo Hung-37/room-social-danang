@@ -14,10 +14,6 @@ export default async function Page() {
               <div>
                 <span className="eyebrow">An toàn cộng đồng</span>
                 <h1>Báo cáo hội thoại</h1>
-                <p>
-                  Xem xét lý do báo cáo, cập nhật trạng thái và giữ riêng tư cho
-                  nội dung trao đổi.
-                </p>
               </div>
             </div>
             <Reports />

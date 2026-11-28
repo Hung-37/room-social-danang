@@ -114,7 +114,24 @@
   gap: var(--space-8);
 }
 
+.admin-main .admin-page :is(.admin-controls, .import-controls, .url-crawl-actions, .listing-actions) > :is(button, a.secondary-btn, label.secondary-btn) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  max-width: 100%;
+  padding: 6px 12px;
+  font-size: var(--font-sm);
+  line-height: 1.35;
+  text-align: center;
+}
+
 @media (max-width: 850px) {
+  .admin-main .admin-page :is(.admin-controls, .import-controls, .url-crawl-actions, .listing-actions) > :is(button, a.secondary-btn, label.secondary-btn) {
+    flex: 0 1 auto;
+    min-height: 44px;
+  }
+
   .admin-main .admin-listing-row {
     grid-template-columns: auto minmax(0, 1fr) clamp(84px, 24vw, 148px);
     gap: var(--space-8);

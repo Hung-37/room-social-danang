@@ -59,15 +59,11 @@ const fs = require("node:fs");
   ]) {
     await p.setViewportSize(viewport);
     await p.goto("/admin?tab=listings");
-    const button = p.getByRole("button", {
+    await p.getByRole("heading", { name: "Quản lý bài đăng", exact: true }).waitFor();
+    assert.equal(await p.getByRole("button", {
       name: "Phân cụm lại theo địa chỉ",
       exact: true,
-    });
-    await button.waitFor();
-    await button.click();
-    await p
-      .getByText(/Đã kiểm tra \d+ tin, cập nhật khu vực cho \d+ tin/)
-      .waitFor();
+    }).count(), 0);
     checks++;
     assert.equal(
       await p.evaluate(
@@ -90,26 +86,10 @@ const fs = require("node:fs");
     assert.equal(scan.violations.length, 0, JSON.stringify(scan.violations));
     checks++;
   }
-  await p.route("**/api/admin/recluster", (route) =>
-    route.fulfill({
-      status: 503,
-      contentType: "application/json",
-      body: JSON.stringify({
-        error:
-          "Không thể hoàn tất phân cụm. Đã lưu 0 tin trong 0 tin đã kiểm tra; vui lòng thử lại.",
-        code: "RECLUSTER_FAILED",
-      }),
-    }),
-  );
-  await p
-    .getByRole("button", { name: "Phân cụm lại theo địa chỉ", exact: true })
-    .click();
-  await p.getByText(/Không thể hoàn tất phân cụm/).waitFor();
-  checks++;
   assert.deepEqual(errors, []);
   checks++;
   console.log(
-    `PASS: ${checks} browser checks, desktop/mobile recluster action, error display, no horizontal overflow or runtime errors; 2 Axe scans with zero violations.`,
+    `PASS: ${checks} browser checks, no manual recluster button, horizontal overflow or runtime errors; 2 Axe scans with zero violations.`,
   );
   await browser.close();
 })().catch((e) => {

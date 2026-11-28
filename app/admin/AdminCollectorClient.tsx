@@ -217,7 +217,7 @@ export default function AdminCollectorClient({
   const [selectedListings, setSelectedListings] = useState<Set<string>>(
     new Set(),
   );
-  const [batchAction, setBatchAction] = useState<string | null>(null);
+  const [batchAction, setBatchAction] = useState<"verified" | "rejected" | null>(null);
   const [listingQuery, setListingQuery] = useState("");
   const [listingStatus, setListingStatus] = useState("all");
   const [listingOffset, setListingOffset] = useState(0);
@@ -669,7 +669,7 @@ export default function AdminCollectorClient({
     }
   }
 
-  async function batchUpdateStatus(status: string) {
+  async function batchUpdateStatus(status: "verified" | "rejected") {
     if (reviewPending.current || batchAction !== null) return;
     if (selectedListings.size === 0) {
       setMessage("Vui lòng chọn ít nhất một bài.");
@@ -725,29 +725,6 @@ export default function AdminCollectorClient({
     }
   }
 
-  async function autoRecluster() {
-    setBatchAction("recluster");
-    try {
-      const response = await fetch("/api/admin/recluster", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      const payload = await response.json();
-      if (response.ok && payload.data) {
-        const { totalUpdated, scanned } = payload.data;
-        await loadListings();
-        setMessage(
-          `Đã kiểm tra ${scanned} tin, cập nhật khu vực cho ${totalUpdated} tin. Ngày xác nhận tin được giữ nguyên.`,
-        );
-      } else {
-        setMessage(payload.error || "Không thể phân cụm lại.");
-      }
-    } catch {
-      setMessage("Lỗi khi phân cụm lại.");
-    } finally {
-      setBatchAction(null);
-    }
-  }
 
   function toggleSelection(externalId: string) {
     setSelectedListings((prev) => {
@@ -1020,40 +997,10 @@ export default function AdminCollectorClient({
 
         {activeTab === "collector" && (
           <>
-            <div className="admin-notice">
-              <strong>Chính sách nguồn:</strong> chỉ chạy API/RSS công khai đã
-              allowlist. Không đăng nhập, không vượt CAPTCHA, không cào group
-              kín và mọi bài mới đều cần kiểm chứng.
-            </div>
-
-            {sources.filter((s) => s.enabled).length === 0 && (
-              <div className="admin-notice guide-notice">
-                <strong>📋 Hướng dẫn bắt đầu:</strong>
-                <ol>
-                  <li>
-                    Sử dụng <strong>Import</strong> bên dưới để nhập dữ liệu từ
-                    file CSV/JSON (khuyên dùng)
-                  </li>
-                  <li>
-                    Hoặc cấu hình <code>PUBLIC_FEED_URL</code> trong{" "}
-                    <code>.env.local</code> cho nguồn JSON
-                  </li>
-                  <li>
-                    Sau đó click <strong>"Chạy ngay"</strong> để thu thập dữ
-                    liệu
-                  </li>
-                </ol>
-              </div>
-            )}
-
             <div className="import-panel">
               <div className="admin-section-head">
                 <div>
                   <h2>📥 Nhập dữ liệu có quyền sử dụng</h2>
-                  <p>
-                    Tải CSV/JSON hoặc dán nội dung tin từ các nguồn bạn có quyền
-                    sử dụng để lọc và lưu vào hệ thống.
-                  </p>
                 </div>
               </div>
               <div className="import-controls">
@@ -1103,11 +1050,6 @@ export default function AdminCollectorClient({
               <div className="admin-section-head">
                 <div>
                   <h2>🌐 Cào thử một URL công khai</h2>
-                  <p>
-                    Nhập trang HTTPS bất kỳ được phép truy cập. Hệ thống tự nhận
-                    diện JSON, RSS, JSON-LD, Open Graph và card HTML, sau đó
-                    luôn đưa tin vào hàng chờ duyệt.
-                  </p>
                 </div>
               </div>
               <div className="form-grid url-crawl-fields">
@@ -1234,11 +1176,6 @@ export default function AdminCollectorClient({
             <div className="admin-section-head">
               <div>
                 <h2>Nguồn dữ liệu</h2>
-                <p>
-                  Danh sách trang đã khai báo; mở link để đối chiếu, bật nguồn
-                  được phép rồi chọn “Cào lại nguồn này”. Nguồn chưa được cấp
-                  phép chỉ dùng để tham khảo.
-                </p>
               </div>
               <div className="admin-controls toolbar collector-run-controls">
                 <div className="collector-auto-run">
@@ -1270,7 +1207,6 @@ export default function AdminCollectorClient({
                 <div className="source-row" key={source.id}>
                   <div>
                     <strong>{source.name}</strong>
-                    <span>{source.note}</span>
                     {source.url && /^https:\/\//.test(source.url) && (
                       <a
                         href={source.url}
@@ -1435,15 +1371,6 @@ export default function AdminCollectorClient({
                 )}
                 <button
                   className="secondary-btn"
-                  onClick={autoRecluster}
-                  disabled={reviewing || batchAction !== null}
-                >
-                  {batchAction === "recluster"
-                    ? "Đang phân cụm..."
-                    : "Phân cụm lại theo địa chỉ"}
-                </button>
-                <button
-                  className="secondary-btn"
                   onClick={loadListings}
                   disabled={loadingListings}
                 >
@@ -1451,12 +1378,6 @@ export default function AdminCollectorClient({
                 </button>
               </div>
             </div>
-
-            <p className="muted">
-              Phân cụm lại sẽ thay thế khu vực đã gán theo địa chỉ. Tin thiếu
-              thông tin được đưa về “Chưa phân cụm”; ngày xác nhận tin không
-              thay đổi.
-            </p>
 
             <div className="feed-filters admin-listing-filters toolbar">
               <input
@@ -1671,10 +1592,6 @@ export default function AdminCollectorClient({
             <div className="admin-section-head">
               <div>
                 <h2>Kiểm duyệt cộng đồng</h2>
-                <p>
-                  Bài viết chỉ xuất hiện công khai sau khi được quản trị viên
-                  xác minh.
-                </p>
               </div>
               <button
                 className="secondary-btn"

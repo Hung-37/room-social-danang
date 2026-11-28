@@ -103,10 +103,6 @@ export default function SettingsClient() {
           Tải lại cấu hình
         </button>
       </div>
-      <p>
-        Các giá trị dưới đây được lưu trong database. Tin mới và tin sửa luôn cần kiểm duyệt; không
-        thể bỏ qua phân quyền bằng cấu hình.
-      </p>
       {error && (
         <p className="feedback feedback-error" role="alert">
           {error}

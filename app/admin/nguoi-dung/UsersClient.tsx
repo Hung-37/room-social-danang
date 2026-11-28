@@ -86,10 +86,6 @@ export default function UsersClient() {
   return (
     <>
       <h1>Quản lý người dùng</h1>
-      <p>
-        Tìm tài khoản, theo dõi hoạt động và tạm khóa khi cần. Xác minh chủ trọ được xử lý ở mục
-        riêng; màn hình này không cấp quyền Admin hoặc đọc tin nhắn riêng.
-      </p>
       <div className="user-filters">
         <label>
           Tìm người dùng

@@ -134,7 +134,7 @@ async function auditLayout({ contexts, api, stamp, room, post, chat, out }) {
       "admin-listings",
       "/admin?tab=listings",
       "admin",
-      "input[aria-label='Tìm bài đăng quản trị'];text=Phân cụm lại theo địa chỉ",
+      "input[aria-label='Tìm bài đăng quản trị'];text=Tải lại",
     ],
     ["admin-reports", "/admin?tab=reports", "admin"],
     ["admin-landlords", "/admin/chu-tro", "admin"],
