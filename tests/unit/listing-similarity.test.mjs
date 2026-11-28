@@ -14,3 +14,16 @@ test('rank near copies across URLs without flagging exact URLs or unrelated area
   assert.ok(matches.every(pair => !['d','e'].includes(pair.right) && pair.score <= 1));
   assert.deepEqual(findSimilarListings([{id:'x',title:''}, {id:'y',title:''}]), []);
 });
+
+test('collector review maps source URLs, reports the scanned batch and preserves input', async () => {
+  const { reviewCollectedBatch } = await import('../../lib/server/collector/similarity.js');
+  const first = { externalId: 'one', source: { url: 'https://example.com/room/1' },
+    title: 'Phòng gác lửng gần cầu Hòa Cầm', summary: 'Phòng có bếp riêng và ban công', address: '36 Lê Văn Tâm' };
+  const rows = [first, { ...first, externalId: 'two', source: { url: 'https://example.com/room/2' } }];
+  const original = structuredClone(rows);
+  const review = await reviewCollectedBatch(rows);
+  assert.equal(review.similarityScanned, 2);
+  assert.deepEqual(review.similarListings.map(p => [p.left, p.right]), [['one','two']]);
+  assert.deepEqual(rows, original);
+  assert.deepEqual(await reviewCollectedBatch([]), {similarityScanned: 0, similarListings: []});
+});

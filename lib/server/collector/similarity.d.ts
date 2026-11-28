@@ -14,3 +14,8 @@ export function findSimilarListings(input: SimilarityInput[]): SimilarityMatch[]
 export function findAutoDuplicates(input: SimilarityInput[]): AutoDuplicateMatch[];
 export function scanSimilarListings(input: SimilarityInput[]): Promise<SimilarityMatch[]>;
 export function scanAutoDuplicates(input: SimilarityInput[]): Promise<AutoDuplicateMatch[]>;
+
+export function reviewCollectedBatch(listings: Array<{
+  externalId: string; title: string; summary?: string | null; address?: string | null;
+  imageUrl?: unknown; clusterId?: string | null; source: { url: string | null };
+}>): Promise<{ similarListings: SimilarityMatch[]; similarityScanned: number }>;

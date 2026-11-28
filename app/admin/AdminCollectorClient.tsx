@@ -28,9 +28,29 @@ type RunResult = {
   warning?: string;
 };
 
+type BatchReview = {
+  similarListings?: import("@/lib/server/collector/similarity.js").SimilarityMatch[];
+  similarityScanned?: number;
+};
+
+function BatchSuggestions({ review }: { review: BatchReview }) {
+  if (!review.similarListings) return null;
+  return (
+    <details>
+      <summary>AI gợi ý {review.similarListings.length} cặp trong {review.similarityScanned} tin của đợt này</summary>
+      {review.similarListings.length > 0 && <ol>{review.similarListings.map(pair =>
+        <li key={JSON.stringify([pair.left, pair.right])}>
+          {pair.leftTitle} (<code>{pair.left}</code>) · {pair.rightTitle} (<code>{pair.right}</code>)
+          {" · "}Điểm tương đồng {pair.score.toFixed(2)}/1
+        </li>
+      )}</ol>}
+    </details>
+  );
+}
+
 type RunResponse = {
   data: RunResult[];
-  meta: {
+  meta: BatchReview & {
     ranAt: string;
     configured: number;
     collected: number;
@@ -71,7 +91,7 @@ type UrlPreview = {
 
 type UrlPreviewResponse = {
   data?: UrlPreview[];
-  meta?: {
+  meta?: BatchReview & {
     url: string;
     format: string;
     pages?: number;
@@ -1119,6 +1139,7 @@ export default function AdminCollectorClient({
                     : ""}
                 </p>
               )}
+              {crawlPreview?.meta && <BatchSuggestions review={crawlPreview.meta} />}
               {crawlPreview?.error && (
                 <p className="error-message">{crawlPreview.error}</p>
               )}
@@ -1285,6 +1306,7 @@ export default function AdminCollectorClient({
                     <p>{new Date(run.meta.ranAt).toLocaleString("vi-VN")}</p>
                   </div>
                 </div>
+                <BatchSuggestions review={run.meta} />
                 {run.data.length === 0 ? (
                   <p className="empty-state">
                     Chưa có nguồn công khai nào được cấu hình.

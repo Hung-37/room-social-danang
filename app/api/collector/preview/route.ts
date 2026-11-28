@@ -1,3 +1,4 @@
+import { reviewCollectedBatch } from "@/lib/server/collector/similarity.js";
 import { NextResponse } from 'next/server';
 import { fetchGenericUrlListings, isPublicFeedUrl } from '@/lib/server/collector/parser.js';
 import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
         pages: result.pages,
         maxPages,
         received: result.listings.length,
+        ...await reviewCollectedBatch(result.listings),
         limited: result.listings.length > 500,
         robots: result.robots,
         warnings: result.warnings
