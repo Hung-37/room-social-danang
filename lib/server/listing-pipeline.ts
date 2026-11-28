@@ -8,6 +8,7 @@ import { hasDatabaseConfig } from "./mysql-pool";
 import { getSiteSettings } from "./site-settings";
 import { recordCollectorRun } from "./collector-run-storage";
 import { recordCollectorRunDb } from "./collector-db";
+import { archiveNearDuplicateListings } from "./listing-auto-archive";
 export async function processListings(
   input: NormalizedListing[],
   options: {
@@ -71,6 +72,7 @@ export async function processListings(
       });
     }
   }
+  const autoArchive = saved > 0 ? await archiveNearDuplicateListings(listings) : { scanned: 0, archived: [] };
   const errorCount = (options.sourceErrors || 0) + persistenceErrors.length;
   const record = {
     ranAt: new Date().toISOString(),
@@ -99,6 +101,7 @@ export async function processListings(
   return {
     listings,
     rejected,
+    autoArchive,
     status,
     duplicates: record.duplicates,
     record,

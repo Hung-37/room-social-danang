@@ -16,4 +16,10 @@ Bộ mẫu chỉ gồm các cặp do bản cũ đề xuất. Kết quả đo kh�
 
 Cào thủ công trả gợi ý trong `meta.similarListings`. Kiểm tra bằng giao diện Admin dùng cùng bộ chấm, tối đa 200 tin và 30 cặp. Các URL gốc trùng sau chuẩn hóa tiếp tục đi qua luồng đối chiếu URL. Điểm AI chỉ phục vụ rà thủ công.
 
+## Tự động lưu trữ tin trùng (độ tin cậy rất cao)
+
+Sau mỗi lượt cào (cron lẫn thủ công), `archiveNearDuplicateListings` trong `lib/server/listing-auto-archive.ts` so sánh các tin vừa lưu với tối đa 200 tin `verified`/`needs_review` mới cập nhật nhất. Chỉ các cặp đạt đồng thời `score ≥ 0,95` **và** ảnh bìa gần trùng (`near ≥ 0,9`, tức cùng ảnh chụp lại) mới bị xử lý — cặp chỉ giống văn bản vẫn chờ admin rà thủ công.
+
+Phía bị ẩn luôn là tin vừa cào trong lượt đó và chỉ khi trạng thái hiện tại là `needs_review`; tin đã `verified` không bao giờ bị đụng. Mỗi lần ẩn ghi `moderation_logs` với action `duplicate_auto_archived`, actor `collector-ml`. Kết quả trả về trong `meta.autoArchived`/`meta.autoArchivePairs` của `/api/collector/run`. Tắt bằng `LISTING_AUTO_ARCHIVE=0`. Lỗi quét hoặc ghi đều được nuốt — không làm hỏng lượt cào.
+
 Nút kiểm tra bảo vệ trang chủ dùng những tiêu chí HTTP riêng biệt.

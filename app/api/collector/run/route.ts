@@ -164,6 +164,8 @@ async function run(request: Request, mode: "cron" | "manual") {
         clusterId: item.clusterId, url: item.source.url,
       }))) }),
       duplicates: result.duplicates,
+      autoArchived: result.autoArchive?.archived?.length ?? 0,
+      autoArchivePairs: result.autoArchive?.archived ?? [],
       persistence: result.persistence,
       status: result.status,
       rejected: result.rejected,

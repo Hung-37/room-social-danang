@@ -5,6 +5,12 @@ export interface SimilarityInput {
 }
 export interface SimilarityMatch {
   left: string; right: string; leftTitle: string; rightTitle: string; score: number;
+  near?: number;
+}
+export interface AutoDuplicateMatch extends SimilarityMatch {
+  near: number;
 }
 export function findSimilarListings(input: SimilarityInput[]): SimilarityMatch[];
+export function findAutoDuplicates(input: SimilarityInput[]): AutoDuplicateMatch[];
 export function scanSimilarListings(input: SimilarityInput[]): Promise<SimilarityMatch[]>;
+export function scanAutoDuplicates(input: SimilarityInput[]): Promise<AutoDuplicateMatch[]>;
