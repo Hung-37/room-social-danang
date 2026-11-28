@@ -210,7 +210,7 @@ export default function FeedExplorer({
       <main
         id="main-content"
         tabIndex={-1}
-        className={`content-shell explorer ${rooms ? "rooms-explorer" : "discussions-explorer"}`}
+        className={`content-shell explorer ${rooms ? "rooms-explorer" : "discussions-explorer"} ${composerOpen && !rooms ? "composer-open" : ""}`}
       >
         <nav className="breadcrumb" aria-label="Đường dẫn">
           <Link href="/">Trang chủ</Link>
@@ -255,9 +255,6 @@ export default function FeedExplorer({
           <section className="composer-panel" id="viet-bai">
             <div className="section-title-row">
               <div>
-                <span className="section-eyebrow">
-                  Gửi một câu hỏi, chia sẻ một trải nghiệm
-                </span>
                 <h2 tabIndex={-1} ref={composerHeading}>
                   Viết thảo luận
                 </h2>

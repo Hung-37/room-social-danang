@@ -11,7 +11,7 @@ const routes = [['home','/'],['feed','/bang-tin'],['search','/bang-tin?q=Hai%20C
   ['appointments','/lich-xem-phong'],['notifications','/thong-bao'],['profile','/profile'],['admin','/admin']];
 const room = {id:'ui-room',externalId:'ui-room',contentKind:'listing',title:'[UI mẫu] Phòng gần biển Sơn Trà',summary:'Dữ liệu chỉ trong bộ nhớ trình duyệt để kiểm tra giao diện.',
   clusterId:'son-tra',clusterName:'Sơn Trà',address:'Sơn Trà, Đà Nẵng',price:2500000,area:25,verificationStatus:'verified',status:'Đã duyệt',comments:0,
-  tags:[],sourceName:'Nguồn kiểm thử giao diện',sourceUrl:'https://example.com/room',updatedAt:'2026-11-15T03:00:00Z',updated:'15/11/2026',imageUrls:[]};
+  tags:[],sourceName:'Nguồn kiểm thử giao diện',sourceUrl:'https://example.com/room',updatedAt:'2026-11-15T03:00:00Z',updated:'15/11/2026',imageUrls:['/api/images/ui-audit-photo']};
 async function main(){
  fs.mkdirSync(out,{recursive:true});
  const browser=await chromium.launch(process.env.CHROMIUM_PATH ? {executablePath:process.env.CHROMIUM_PATH} : {channel:'msedge'});
@@ -22,7 +22,7 @@ async function main(){
   await context.route('**/api/**',r=>['GET','HEAD'].includes(r.request().method())?r.continue():r.abort());
   const page=await context.newPage();
   page.on('pageerror',e=>report.errors.push(e.message));
-  for(const width of [375,768,1280]){
+  for(const width of [320,375,430,768,1024,1280,1440]){
    await page.setViewportSize({width,height:900});
    for(const [name,url] of routes){
     await page.goto(url,{waitUntil:'networkidle'});
@@ -80,15 +80,15 @@ async function main(){
   });
   const p=await fixture.newPage();
   p.on('pageerror',e=>report.errors.push(e.message));
-  for(const width of [375,768,1280]){
+  for(const width of [320,375,430,768,1024,1280,1440]){
    await p.setViewportSize({width,height:900});
    for(const [name,url] of [['feed','/bang-tin'],['detail','/bai/ui-room'],['reference','/bai/ui-reference']]){
     await p.goto(url,{waitUntil:'networkidle'});
-    await p.getByText(name==='reference'?'[UI mẫu] Tin tham khảo thiếu giá':'[UI mẫu] Phòng gần biển Sơn Trà',{exact:true}).first().waitFor();
+    await p.getByRole('heading',{name:name==='reference'?'[UI mẫu] Tin tham khảo thiếu giá':'[UI mẫu] Phòng gần biển Sơn Trà',exact:true}).waitFor();
     assert.equal(await p.getByText('Còn phòng',{exact:true}).count(),0);
     assert.equal(await p.getByRole('button',{name:'Nhắn chủ trọ',exact:true}).count(),0);
     assert.equal(await p.locator('img[src*="unlicensed"]').count(),0);
-    assert(await p.locator('.room-photo-empty').count()>0);
+    if(name==='detail') assert(await p.locator('.room-photo-empty').count()>0);
     assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false,`${name} ${width} overflow`);
     if(name!=='detail'){
      assert(await p.getByText('Tin tham khảo · Chưa xác minh · Chưa xác nhận còn phòng',{exact:true}).count()>0);
@@ -97,6 +97,13 @@ async function main(){
     if(width!==768) await p.screenshot({path:`${out}/fixture-${name}-${width}.png`,fullPage:true});
     const scan=await new AxeBuilder({page:p}).withTags(['wcag2a','wcag2aa','wcag21a','wcag21aa']).analyze();
     report.axe.push({name:`fixture-${name}-${width}`,violations:scan.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))}))});
+    if(name==='detail' && width===375) {
+     const cover=p.locator('.detail-cover.photo-open');
+     const coverInfo=await cover.evaluate(el=>({ariaLabel:el.getAttribute('aria-label'),innerText:el.innerText,textContent:el.textContent,visibleParts:[...el.querySelectorAll('span')].map(node=>node.innerText)}));
+     assert.equal(await p.getByRole('button',{name:/Xem ảnh đầy đủ.*1\s*\/\s*1/}).count(),1,JSON.stringify(coverInfo));
+     assert(!scan.violations.some(v=>v.id==='label-content-name-mismatch'),JSON.stringify({coverInfo,violation:scan.violations.find(v=>v.id==='label-content-name-mismatch')?.nodes}));
+     report.checks.push('room cover accessible name includes its visible label');
+    }
    }
   }
   await p.goto('/bang-tin',{waitUntil:'networkidle'});
@@ -165,6 +172,7 @@ async function main(){
   fs.writeFileSync(`${out}/ui-report.json`,JSON.stringify(report,null,2));
   await browser.close();
  }
- console.log('UI redesign: 27 real page visits, 9 fixture layouts, 17 axe scans and interaction checks passed.');
+ const fixtureLayouts=report.axe.filter(x=>x.name?.startsWith('fixture-')).length;
+ console.log(`UI audit: ${report.pages.length} route/viewport visits, ${fixtureLayouts} fixture layouts, ${report.axe.length} axe scans, ${report.checks.length} interaction groups passed.`);
 }
-main().catch(e=>{console.error(e.message);process.exitCode=1;});
+main().catch(e=>{console.error(e.stack || e);process.exitCode=1;});

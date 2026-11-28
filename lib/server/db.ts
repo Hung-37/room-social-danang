@@ -1,3 +1,4 @@
+import { filterDuplicateListingUrls } from "./collector/parser.js";
 import { lockListingOwner, reviewRevisionSql } from "./listing-eligibility";
 import { MutationError } from "./mutation-errors";
 import schemaContract from "@/database/schema-contract.json";
@@ -22,7 +23,7 @@ type Listing = {
   phone?: string | null;
   imageUrl?: string | null;
   clusterId: string | null;
-  source: { name: string; url: string | null; permission: string };
+  source: { originalUrlKey?: string | null; name: string; url: string | null; permission: string };
   verificationStatus: string;
   trustScore: number;
 };
@@ -31,6 +32,16 @@ const LISTING_STALE_DAYS = Math.max(
   Number(process.env.LISTING_STALE_DAYS) || 30,
   1,
 );
+
+// Call with the listing write lock held so another import cannot insert between
+// this legacy URL lookup and the upsert.
+export async function filterStoredDuplicates<T extends Listing>(connection: PoolConnection, listings: T[]) {
+  if (!listings.some((item) => item.source.originalUrlKey)) return listings;
+  const [rows] = await connection.query<(RowDataPacket & {external_id: string; source_url: string})[]>(
+    "SELECT external_id, source_url FROM listings WHERE source_url IS NOT NULL ORDER BY id",
+  );
+  return filterDuplicateListingUrls(listings, rows);
+}
 
 export async function saveListings(
   listings: Listing[],
@@ -86,6 +97,7 @@ export async function saveListings(
            VALUES ${placeholders}
            ON DUPLICATE KEY UPDATE
             verification_status=IF(listings.verification_status IN ('rejected','hidden','rented'),listings.verification_status,IF(listings.verification_status='verified' AND title<=>VALUES(title) AND summary<=>VALUES(summary) AND price<=>VALUES(price) AND area_m2<=>VALUES(area_m2) AND address<=>VALUES(address) AND image_url<=>VALUES(image_url),'verified','needs_review')),
+            source_url = COALESCE(VALUES(source_url), source_url),
             title = VALUES(title), summary = VALUES(summary), price = VALUES(price), area_m2 = VALUES(area_m2),
             address = VALUES(address), phone = VALUES(phone), image_url = VALUES(image_url), cluster_id = VALUES(cluster_id),
             trust_score = VALUES(trust_score),
@@ -119,7 +131,10 @@ export async function saveListings(
     };
     return existingConnection
       ? await write(existingConnection)
-      : await withListingWriteLock(write);
+      : await withListingWriteLock(async (connection) => {
+          listings = await filterStoredDuplicates(connection, listings);
+          return write(connection);
+        });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     const code = (error as { code?: string })?.code;

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { deduplicateListings, fetchGenericUrlListings, fetchHtmlListings, isPlaceholderListingUrl, isPublicFeedUrl, normalizeListing, parseGenericHtmlListings, publicSources, sanitizeListingSummary } from '../../lib/server/collector/parser.js';
+import { canonicalListingUrl, filterDuplicateListingUrls, deduplicateListings, fetchGenericUrlListings, fetchHtmlListings, isPlaceholderListingUrl, isPublicFeedUrl, normalizeListing, parseGenericHtmlListings, publicSources, sanitizeListingSummary } from '../../lib/server/collector/parser.js';
 
 const tromoiSource = publicSources.find((source) => source.id === 'tromoi-da-nang');
 const thuephongtroSource = publicSources.find((source) => source.id === 'thuephongtro-da-nang');
@@ -222,4 +222,23 @@ test('pagination stops at cyclic and off-origin next links', async () => {
  const mock=async url=>url.endsWith('/robots.txt')?new Response('User-agent: *\nAllow: /'):Response.json({items:[],next});
  assert.equal((await fetchGenericUrlListings('https://feed.example.vn/rooms?page=1',mock,{maxPages:50})).pages,1);
  }
+});
+
+test('collector and import share original URLs across batches without replacing a legacy ID', () => {
+  const original = 'https://TROMOI.com:443/phong-tro/hoa-cam/?id=78601&utm_source=crawl#photo';
+  const url = 'https://tromoi.com/phong-tro/hoa-cam?fbclid=test&id=78601';
+  const item = { title: 'Room listing', price: 3500000, url: original };
+  const crawl = normalizeListing(item, tromoiSource);
+  const imported = normalizeListing({ ...item, title: 'Updated title', price: 3400000, url }, { name: 'User import' });
+  const other = normalizeListing({ ...item, url: url.replace('78601', '78602') }, tromoiSource);
+  assert.notEqual(crawl.externalId, imported.externalId);
+  assert.equal(canonicalListingUrl(original), canonicalListingUrl(url));
+  assert.equal(deduplicateListings([crawl, imported, other]).length, 2);
+  for (const [stored, incoming] of [[crawl, imported], [imported, crawl]]) {
+    const rows = [{ source_url: stored.source.url, external_id: stored.externalId }];
+    assert.deepEqual(filterDuplicateListingUrls([incoming, stored, other], rows), [stored, other]);
+  }
+  const feedOnly = normalizeListing({ title: 'Second room', price: 123 }, tromoiSource);
+  assert.equal(feedOnly.source.originalUrlKey, null);
+  assert.deepEqual(filterDuplicateListingUrls([feedOnly], [{ source_url: tromoiSource.url, external_id: 'older' }]), [feedOnly]);
 });

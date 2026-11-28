@@ -1,0 +1,105 @@
+{
+  "pages": [
+    {
+      "width": 390,
+      "name": "home",
+      "layout": {
+        "x": 0,
+        "width": 390,
+        "textHash": "aa746235da7253d55eceaf27e2e16bff1c88eecb3fe834153748d55fb3dc3efc",
+        "y": 64
+      }
+    },
+    {
+      "width": 390,
+      "name": "feed",
+      "layout": {
+        "x": 16,
+        "width": 358,
+        "textHash": "d66552db99d7babfea47a9da49b2b368c9930068d4eba4029b3a873129c7cadc",
+        "y": 64
+      }
+    },
+    {
+      "width": 390,
+      "name": "detail",
+      "layout": {
+        "x": 0,
+        "width": 390,
+        "textHash": "3635270c8fbd7f085517215e4ad644788ec6437ad754bb97281d2c502f8c0875",
+        "y": 64
+      }
+    },
+    {
+      "width": 390,
+      "name": "management",
+      "layout": {
+        "x": 12,
+        "width": 366,
+        "textHash": "3de4cd3e5ba4caf2e08d28708178f4f50b80e643e916c607ad636c90b8b45de3",
+        "y": 64
+      }
+    },
+    {
+      "width": 390,
+      "name": "admin",
+      "layout": {
+        "x": 0,
+        "width": 390,
+        "textHash": "aa746235da7253d55eceaf27e2e16bff1c88eecb3fe834153748d55fb3dc3efc",
+        "y": 64
+      }
+    },
+    {
+      "width": 1440,
+      "name": "home",
+      "layout": {
+        "x": 0,
+        "width": 1440,
+        "textHash": "aa746235da7253d55eceaf27e2e16bff1c88eecb3fe834153748d55fb3dc3efc",
+        "y": 76
+      }
+    },
+    {
+      "width": 1440,
+      "name": "feed",
+      "layout": {
+        "x": 100,
+        "width": 1240,
+        "textHash": "dc8a935df81a0a982877b2d5e313eb34c178ac245811c3f6b6351fe79ae84596",
+        "y": 76
+      }
+    },
+    {
+      "width": 1440,
+      "name": "detail",
+      "layout": {
+        "x": 0,
+        "width": 1440,
+        "textHash": "3635270c8fbd7f085517215e4ad644788ec6437ad754bb97281d2c502f8c0875",
+        "y": 76
+      }
+    },
+    {
+      "width": 1440,
+      "name": "management",
+      "layout": {
+        "x": 120,
+        "width": 1200,
+        "textHash": "3de4cd3e5ba4caf2e08d28708178f4f50b80e643e916c607ad636c90b8b45de3",
+        "y": 76
+      }
+    },
+    {
+      "width": 1440,
+      "name": "admin",
+      "layout": {
+        "x": 0,
+        "width": 1440,
+        "textHash": "aa746235da7253d55eceaf27e2e16bff1c88eecb3fe834153748d55fb3dc3efc",
+        "y": 76
+      }
+    }
+  ],
+  "sourceCommit": "6e9b30031ef522506d0ccc753ee3b2835fc231a6"
+}

@@ -531,7 +531,6 @@ export default function AdminCollectorClient({
             ? "Chưa lưu đầy đủ dữ liệu vào MySQL. Kiểm tra kết nối rồi thử lại."
             : `Đã lưu ${payload.saved ?? 0} tin vào MySQL; tin đang chờ Admin kiểm duyệt.`),
       );
-      // Reload listings after import
       loadListings();
     } catch {
       setMessage("Không thể xử lý dữ liệu nhập.");

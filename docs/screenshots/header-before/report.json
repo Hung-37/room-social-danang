@@ -1,0 +1,190 @@
+{
+  "phase": "before",
+  "headers": [
+    {
+      "state": "guest",
+      "width": 360,
+      "mobile": true,
+      "overflow": false
+    },
+    {
+      "state": "guest",
+      "width": 390,
+      "mobile": true,
+      "overflow": false
+    },
+    {
+      "state": "guest",
+      "width": 768,
+      "mobile": true,
+      "overflow": false
+    },
+    {
+      "state": "guest",
+      "width": 1024,
+      "mobile": false,
+      "overflow": false
+    },
+    {
+      "state": "guest",
+      "width": 1440,
+      "mobile": false,
+      "overflow": false
+    },
+    {
+      "state": "member",
+      "width": 360,
+      "mobile": true,
+      "overflow": false
+    },
+    {
+      "state": "member",
+      "width": 390,
+      "mobile": true,
+      "overflow": false
+    },
+    {
+      "state": "member",
+      "width": 768,
+      "mobile": true,
+      "overflow": false
+    },
+    {
+      "state": "member",
+      "width": 1024,
+      "mobile": false,
+      "overflow": false
+    },
+    {
+      "state": "member",
+      "width": 1440,
+      "mobile": false,
+      "overflow": false
+    }
+  ],
+  "pages": [
+    {
+      "name": "home",
+      "width": 390,
+      "url": "http://127.0.0.1:3000/",
+      "layout": {
+        "x": 0,
+        "y": 64,
+        "width": 390,
+        "height": 3599.484375,
+        "text": "Sống & học tại Đà Nẵng\nMột căn phòng.\nMột khởi đầu mới.\n\nTìm nơi ở hợp túi tiền, gần trường và gần những điều bạn yêu.\n\nBạn muốn ở đâu?\nKhu vực\nTất cả khu vực\nBách khoa – Sư phạm\nHòa Cường\nHải Châu\nNgũ Hành Sơn\nNam Đà Nẵng\nSơn Trà\nCẩm Lệ\nHòa Vang\nTìm phòng\nKhám phá\nHải Châu ↗\nNgũ Hành Sơn ↗\nSơn Trà ↗\n🏠\nTìm phòng trọ\n\nXem tin đăng theo khu vực và ngân sách\n\n💬\nHỏi kinh nghiệm\n\nTham gia thảo luận với cộng đồng\n\n📍\nKhám phá khu vực\n\nTìm hiểu về các khu vực ở Đà Nẵng\n\nTin đăng mới nhất\nXem tất cả →\n\nKhông thể tải tin đăng lúc này.\n\nThử lại\nKhu vực phổ biến\nXem tất cả →\n🎓\nBách khoa – Sư phạm\n\nLiên Chiểu\n\nĐH Bách khoa · ĐH Sư phạm\n🏢\nHòa Cường\n\nHòa Cường – Xô Viết Nghệ Tĩnh\n\nĐH Đông Á · ĐH Kiến trúc\n🏙️\nHải Châu\n\nTrung tâm\n\nĐH Sư phạm Kỹ thuật · Các cơ sở lân cận\n🏖️\nNgũ Hành Sơn\n\nNgũ Hành Sơn\n\nĐH Kinh tế · Các trường lân cận\n🏫\nNam Đà Nẵng\n\nKhu đô thị đại học\n\nVKU · ĐH Y Dược · Các cơ sở lân cận\n📍\nSơn Trà\n\nSơn Trà – An Hải\n\nTham gia cộng đồng sinh viên\n\nChia sẻ kinh nghiệm, hỏi đáp về phòng trọ, cùng nhau xây dựng một cộng đồng hữu ích cho sinh viên Đà Nẵng.\n\nTham gia ngay →\n\nKhông thể tải thảo luận.\n\nThử lại\nBạn có phòng trọ cho thuê?\n\nKết nối với người tìm phòng tại Đà Nẵng.\n\nĐăng tin ngay"
+      }
+    },
+    {
+      "name": "feed",
+      "width": 390,
+      "url": "http://127.0.0.1:3000/bang-tin",
+      "layout": {
+        "x": 16,
+        "y": 64,
+        "width": 358,
+        "height": 1156.671875,
+        "text": "Trang chủ\n/\nTìm phòng\nTÌM NƠI Ở PHÙ HỢP\nTìm phòng, theo cách của bạn.\n\nLọc theo khu vực và ngân sách. Hỏi thêm trước khi quyết định.\n\nBạn có phòng cho thuê?\nTìm kiếm\nKhu vực\nTất cả khu vực\nBách khoa – Sư phạm\nHòa Cường\nHải Châu\nNgũ Hành Sơn\nNam Đà Nẵng\nSơn Trà\nCẩm Lệ\nHòa Vang\nChưa phân cụm\nGiá từ (triệu/tháng)\nGiá đến (triệu/tháng)\nSắp xếp\nMới nhất\nGiá thấp đến cao\nGiá cao đến thấp\nDiện tích lớn nhất\nXóa bộ lọc\nDanh sách phòng\n\nChưa thể tải dữ liệu. Vui lòng thử lại.\n\nThử lại\n\n0 phòng đang hiển thị\n\nMột chút lưu ý, thêm phần an tâm\n\nXem phòng trực tiếp, kiểm tra hợp đồng và xác minh người nhận tiền trước khi đặt cọc.\n\nHỏi kinh nghiệm trong cộng đồng →"
+      }
+    },
+    {
+      "name": "detail",
+      "width": 390,
+      "url": "http://127.0.0.1:3000/bai/header-preview",
+      "layout": {
+        "x": 0,
+        "y": 64,
+        "width": 390,
+        "height": 420.4375,
+        "text": "KẾT NỐI GIÁN ĐOẠN\nMình thử lại nhé?\n\nChưa thể tải dữ liệu. Vui lòng thử lại.\n\nThử tải lại\nTìm phòng khác\nVề cộng đồng"
+      }
+    },
+    {
+      "name": "management",
+      "width": 390,
+      "url": "http://127.0.0.1:3000/quan-ly-phong",
+      "layout": {
+        "x": 12,
+        "y": 64,
+        "width": 366,
+        "height": 416.671875,
+        "text": "DÀNH CHO CHỦ TRỌ\nQuản lý phòng của tôi\n\nChủ trọ được xác minh → Gửi tin → Admin duyệt → Phòng xuất hiện công khai.\n\nChưa thể tải dữ liệu. Vui lòng thử lại.\n\nThử tải lại phòng"
+      }
+    },
+    {
+      "name": "admin",
+      "width": 390,
+      "url": "http://127.0.0.1:3000/?openLogin=true",
+      "layout": {
+        "x": 0,
+        "y": 64,
+        "width": 390,
+        "height": 3599.484375,
+        "text": "Sống & học tại Đà Nẵng\nMột căn phòng.\nMột khởi đầu mới.\n\nTìm nơi ở hợp túi tiền, gần trường và gần những điều bạn yêu.\n\nBạn muốn ở đâu?\nKhu vực\nTất cả khu vực\nBách khoa – Sư phạm\nHòa Cường\nHải Châu\nNgũ Hành Sơn\nNam Đà Nẵng\nSơn Trà\nCẩm Lệ\nHòa Vang\nTìm phòng\nKhám phá\nHải Châu ↗\nNgũ Hành Sơn ↗\nSơn Trà ↗\n🏠\nTìm phòng trọ\n\nXem tin đăng theo khu vực và ngân sách\n\n💬\nHỏi kinh nghiệm\n\nTham gia thảo luận với cộng đồng\n\n📍\nKhám phá khu vực\n\nTìm hiểu về các khu vực ở Đà Nẵng\n\nTin đăng mới nhất\nXem tất cả →\n\nKhông thể tải tin đăng lúc này.\n\nThử lại\nKhu vực phổ biến\nXem tất cả →\n🎓\nBách khoa – Sư phạm\n\nLiên Chiểu\n\nĐH Bách khoa · ĐH Sư phạm\n🏢\nHòa Cường\n\nHòa Cường – Xô Viết Nghệ Tĩnh\n\nĐH Đông Á · ĐH Kiến trúc\n🏙️\nHải Châu\n\nTrung tâm\n\nĐH Sư phạm Kỹ thuật · Các cơ sở lân cận\n🏖️\nNgũ Hành Sơn\n\nNgũ Hành Sơn\n\nĐH Kinh tế · Các trường lân cận\n🏫\nNam Đà Nẵng\n\nKhu đô thị đại học\n\nVKU · ĐH Y Dược · Các cơ sở lân cận\n📍\nSơn Trà\n\nSơn Trà – An Hải\n\nTham gia cộng đồng sinh viên\n\nChia sẻ kinh nghiệm, hỏi đáp về phòng trọ, cùng nhau xây dựng một cộng đồng hữu ích cho sinh viên Đà Nẵng.\n\nTham gia ngay →\n\nKhông thể tải thảo luận.\n\nThử lại\nBạn có phòng trọ cho thuê?\n\nKết nối với người tìm phòng tại Đà Nẵng.\n\nĐăng tin ngay"
+      }
+    },
+    {
+      "name": "home",
+      "width": 1440,
+      "url": "http://127.0.0.1:3000/",
+      "layout": {
+        "x": 0,
+        "y": 76,
+        "width": 1440,
+        "height": 2402.046875,
+        "text": "Sống & học tại Đà Nẵng\nMột căn phòng.\nMột khởi đầu mới.\n\nTìm nơi ở hợp túi tiền, gần trường và gần những điều bạn yêu.\n\nBạn muốn ở đâu?\nKhu vực\nTất cả khu vực\nBách khoa – Sư phạm\nHòa Cường\nHải Châu\nNgũ Hành Sơn\nNam Đà Nẵng\nSơn Trà\nCẩm Lệ\nHòa Vang\nTìm phòng\nKhám phá\nHải Châu ↗\nNgũ Hành Sơn ↗\nSơn Trà ↗\n🏠\nTìm phòng trọ\n\nXem tin đăng theo khu vực và ngân sách\n\n💬\nHỏi kinh nghiệm\n\nTham gia thảo luận với cộng đồng\n\n📍\nKhám phá khu vực\n\nTìm hiểu về các khu vực ở Đà Nẵng\n\nTin đăng mới nhất\nXem tất cả →\n\nKhông thể tải tin đăng lúc này.\n\nThử lại\nKhu vực phổ biến\nXem tất cả →\n🎓\nBách khoa – Sư phạm\n\nLiên Chiểu\n\nĐH Bách khoa · ĐH Sư phạm\n🏢\nHòa Cường\n\nHòa Cường – Xô Viết Nghệ Tĩnh\n\nĐH Đông Á · ĐH Kiến trúc\n🏙️\nHải Châu\n\nTrung tâm\n\nĐH Sư phạm Kỹ thuật · Các cơ sở lân cận\n🏖️\nNgũ Hành Sơn\n\nNgũ Hành Sơn\n\nĐH Kinh tế · Các trường lân cận\n🏫\nNam Đà Nẵng\n\nKhu đô thị đại học\n\nVKU · ĐH Y Dược · Các cơ sở lân cận\n📍\nSơn Trà\n\nSơn Trà – An Hải\n\nTham gia cộng đồng sinh viên\n\nChia sẻ kinh nghiệm, hỏi đáp về phòng trọ, cùng nhau xây dựng một cộng đồng hữu ích cho sinh viên Đà Nẵng.\n\nTham gia ngay →\n\nKhông thể tải thảo luận.\n\nThử lại\nBạn có phòng trọ cho thuê?\n\nKết nối với người tìm phòng tại Đà Nẵng.\n\nĐăng tin ngay"
+      }
+    },
+    {
+      "name": "feed",
+      "width": 1440,
+      "url": "http://127.0.0.1:3000/bang-tin",
+      "layout": {
+        "x": 100,
+        "y": 76,
+        "width": 1240,
+        "height": 822.515625,
+        "text": "Trang chủ\n/\nTìm phòng\nTÌM NƠI Ở PHÙ HỢP\nTìm phòng, theo cách của bạn.\n\nLọc theo khu vực và ngân sách. Hỏi thêm trước khi quyết định.\n\nBạn có phòng cho thuê?\nTìm kiếm\nKhu vực\nTất cả khu vực\nBách khoa – Sư phạm\nHòa Cường\nHải Châu\nNgũ Hành Sơn\nNam Đà Nẵng\nSơn Trà\nCẩm Lệ\nHòa Vang\nChưa phân cụm\nGiá từ (triệu/tháng)\nGiá đến (triệu/tháng)\nSắp xếp\nMới nhất\nGiá thấp đến cao\nGiá cao đến thấp\nDiện tích lớn nhất\nXóa bộ lọc\nDanh sách phòng\n\nChưa thể tải dữ liệu. Vui lòng thử lại.\n\nThử lại\n\n0 phòng đang hiển thị\n\nMột chút lưu ý, thêm phần an tâm\n\nXem phòng trực tiếp, kiểm tra hợp đồng và xác minh người nhận tiền trước khi đặt cọc.\n\nHỏi kinh nghiệm trong cộng đồng →"
+      }
+    },
+    {
+      "name": "detail",
+      "width": 1440,
+      "url": "http://127.0.0.1:3000/bai/header-preview",
+      "layout": {
+        "x": 0,
+        "y": 76,
+        "width": 1440,
+        "height": 419.65625,
+        "text": "KẾT NỐI GIÁN ĐOẠN\nMình thử lại nhé?\n\nChưa thể tải dữ liệu. Vui lòng thử lại.\n\nThử tải lại\nTìm phòng khác\nVề cộng đồng"
+      }
+    },
+    {
+      "name": "management",
+      "width": 1440,
+      "url": "http://127.0.0.1:3000/quan-ly-phong",
+      "layout": {
+        "x": 120,
+        "y": 76,
+        "width": 1200,
+        "height": 419.96875,
+        "text": "DÀNH CHO CHỦ TRỌ\nQuản lý phòng của tôi\n\nChủ trọ được xác minh → Gửi tin → Admin duyệt → Phòng xuất hiện công khai.\n\nChưa thể tải dữ liệu. Vui lòng thử lại.\n\nThử tải lại phòng"
+      }
+    },
+    {
+      "name": "admin",
+      "width": 1440,
+      "url": "http://127.0.0.1:3000/?openLogin=true",
+      "layout": {
+        "x": 0,
+        "y": 76,
+        "width": 1440,
+        "height": 2402.046875,
+        "text": "Sống & học tại Đà Nẵng\nMột căn phòng.\nMột khởi đầu mới.\n\nTìm nơi ở hợp túi tiền, gần trường và gần những điều bạn yêu.\n\nBạn muốn ở đâu?\nKhu vực\nTất cả khu vực\nBách khoa – Sư phạm\nHòa Cường\nHải Châu\nNgũ Hành Sơn\nNam Đà Nẵng\nSơn Trà\nCẩm Lệ\nHòa Vang\nTìm phòng\nKhám phá\nHải Châu ↗\nNgũ Hành Sơn ↗\nSơn Trà ↗\n🏠\nTìm phòng trọ\n\nXem tin đăng theo khu vực và ngân sách\n\n💬\nHỏi kinh nghiệm\n\nTham gia thảo luận với cộng đồng\n\n📍\nKhám phá khu vực\n\nTìm hiểu về các khu vực ở Đà Nẵng\n\nTin đăng mới nhất\nXem tất cả →\n\nKhông thể tải tin đăng lúc này.\n\nThử lại\nKhu vực phổ biến\nXem tất cả →\n🎓\nBách khoa – Sư phạm\n\nLiên Chiểu\n\nĐH Bách khoa · ĐH Sư phạm\n🏢\nHòa Cường\n\nHòa Cường – Xô Viết Nghệ Tĩnh\n\nĐH Đông Á · ĐH Kiến trúc\n🏙️\nHải Châu\n\nTrung tâm\n\nĐH Sư phạm Kỹ thuật · Các cơ sở lân cận\n🏖️\nNgũ Hành Sơn\n\nNgũ Hành Sơn\n\nĐH Kinh tế · Các trường lân cận\n🏫\nNam Đà Nẵng\n\nKhu đô thị đại học\n\nVKU · ĐH Y Dược · Các cơ sở lân cận\n📍\nSơn Trà\n\nSơn Trà – An Hải\n\nTham gia cộng đồng sinh viên\n\nChia sẻ kinh nghiệm, hỏi đáp về phòng trọ, cùng nhau xây dựng một cộng đồng hữu ích cho sinh viên Đà Nẵng.\n\nTham gia ngay →\n\nKhông thể tải thảo luận.\n\nThử lại\nBạn có phòng trọ cho thuê?\n\nKết nối với người tìm phòng tại Đà Nẵng.\n\nĐăng tin ngay"
+      }
+    }
+  ],
+  "axe": [],
+  "errors": [],
+  "checks": []
+}

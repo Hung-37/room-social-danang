@@ -1180,15 +1180,47 @@ main:focus {
 }
 .discussion-form {
   max-width: 850px;
+  display: grid;
+  gap: 20px;
 }
-.discussion-form label {
+.discussion-form > label,
+.discussion-form .form-row > label {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
   font-size: 14px;
+  font-weight: 650;
+  line-height: 1.45;
 }
 .discussion-form input,
 .discussion-form textarea,
 .discussion-form select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  background: #fff;
   font-size: 14px;
-  min-height: 46px;
+  line-height: 1.5;
+}
+.discussion-form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+.discussion-form .form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.discussion-form .composer-footer {
+  margin-top: 0;
+}
+.discussion-form .composer-footer p {
+  margin: 0;
+}
+.discussions-explorer.composer-open .explorer-heading > .primary-btn {
+  display: none;
 }
 .composer-footer {
   display: flex;
