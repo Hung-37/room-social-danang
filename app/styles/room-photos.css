@@ -217,17 +217,6 @@
   flex-basis: 100%;
   font-weight: 600;
 }
-.review-photo-grid > a {
-  display: block;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 10px;
-  background: #edf2ee;
-}
-.review-photo-grid img {
-  height: 100%;
-  object-fit: contain;
-}
 @media (max-width: 600px) {
   .room-media {
     --photo-gutter: 20px;

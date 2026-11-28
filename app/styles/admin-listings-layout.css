@@ -79,10 +79,6 @@
   overflow-wrap: anywhere;
 }
 
-.admin-listing-row .review-preview {
-  margin-top: var(--space-4);
-}
-
 .listing-cover {
   display: grid;
   place-items: center;

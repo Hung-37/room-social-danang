@@ -1,5 +1,4 @@
 "use client";
-import ListingReviewPreview from "@/components/ListingReviewPreview";
 import DeleteRejectedListing from "@/components/DeleteRejectedListing";
 import FormField from "@/components/FormField";
 import { roomPhotos } from "@/lib/policies/room-photos.js";
@@ -821,7 +820,6 @@ export default function AdminCollectorClient({
           <div>
             <span className="eyebrow">Khu vực quản trị</span>
             <h1>Quản trị hệ thống</h1>
-            <p>Quản lý nguồn dữ liệu, bài đăng và cấu hình hệ thống.</p>
           </div>
           <div className="admin-controls">
             <Link href="/" className="secondary-btn">
@@ -1411,7 +1409,6 @@ export default function AdminCollectorClient({
             <div className="admin-section-head">
               <div>
                 <h2>Quản lý bài đăng</h2>
-                <p>Xem xét và duyệt các bài đăng từ hệ thống.</p>
               </div>
               <div className="admin-controls toolbar">
                 {selectedListings.size > 0 && (
@@ -1495,7 +1492,7 @@ export default function AdminCollectorClient({
               <p>
                 {loadingListings
                   ? "Đang tải danh sách…"
-                  : `${listingTotal} tin đăng · ${Math.ceil(listingTotal / 20)} trang cần xử lý${listingTotal ? ` · Trang ${Math.floor(listingOffset / 20) + 1}/${Math.ceil(listingTotal / 20)}` : ""} · 20 tin/trang.`}
+                  : `${listingTotal} tin đăng · 20 tin/trang`}
               </p>
               <nav
                 className="button-row admin-pagination"
@@ -1535,10 +1532,6 @@ export default function AdminCollectorClient({
                     : listingError
                       ? "Dùng nút Tải lại để thử lại."
                       : "Không có bài đăng phù hợp bộ lọc."}
-                </p>
-                <p>
-                  Hãy cấu hình và bật nguồn dữ liệu, sau đó chạy collector để
-                  thu thập bài đăng.
                 </p>
               </div>
             ) : (
@@ -1589,7 +1582,6 @@ export default function AdminCollectorClient({
                           {listing.address || "Chưa rõ địa chỉ"} ·{" "}
                           {listing.sourceName}
                         </small>
-                        <ListingReviewPreview id={listing.externalId} />
                       </div>
                       <ListingCover key={listing.imageUrl ?? ""} url={listing.imageUrl} title={listing.title} />
                       <div className="listing-actions">
@@ -1786,9 +1778,6 @@ export default function AdminCollectorClient({
             <div className="admin-section-head">
               <div>
                 <h2>Báo cáo cộng đồng</h2>
-                <p>
-                  Kiểm tra nội dung bị người dùng đánh dấu và quyết định xử lý.
-                </p>
               </div>
               <button className="secondary-btn" onClick={loadReports}>
                 Tải lại
@@ -1858,7 +1847,6 @@ export default function AdminCollectorClient({
             <div className="admin-section-head">
               <div>
                 <h2>Nhật ký kiểm duyệt</h2>
-                <p>Lịch sử duyệt, từ chối và xử lý báo cáo trong hệ thống.</p>
               </div>
               <button className="secondary-btn" onClick={loadAuditLogs}>
                 Tải lại

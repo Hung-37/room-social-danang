@@ -131,8 +131,8 @@ fs.mkdirSync(out, { recursive: true });
     .locator('.source-row')
     .filter({ hasText: 'Phòng trọ Hải Châu kiểm thử' })
     .first();
-  await listing.getByText('Xem nội dung và ảnh', { exact: true }).click();
-  await listing.getByText('Phân tích AI:', { exact: false }).waitFor();
+  await listing.locator('.listing-cover').waitFor();
+  assert.equal(await listing.getByText('Xem nội dung và ảnh', { exact: true }).count(), 0);
   checks++;
   const scans = [];
   for (const width of [1440, 390])

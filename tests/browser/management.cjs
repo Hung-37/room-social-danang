@@ -103,8 +103,8 @@ fs.mkdirSync(out, { recursive: true });
   await a.goto('/admin?tab=listings');
   await a.getByRole('button', { name: /Quản lý bài/ }).click();
   const review = a.locator('.source-row').filter({ hasText: title });
-  await review.getByText('Xem nội dung và ảnh', { exact: true }).click();
-  await review.getByRole('img', { name: 'Ảnh phòng 2', exact: true }).waitFor();
+  await review.getByRole('img', { name: 'Ảnh phòng: ' + title, exact: true }).waitFor();
+  assert.equal(await review.getByText('Xem nội dung và ảnh', { exact: true }).count(), 0);
   checks++;
   // Also verify every uploaded image is present in the private preview payload.
   const preview = await api(admin, '/api/admin/listings/' + id + '/preview');
