@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import type { SimilarityMatch } from "@/lib/server/collector/similarity.js";
+
 const endpoint = "/api/admin/listings/duplicate-audit";
 type Plan = {
   revision: string;
@@ -13,6 +15,26 @@ export default function DuplicateReview() {
   const [plan, setPlan] = useState<Plan>();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
+
+  const [similar, setSimilar] = useState<SimilarityMatch[]>();
+  const [scanned, setScanned] = useState(0);
+  const [scanning, setScanning] = useState(false);
+  async function scan() {
+    setScanning(true);
+    setSimilar(undefined);
+    setMessage("");
+    try {
+      const response = await fetch(endpoint + "?mode=similar", { cache: "no-store" });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error);
+      setSimilar(payload.data);
+      setScanned(payload.meta.scanned);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Chưa phân tích được dữ liệu.");
+    } finally {
+      setScanning(false);
+    }
+  }
 
   async function load() {
     setPlan(undefined);
@@ -66,6 +88,16 @@ export default function DuplicateReview() {
           </details>
         </>
       )}
+      <section aria-labelledby="similar-heading">
+        <h2 id="similar-heading">Tin có nội dung gần giống</h2>
+        <p>So sánh tối đa 200 tin mới cập nhật. Các cặp gợi ý cần được đối chiếu thủ công.</p>
+        <button className="secondary-btn" disabled={scanning} onClick={scan}>{scanning ? "Đang so sánh…" : "So sánh nội dung"}</button>
+        {similar && <p role="status">{similar.length} cặp gợi ý trong {scanned} tin.</p>}
+        {similar && <ol>{similar.map(pair => <li key={JSON.stringify([pair.left, pair.right])}>
+          <strong>{pair.leftTitle}</strong> (<code>{pair.left}</code>) · <strong>{pair.rightTitle}</strong> (<code>{pair.right}</code>)
+          {" · "}Điểm tương đồng {pair.score.toFixed(2)}/1
+        </li>)}</ol>}
+      </section>
     </>
   );
 }

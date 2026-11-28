@@ -1,3 +1,4 @@
+import { findSimilarListings, type SimilarityInput } from "@/lib/server/collector/similarity.js";
 import { createHash } from "node:crypto";
 import type { PoolConnection, RowDataPacket } from "mysql2/promise";
 import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
@@ -100,6 +101,15 @@ export async function GET(request: Request) {
   if (!getAdminSessionFromRequest(request))
     return apiError("Yêu cầu quyền quản trị viên.", 401);
   try {
+    if (new URL(request.url).searchParams.get("mode") === "similar") {
+      const [rows] = await getDatabasePool().query<(RowDataPacket & SimilarityInput)[]>(
+        `SELECT external_id AS id, title, address, LEFT(summary, 400) AS summary, cluster_id AS clusterId, source_url AS url
+         FROM listings WHERE verification_status IN ('verified','needs_review') AND source_url IS NOT NULL
+         ORDER BY updated_at DESC, id DESC LIMIT 200`,
+      );
+      return apiData(findSimilarListings(rows), { meta: { scanned: rows.length } },
+        { headers: { "Cache-Control": "private, no-store" } });
+    }
     const groups = await audit(getDatabasePool());
     return apiData(
       groups.map((group) => group.map(({ id, status, dependencies }) => ({ id, status, dependencies }))),
