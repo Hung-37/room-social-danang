@@ -46,6 +46,7 @@ export declare function isPlaceholderListingUrl(value: unknown): boolean;
 export declare function sanitizeListingSummary(value: unknown): string;
 export declare function filterDuplicateListingUrls<T extends {externalId: string; source: {name: string; originalUrlKey?: string | null}}>(listings: T[], storedRows: {external_id: string; source_url: string}[]): T[];
 export declare function canonicalListingUrl(value: unknown): string | null;
+export declare function collectorSourceUrlKey(source: Pick<CollectorSource, 'url' | 'permission'>): string | null;
 export declare function normalizeListing(item: Record<string, unknown>, source: CollectorSource): NormalizedListing;
 export declare function deduplicateListings<T>(listings: T[]): T[];
 export declare function collectListings(inputs: CollectorInput[]): {

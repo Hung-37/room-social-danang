@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
 import { randomUUID } from 'node:crypto';
-import { isPublicFeedUrl } from '@/lib/server/collector/parser.js';
+import { collectorSourceUrlKey, isPublicFeedUrl } from '@/lib/server/collector/parser.js';
 import { getAdminSessionFromRequest } from '@/lib/server/admin-auth';
 import { getManagedSourcesAsync, setSourceEnabledAsync } from '@/lib/server/collector-source-storage';
 import { saveCollectorSourceSetting } from '@/lib/server/collector-db';
@@ -110,6 +110,9 @@ export async function POST(r: Request) {
         return apiError('Không chỉnh sửa loại nguồn này.', 400);
       id = original.id;
     }
+    const urlKey = collectorSourceUrlKey({ url, permission });
+    if (sources.some((source) => source.id !== id && collectorSourceUrlKey(source) === urlKey))
+      return apiError('URL này đã được cấu hình cho một nguồn khác.', 409);
     const source = {
       id,
       name,

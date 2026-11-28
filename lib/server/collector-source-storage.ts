@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
-import { publicSources } from '@/lib/server/collector/parser.js';
+import { collectorSourceUrlKey, publicSources, type CollectorSource } from '@/lib/server/collector/parser.js';
 import {
   hasCollectorDatabase,
   listCollectorSourceSettings,
@@ -29,7 +29,18 @@ function writeSettings(settings: SourceSettings) {
   renameSync(temp, SETTINGS_FILE);
 }
 
-export function getManagedSources() {
+function distinctSources<T extends CollectorSource>(sources: T[]) {
+  const selected = new Map<string, T>();
+  for (const source of sources) {
+    const url = collectorSourceUrlKey(source);
+    const key = url ? `url:${url}` : `id:${source.id}`;
+    const current = selected.get(key);
+    if (!current || (!current.enabled && source.enabled)) selected.set(key, source);
+  }
+  return [...selected.values()];
+}
+
+function configuredDefaults() {
   const settings = readSettings();
   const allowDemo =
     process.env.NODE_ENV !== 'production' || process.env.COLLECTOR_INCLUDE_DEMO === 'true';
@@ -42,9 +53,13 @@ export function getManagedSources() {
   }));
 }
 
+export function getManagedSources() {
+  return distinctSources(configuredDefaults());
+}
+
 export async function getManagedSourcesAsync() {
-  const fallback = getManagedSources();
-  if (!hasCollectorDatabase()) return fallback;
+  const fallback = configuredDefaults();
+  if (!hasCollectorDatabase()) return distinctSources(fallback);
   try {
     const settings = await listCollectorSourceSettings();
     const byId = new Map(settings.map((setting) => [setting.sourceId, setting]));
@@ -53,7 +68,7 @@ export async function getManagedSourcesAsync() {
       .flatMap((s) =>
         s.config && typeof s.config === 'object' ? [s.config as (typeof fallback)[number]] : []
       );
-    return [...fallback, ...extra].map((source) => {
+    const sources = [...fallback, ...extra].map((source) => {
       const saved = byId.get(source.id);
       const config =
         saved?.config && typeof saved.config === 'object'
@@ -72,11 +87,12 @@ export async function getManagedSourcesAsync() {
             : enabled
       };
     });
+    return distinctSources(sources);
   } catch (error) {
     if (process.env.NODE_ENV === 'production') {
       throw new Error('Không tải được cấu hình nguồn từ MySQL.', { cause: error });
     }
-    return fallback;
+    return distinctSources(fallback);
   }
 }
 
