@@ -38,7 +38,8 @@ const LISTING_STALE_DAYS = Math.max(
 export async function filterStoredDuplicates<T extends Listing>(connection: PoolConnection, listings: T[]) {
   if (!listings.some((item) => item.source.originalUrlKey)) return listings;
   const [rows] = await connection.query<(RowDataPacket & {external_id: string; source_url: string})[]>(
-    "SELECT external_id, source_url FROM listings WHERE source_url IS NOT NULL ORDER BY id",
+    `SELECT external_id, source_url FROM listings WHERE source_url IS NOT NULL
+      ORDER BY CASE verification_status WHEN 'verified' THEN 0 WHEN 'needs_review' THEN 1 ELSE 2 END, id`,
   );
   return filterDuplicateListingUrls(listings, rows);
 }
