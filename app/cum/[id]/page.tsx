@@ -9,6 +9,7 @@ import { listCommunityPosts as listFileDiscussions } from "@/lib/server/server-c
 import { getClusterOverview } from "@/lib/server/cluster-overview";
 import { readScrapedListings } from "@/lib/server/file-storage";
 import Link from "next/link";
+import "./area.css";
 
 export const dynamic = "force-dynamic";
 
@@ -67,15 +68,15 @@ export default async function ClusterPage({
   return (
     <>
       <Header />
-      <main id="main-content" tabIndex={-1}>
+      <main className="area-page" id="main-content" tabIndex={-1}>
         <section className="detail-hero">
           <div className="container">
-            <div className="breadcrumb">
-              <Link href="/">Trang chủ</Link> / <Link href="/cum">Khu vực</Link>{" "}
+            <nav className="breadcrumb" aria-label="Đường dẫn">
+              <Link href="/">Trang chủ</Link> / <Link href="/khu-vuc">Khu vực</Link>{" "}
               / {cluster.name}
-            </div>
+            </nav>
             <div className="detail-card">
-              <span className="eyebrow">Cộng đồng khu vực</span>
+
               <h1>{cluster.name}</h1>
               <p className="detail-lead">{cluster.description}</p>
               {unavailable ? (
@@ -105,7 +106,7 @@ export default async function ClusterPage({
                 className="text-link"
                 href={`/bang-tin?cluster=${cluster.id}`}
               >
-                Tìm và lọc phòng tại đây →
+                Lọc phòng tại khu vực →
               </Link>
             </div>
           </div>
@@ -115,7 +116,7 @@ export default async function ClusterPage({
             <div className="container">
               <div className="section-head">
                 <div>
-                  <h2>Phòng tại {cluster.name}</h2>
+                  <h2>Phòng trong khu vực</h2>
                   <p>Chỉ hiển thị tin đã duyệt còn trong thời hạn cập nhật.</p>
                 </div>
               </div>
@@ -148,7 +149,7 @@ export default async function ClusterPage({
               )}
               <div className="section-head">
                 <div>
-                  <h2>Thảo luận tại {cluster.name}</h2>
+                  <h2>Thảo luận trong khu vực</h2>
                 </div>
               </div>
               <div className="post-list">
