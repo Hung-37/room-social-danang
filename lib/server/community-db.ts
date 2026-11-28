@@ -20,6 +20,7 @@ export async function communityPostExists(postId: string) {
 
 function mapPost(row: Record<string, unknown>): RoomPost {
   const post = normalizeToRoomPost({
+    contentKind: "discussion",
     id: row.id,
     title: row.title,
     summary: row.summary,
@@ -31,7 +32,6 @@ function mapPost(row: Record<string, unknown>): RoomPost {
     postKind: row.postKind,
     tags: [],
   });
-  // Override defaults from normalizeToRoomPost for community posts
   const updated = new Date(String(row.updatedAt));
   post.updated = Number.isFinite(updated.getTime())
     ? updated.toLocaleString("vi-VN", {
@@ -39,7 +39,7 @@ function mapPost(row: Record<string, unknown>): RoomPost {
         dateStyle: "short",
         timeStyle: "short",
       })
-    : "Mới cập nhật";
+    : "Chưa có thời gian cập nhật";
   post.image = "💬";
   post.price = "";
   post.area = "";

@@ -1,0 +1,133 @@
+/* Admin collection and moderation form layout. Keep rules scoped to /admin. */
+.admin-main .import-panel {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  margin: 0 0 20px;
+  padding: clamp(18px, 2.4vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 0 10px 28px rgba(27, 73, 62, .06);
+}
+
+.admin-main .import-panel .admin-section-head {
+  margin: 0 0 2px;
+}
+
+.admin-main .import-panel .admin-section-head p {
+  max-width: 780px;
+  line-height: 1.6;
+}
+
+.admin-main .import-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-width: 0;
+}
+
+.admin-main .import-panel .form-group {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+}
+
+.admin-main .import-panel .form-group > label {
+  display: block;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.admin-main .import-panel input:not([type='file']),
+.admin-main .import-panel select,
+.admin-main .import-panel textarea,
+.admin-main .admin-listing-filters input,
+.admin-main .admin-listing-filters select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text);
+  background: var(--card);
+  font: inherit;
+  line-height: 1.45;
+}
+
+.admin-main .import-panel input:not([type='file']):focus-visible,
+.admin-main .import-panel select:focus-visible,
+.admin-main .import-panel textarea:focus-visible,
+.admin-main .admin-listing-filters input:focus-visible,
+.admin-main .admin-listing-filters select:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.admin-main .import-panel .import-textarea {
+  display: block;
+  width: min(100%, 820px);
+  min-height: 180px;
+  resize: vertical;
+}
+
+.admin-main .import-panel > .primary-btn {
+  justify-self: start;
+}
+
+.admin-main .import-panel form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: end;
+  gap: 14px;
+  min-width: 0;
+}
+
+.admin-main .import-panel form > .primary-btn {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+.admin-main .admin-listing-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, .45fr);
+  gap: 10px;
+  width: min(100%, 900px);
+  margin: 18px 0 12px;
+}
+
+.admin-main .admin-pagination {
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .admin-main .import-panel {
+    padding: 16px;
+  }
+
+  .admin-main .import-panel form,
+  .admin-main .admin-listing-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-main .import-panel form > .primary-btn {
+    grid-column: auto;
+    width: 100%;
+  }
+
+  .admin-main .import-panel > .primary-btn {
+    width: 100%;
+  }
+
+  .admin-main .admin-pagination {
+    justify-content: space-between;
+    width: 100%;
+  }
+}

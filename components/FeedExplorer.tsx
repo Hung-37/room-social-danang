@@ -5,6 +5,7 @@ import { useSubmissionKey } from "./useSubmissionKey";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import Header from "./Header";
+import FormField from "./FormField";
 import ManagementPager from "./ManagementPager";
 import Icon from "./Icons";
 import PostCard from "./PostCard";
@@ -172,6 +173,7 @@ export default function FeedExplorer({
   ]);
   async function publish(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (sending) return;
     const form = event.currentTarget;
     setSending(true);
     setMessage("");
@@ -209,7 +211,7 @@ export default function FeedExplorer({
       <main
         id="main-content"
         tabIndex={-1}
-        className={`content-shell explorer ${rooms ? "rooms-explorer" : "discussions-explorer"}`}
+        className={`content-shell explorer ${rooms ? "rooms-explorer" : "discussions-explorer"} ${composerOpen && !rooms ? "composer-open" : ""}`}
       >
         <nav className="breadcrumb" aria-label="Đường dẫn">
           <Link href="/">Trang chủ</Link>
@@ -254,9 +256,6 @@ export default function FeedExplorer({
           <section className="composer-panel" id="viet-bai">
             <div className="section-title-row">
               <div>
-                <span className="section-eyebrow">
-                  Gửi một câu hỏi, chia sẻ một trải nghiệm
-                </span>
                 <h2 tabIndex={-1} ref={composerHeading}>
                   Viết thảo luận
                 </h2>
@@ -274,8 +273,7 @@ export default function FeedExplorer({
             </div>
             {authenticated ? (
               <form className="auth-form discussion-form" onSubmit={publish}>
-                <label>
-                  Tiêu đề
+                <FormField label="Tiêu đề">
                   <input
                     name="title"
                     required
@@ -283,9 +281,8 @@ export default function FeedExplorer({
                     maxLength={120}
                     placeholder="Ví dụ: Cần hỏi gì trước khi đặt cọc?"
                   />
-                </label>
-                <label>
-                  Nội dung
+                </FormField>
+                <FormField label="Nội dung">
                   <textarea
                     name="summary"
                     required
@@ -294,18 +291,16 @@ export default function FeedExplorer({
                     rows={4}
                     placeholder="Chia sẻ thêm tình huống để mọi người dễ hỗ trợ bạn..."
                   />
-                </label>
-                <div className="form-row">
-                  <label>
-                    Chủ đề bài viết
+                </FormField>
+                <div className="form-row form-grid discussion-topic-fields">
+                  <FormField label="Chủ đề bài viết">
                     <select aria-label="Chủ đề bài viết" name="postKind">
                       <option value="question">Hỏi đáp</option>
                       <option value="experience">Trải nghiệm</option>
                       <option value="warning">Cảnh báo</option>
                     </select>
-                  </label>
-                  <label>
-                    Khu vực bài viết
+                  </FormField>
+                  <FormField label="Khu vực bài viết">
                     <select aria-label="Khu vực bài viết" name="clusterId">
                       {clusters.map((c) => (
                         <option key={c.id} value={c.id}>
@@ -313,11 +308,11 @@ export default function FeedExplorer({
                         </option>
                       ))}
                     </select>
-                  </label>
+                  </FormField>
                 </div>
                 <div className="composer-footer">
                   <p>Bài viết sẽ được duyệt trước khi xuất hiện công khai.</p>
-                  <button className="primary-btn" disabled={sending}>
+                  <button className="primary-btn" disabled={sending} aria-busy={sending}>
                     {sending ? "Đang gửi..." : "Gửi bài chờ duyệt"}
                     <Icon name="arrow" />
                   </button>
@@ -350,8 +345,7 @@ export default function FeedExplorer({
           </section>
         )}
         <section className="explorer-filters" aria-label="Bộ lọc">
-          <label>
-            Tìm kiếm
+          <FormField label="Tìm kiếm">
             <input
               type="search"
               value={query}
@@ -362,9 +356,8 @@ export default function FeedExplorer({
                   : "Tiêu đề, nội dung thảo luận..."
               }
             />
-          </label>
-          <label>
-            Khu vực
+          </FormField>
+          <FormField label="Khu vực">
             <select
               aria-label="Khu vực"
               value={cluster}
@@ -377,7 +370,7 @@ export default function FeedExplorer({
                 </option>
               ))}
             </select>
-          </label>
+          </FormField>
           {rooms ? (
             <>
               <label>
@@ -516,15 +509,6 @@ export default function FeedExplorer({
                   ? "Hỏi kinh nghiệm trong cộng đồng →"
                   : "Xem bảng tin phòng trọ →"}
               </Link>
-            </section>
-            <section className="neighborhood-note">
-              <span className="section-eyebrow">Lần đầu ghé RoomĐàNẵng?</span>
-              <h3>Bắt đầu thật đơn giản</h3>
-              <ol>
-                <li>Tìm khu vực bạn muốn ở</li>
-                <li>Đọc tin và hỏi điều còn băn khoăn</li>
-                <li>Xem phòng trước khi đặt cọc</li>
-              </ol>
             </section>
           </aside>
         </div>

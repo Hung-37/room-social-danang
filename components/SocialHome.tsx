@@ -5,7 +5,9 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Header from "./Header";
+import FormField from "./FormField";
 import PostCard from "./PostCard";
+import Icon from "./Icons";
 import { clusters, normalizeToRoomPost, type RoomPost } from "@/lib/data";
 
 function useHomeFeed(kind: "rooms" | "discussions", accountRevision: number) {
@@ -64,8 +66,8 @@ function HomeAuthQueryTrigger({ authenticated }: { authenticated: boolean }) {
 }
 
 export default function SocialHome() {
-  const { authenticated, revision: accountRevision } = useAccountStatus();
   const { openLoginModal } = useLoginModal();
+  const { authenticated, revision: accountRevision } = useAccountStatus();
   const {
     items: rooms,
     loading: loadingRooms,
@@ -85,16 +87,21 @@ export default function SocialHome() {
         <HomeAuthQueryTrigger authenticated={authenticated} />
       </Suspense>
       <Header />
-      <main className="public-home">
-        {/* Hero Section */}
+      <main id="main-content" tabIndex={-1} className="public-home">
         <section className="hero-section">
           <div className="container">
             <div className="hero-content">
-              <div className="hero-badge">🏠 RoomĐàNẵng</div>
-              <h1 className="hero-title">Tìm phòng trọ uy tín tại Đà Nẵng</h1>
+              <div className="hero-badge"><Icon name="pin" /> Sống & học tại Đà Nẵng</div>
+              <h1 className="hero-title">Một căn phòng.<br /><em>Một khởi đầu mới.</em></h1>
               <p className="hero-subtitle">
-                Xem tin phòng theo khu vực và tham gia thảo luận cùng cộng đồng.
+                Tìm nơi ở hợp túi tiền, gần trường và gần những điều bạn yêu.
               </p>
+              <form action="/bang-tin" role="search" className="home-room-search">
+                <FormField label="Tìm phòng">
+                  <input type="search" name="q" placeholder="Tên đường, khu vực, trường học…" />
+                </FormField>
+                <button type="submit" className="primary-btn">Tìm phòng</button>
+              </form>
               <div className="hero-stats">
                 <div className="stat-item">
                   <span className="stat-number">{clusters.length}</span>
@@ -106,9 +113,6 @@ export default function SocialHome() {
                 </div>
               </div>
               <div className="hero-actions">
-                <Link href="/bang-tin" className="btn btn-primary btn-lg">
-                  🏠 Xem tin phòng
-                </Link>
                 <Link href="/thao-luan" className="btn btn-secondary btn-lg">
                   💬 Thảo luận
                 </Link>
@@ -125,7 +129,6 @@ export default function SocialHome() {
           </div>
         </section>
 
-        {/* Quick Links */}
         <section className="quick-links-section">
           <div className="container">
             <div className="quick-links">
@@ -148,7 +151,6 @@ export default function SocialHome() {
           </div>
         </section>
 
-        {/* Featured Rooms */}
         <section className="featured-section">
           <div className="container">
             <div className="section-header">
@@ -191,13 +193,13 @@ export default function SocialHome() {
               <div className="empty-state">
                 <div className="empty-icon">📭</div>
                 <h3>Chưa có tin đăng nào</h3>
-                <p>Tin sẽ xuất hiện sau khi được hệ thống thu thập và kiểm duyệt.</p>
+                <p>Khám phá khu vực trong lúc chờ tin mới.</p>
+                <Link className="secondary-btn" href="/khu-vuc">Khám phá khu vực</Link>
               </div>
             )}
           </div>
         </section>
 
-        {/* Areas Section */}
         <section className="areas-section">
           <div className="container">
             <div className="section-header">
@@ -230,7 +232,6 @@ export default function SocialHome() {
           </div>
         </section>
 
-        {/* Community Section */}
         <section className="community-section">
           <div className="container">
             <div className="community-content">
@@ -240,7 +241,7 @@ export default function SocialHome() {
                   Chia sẻ kinh nghiệm, hỏi đáp về phòng trọ, cùng nhau xây dựng
                   một cộng đồng hữu ích cho sinh viên Đà Nẵng.
                 </p>
-                <Link href="/thao-luan" className="btn btn-primary">
+                <Link href="/thao-luan" className="btn btn-secondary">
                   Tham gia ngay →
                 </Link>
               </div>
@@ -275,16 +276,14 @@ export default function SocialHome() {
           </div>
         </section>
 
-        {/* CTA Section */}
         <section className="cta-section">
           <div className="container">
             <div className="cta-content">
               <h2>Bạn có phòng trọ cho thuê?</h2>
               <p>
-                Đăng tin miễn phí, tiếp cận hàng ngàn sinh viên đang tìm phòng
-                tại Đà Nẵng.
+                Kết nối với người tìm phòng tại Đà Nẵng.
               </p>
-              <Link href="/dang-phong" className="btn btn-primary btn-lg">
+              <Link href="/dang-phong" className="btn btn-secondary btn-lg">
                 Đăng tin ngay
               </Link>
             </div>

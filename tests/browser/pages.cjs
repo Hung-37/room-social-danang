@@ -6,6 +6,7 @@ const fs = require("node:fs"),
   path = require("node:path");
 const base = process.env.TEST_BASE_URL,
   out = process.env.TEST_SCREENSHOT_DIR || "work/pages";
+const layoutAudit = process.argv.includes("--layout-audit");
 if (
   process.env.TEST_ISOLATED_DB !== "1" ||
   !base ||
@@ -25,7 +26,10 @@ fs.mkdirSync(out, { recursive: true });
   try {
     const contexts = {};
     for (const name of ["guest", "student", "owner", "admin"]) {
-      contexts[name] = await browser.newContext({ baseURL: base });
+      contexts[name] = await browser.newContext({
+        baseURL: base,
+        serviceWorkers: layoutAudit ? "block" : "allow",
+      });
       contexts[name].setDefaultTimeout(10000);
     }
     async function api(role, url, method = "GET", data, status = 200) {
@@ -140,6 +144,11 @@ fs.mkdirSync(out, { recursive: true });
       },
       201,
     );
+    if (layoutAudit) {
+      const { auditLayout } = require("./layout-audit.cjs");
+      await auditLayout({ contexts, api, stamp, room, post, chat, out });
+      return;
+    }
     const publicPaths = [
       "/bang-tin",
       "/thao-luan",
@@ -218,9 +227,14 @@ fs.mkdirSync(out, { recursive: true });
             }
             const actual = new URL(p.url()).pathname;
             item.actual = actual;
-            if (role === "guest" && url.startsWith("/admin"))
-              assert.equal(actual, "/dang-nhap");
-            else assert.equal(actual, new URL(url, base).pathname);
+            const opensAuth = url === '/dang-nhap' || url === '/dang-ky' ||
+              (role === 'guest' && url.startsWith('/admin'));
+            if (opensAuth) {
+              assert.equal(actual, '/');
+              const query = new URL(p.url()).searchParams;
+              assert.equal(query.get(url === '/dang-ky' ? 'openRegister' : 'openLogin'), 'true');
+              await p.locator('.modal-container').waitFor();
+            } else assert.equal(actual, new URL(url, base).pathname);
             assert.equal(await p.locator("html").getAttribute("lang"), "vi");
             assert.equal(await p.locator("main").count(), 1);
             const size = await p.evaluate(() => ({
@@ -237,6 +251,7 @@ fs.mkdirSync(out, { recursive: true });
               ),
             );
             if (!scanned.has(actual)) {
+              await p.waitForLoadState('networkidle');
               const a = await new AxeBuilder({ page: p })
                 .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
                 .analyze();
@@ -354,10 +369,12 @@ fs.mkdirSync(out, { recursive: true });
       JSON.stringify(report.pages.filter((p) => !p.passed)),
     );
   } finally {
-    fs.writeFileSync(
-      path.join(out, "results.json"),
-      JSON.stringify(report, null, 2),
-    );
+    if (!layoutAudit) {
+      fs.writeFileSync(
+        path.join(out, "results.json"),
+        JSON.stringify(report, null, 2),
+      );
+    }
     await browser.close();
   }
   console.log(

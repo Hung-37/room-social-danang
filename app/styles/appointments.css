@@ -1,9 +1,9 @@
 .inbox-filters {
   display: grid;
-  gap: 12px;
-  padding: 0 0 20px;
+  gap: var(--space-12);
+  padding: 0 0 var(--space-24);
   border-bottom: 1px solid #d5e3db;
-  margin-bottom: 15px;
+  margin-bottom: var(--space-16);
 }
 .inbox-filters label,
 .message-search label,
@@ -11,9 +11,9 @@
 .visit-filter {
   display: grid;
   gap: 7px;
-  font-size: 0.86rem;
+  font-size: 0.875rem;
   font-weight: 650;
-  color: #244c40;
+  color: var(--text);
 }
 .inbox-filters input,
 .inbox-filters select,
@@ -23,13 +23,8 @@
 .visit-request textarea {
   width: 100%;
   min-width: 0;
-  box-sizing: border-box;
-  font: inherit;
   color: #244c40;
   background: #fff;
-  border: 1px solid #b5c9bf;
-  border-radius: 9px;
-  padding: 11px 12px;
 }
 .inbox-filters input:focus-visible,
 .inbox-filters select:focus-visible,
@@ -41,16 +36,26 @@
   outline-offset: 2px;
 }
 .message-search {
-  border-block: 1px solid #d5e3db;
+  border-block: 1px solid var(--line);
   padding: 14px 0;
   margin: 12px 0;
 }
-.message-search summary,
-.visit-request summary {
+.message-search summary {
   cursor: pointer;
   font-weight: 650;
   color: #076b61;
   padding: 4px 0;
+}
+.visit-request > summary {
+  min-height: 44px;
+  padding: var(--space-12) var(--space-12);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-subtle);
+  color: var(--brand-dark);
+  cursor: pointer;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 .message-search label {
   margin-top: 14px;
@@ -73,10 +78,10 @@
   line-height: 1.65;
 }
 .message-results small {
-  color: #52675f;
+  color: var(--muted);
 }
 .viewing-panel {
-  border: 1px solid #d5e3db;
+  border: 1px solid var(--line);
   background: #fff;
   border-radius: 18px;
   padding: 22px;
@@ -90,8 +95,8 @@
   gap: 12px;
 }
 .viewing-help {
-  font-size: 0.85rem;
-  color: #52675f;
+  font-size: 0.875rem;
+  color: var(--muted);
   line-height: 1.6;
 }
 .visit-list {
@@ -100,7 +105,7 @@
   margin-top: 16px;
 }
 .visit-card {
-  border: 1px solid #d5e3db;
+  border: 1px solid var(--line);
   border-radius: 14px;
   padding: 18px;
   background: #fafbf8;
@@ -113,7 +118,7 @@
 }
 .visit-state {
   display: inline-block;
-  font-size: 0.76rem;
+  font-size: 0.875rem;
   font-weight: 700;
   padding: 6px 10px;
   border-radius: 99px;
@@ -144,20 +149,20 @@
   align-items: center;
 }
 .visit-actions button {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
 }
 .visit-request {
-  margin-top: 18px;
+  margin-top: var(--space-16);
 }
 .visit-request form {
   display: grid;
-  gap: 14px;
-  margin-top: 16px;
+  gap: var(--space-16);
+  margin-top: var(--space-16);
 }
 .visit-request form > p {
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   line-height: 1.6;
-  color: #52675f;
+  color: var(--muted);
   margin: 0;
 }
 .visit-confirm {
@@ -193,7 +198,6 @@
   }
   .visit-request input[type='datetime-local'] {
     max-width: 100%;
-    font-size: 0.85rem;
   }
   .inbox-list .inbox-filters {
     padding-bottom: 14px;
@@ -209,7 +213,7 @@
   top: -18px;
   z-index: 1;
   background: #fff;
-  padding-top: 10px;
+  padding-top: var(--space-12);
 }
 @media (max-width: 700px) {
   .inbox-list {
@@ -218,7 +222,7 @@
 }
 .chat-messages:focus-visible,
 .message-results:focus-visible {
-  outline: 3px solid #08766c;
+  outline: 3px solid var(--brand);
   outline-offset: 3px;
   border-radius: 8px;
 }
@@ -266,20 +270,20 @@
   border-radius: 50%;
   color: #fff;
   background: #247a57;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
 }
 .message-safety-note p {
   display: grid;
   gap: 2px;
   margin: 0;
-  color: #52675f;
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 14px;
   line-height: 1.6;
 }
 .message-safety-note strong {
   color: #193a35;
-  font-size: 13px;
+  font-size: 14px;
 }
 .inbox-layout {
   grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.7fr);
@@ -309,8 +313,8 @@
 }
 .inbox-list-heading > div > span,
 .chat-title-kicker {
-  color: #50645b;
-  font-size: 10px;
+  color: var(--muted);
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: .09em;
 }
@@ -329,7 +333,7 @@
   border-radius: 12px;
   color: var(--brand-dark);
   background: var(--brand-soft);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
 }
 .inbox-summary {
@@ -343,31 +347,27 @@
   border-radius: 999px;
   color: var(--muted);
   background: var(--surface-subtle);
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
 }
 .inbox-filters {
   position: sticky;
   top: -20px;
   z-index: 1;
-  gap: 10px;
-  padding: 12px 0 16px;
+  gap: var(--space-12);
+  padding: var(--space-12) 0 var(--space-16);
   border-color: var(--line);
   background: var(--card);
 }
 .inbox-filters label {
-  gap: 5px;
+  gap: var(--space-4);
   color: var(--text);
-  font-size: 11px;
+  font-size: 14px;
 }
 .inbox-filters input,
 .inbox-filters select {
-  min-height: 40px;
-  border-color: var(--line);
-  border-radius: 10px;
   color: var(--text);
   background: #fff;
-  font-size: 12px;
 }
 .inbox-list > .chat-preview {
   display: grid;
@@ -419,20 +419,20 @@
 .chat-preview-name strong {
   overflow: hidden;
   color: var(--text);
-  font-size: 13px;
+  font-size: 14px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .chat-preview-title {
   overflow: hidden;
-  color: #5b716b;
-  font-size: 11px !important;
+  color: var(--muted);
+  font-size: 14px !important;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .inbox-list .chat-preview small {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.45;
 }
 .chat-unread {
@@ -442,7 +442,7 @@
   border-radius: 999px;
   color: #fff;
   background: var(--brand);
-  font-size: 9px !important;
+  font-size: 14px !important;
   font-weight: 800;
 }
 .chat-panel {
@@ -471,7 +471,7 @@
 .chat-title p {
   margin: 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
 }
 .chat-messages {
   min-height: 260px;
@@ -489,7 +489,7 @@
   padding: 12px 15px;
   border: 1px solid #e5eee8;
   border-radius: 16px 16px 16px 5px;
-  background: #fffefa;
+  background: var(--card);
   box-shadow: 0 3px 10px rgba(27, 73, 62, .04);
 }
 .chat-message.mine {
@@ -500,18 +500,18 @@
 .chat-message-sender {
   display: block;
   margin-bottom: 4px;
-  color: #50645b;
-  font-size: 10px;
+  color: var(--muted);
+  font-size: 14px;
   font-weight: 750;
 }
 .chat-message p {
   color: var(--text);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .chat-message time {
-  color: #50645b;
-  font-size: 10px;
+  color: var(--muted);
+  font-size: 14px;
 }
 .chat-empty {
   display: grid;
@@ -540,7 +540,7 @@
   max-width: 360px;
   margin: 5px 0 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 .chat-compose {
   display: grid;
@@ -548,22 +548,18 @@
   padding: 15px;
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: #fffefa;
+  background: var(--card);
 }
 .chat-compose label {
   color: var(--text);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 750;
 }
 .chat-compose textarea,
 .chat-tools textarea {
   min-width: 0;
-  border-color: var(--line);
-  border-radius: 11px;
   color: var(--text);
   background: #fff;
-  font-size: 13px;
-  line-height: 1.55;
 }
 .chat-compose textarea:focus-visible,
 .chat-tools textarea:focus-visible {
@@ -588,14 +584,14 @@
   border-radius: 10px;
   color: var(--muted);
   background: #fff;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
 }
 .chat-tools details {
   padding: 5px 9px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fffefa;
+  background: var(--card);
 }
 .chat-tools summary {
   color: #8e4a42;
@@ -614,7 +610,7 @@
   border-radius: 10px;
   color: #755316;
   background: #fff5dd;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.55;
 }
 .inbox-empty {
@@ -636,18 +632,18 @@
 }
 .inbox-empty strong {
   color: var(--text);
-  font-size: 13px;
+  font-size: 14px;
 }
 .inbox-empty p {
   margin: 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
   line-height: 1.55;
 }
 .inbox-loading {
   padding: 12px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 @media (max-width: 700px) {

@@ -1,0 +1,145 @@
+:is(
+  input:not(
+    :where(
+      [type="checkbox"],
+      [type="radio"],
+      [type="file"],
+      [type="hidden"],
+      [type="range"],
+      [type="color"],
+      [type="button"],
+      [type="submit"],
+      [type="reset"],
+      [type="image"]
+    )
+  ),
+  select,
+  textarea
+) {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-8) var(--space-12);
+  border: 1px solid var(--field-border);
+  border-radius: var(--radius-control);
+  background: var(--card);
+  color: var(--text);
+  font-family: inherit;
+  font-size: var(--field-font);
+  font-weight: 400;
+  line-height: 1.4;
+
+  &:is(input, select) {
+    height: var(--control-height, var(--field-height));
+    min-height: var(--control-height, var(--field-height));
+    padding-block: 0;
+  }
+}
+
+textarea {
+  min-height: var(--field-textarea-min);
+  resize: vertical;
+}
+
+:is(input, select, textarea):focus-visible {
+  border-color: var(--brand);
+}
+
+:is(input, select, textarea):is([aria-invalid="true"], :user-invalid) {
+  border-color: var(--danger);
+}
+
+:is(input, select, textarea):disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+:is(.user-filters, .admin-listing-filters, .chat-report-toolbar) {
+  --control-height: var(--field-height-compact);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: var(--space-16);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-12);
+}
+
+.btn-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+:is(
+    .home-room-search,
+    .explorer-filters,
+    .management-filters,
+    .user-filters,
+    .admin-listing-filters,
+    .chat-report-toolbar
+  )
+  > :is(button, .primary-btn, .secondary-btn) {
+  align-self: end;
+  min-height: var(--control-height, var(--field-height));
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-control);
+}
+
+label.ui-field,
+:is(
+    .listing-form,
+    .account-form,
+    .modal-form,
+    .editor-section,
+    .explorer-filters,
+    .management-filters,
+    .user-filters,
+    .user-action,
+    .visit-request
+  )
+  label:not(.settings-check):not(.role-option) {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--space-6);
+  font-size: var(--font-sm);
+}
+
+.listing-form .form-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--space-16);
+}
+
+:is(.editor-section, .account-panel) {
+  padding: var(--space-24);
+}
+
+@media (768px <= width <= 1100px) {
+  .user-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --field-font: var(--font-base);
+    --field-height-compact: var(--field-height);
+  }
+  :is(.editor-section, .account-panel, .explorer-filters) {
+    padding: var(--space-16);
+  }
+  .listing-form .form-row,
+  .user-filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

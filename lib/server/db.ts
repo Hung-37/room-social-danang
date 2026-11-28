@@ -150,7 +150,7 @@ export async function getListings(
   const [rows] = await getPool().query(
     `SELECT external_id AS externalId, title, summary, price, area_m2 AS area, address,
             cluster_id AS clusterId, source_name AS sourceName, source_url AS sourceUrl,
-            phone, image_url AS imageUrl, verification_status AS verificationStatus,
+            phone, owner_external_id AS ownerExternalId, image_url AS imageUrl, verification_status AS verificationStatus,
             trust_score AS trustScore, updated_at AS updatedAt, ${includePending ? reviewRevisionSql : "NULL"} AS reviewRevision
      FROM listings
      WHERE (? = 1 OR verification_status = 'verified')
@@ -273,7 +273,7 @@ export async function getListingById(externalId: string) {
   const [rows] = await getPool().query(
     `SELECT external_id AS externalId, title, summary, price, area_m2 AS area, address,
             cluster_id AS clusterId, source_name AS sourceName, source_url AS sourceUrl,
-            phone, image_url AS imageUrl, verification_status AS verificationStatus,
+            phone, owner_external_id AS ownerExternalId, image_url AS imageUrl, verification_status AS verificationStatus,
             trust_score AS trustScore, updated_at AS updatedAt
      FROM listings
     WHERE external_id = ? AND verification_status = 'verified'

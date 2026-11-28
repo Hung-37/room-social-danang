@@ -1,19 +1,24 @@
-/* Admin-only interaction states. */
 .admin-main [aria-busy='true'] { cursor: wait; opacity: .72; }
 .admin-main button:disabled { cursor: not-allowed; opacity: .6; }
 .admin-main .admin-message[role='alert'] { color: #fca5a5; }
 
 .admin-main .admin-heading {
   margin-bottom: 24px;
+  max-width: 100%;
 }
 .admin-main .admin-heading .eyebrow {
   color: #17685d;
   background: rgba(11, 120, 111, .08);
   border: 1px solid rgba(11, 120, 111, .16);
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 8px;
 }
 .admin-main .admin-heading p {
   max-width: 640px;
   line-height: 1.65;
+  font-size: 14px;
+  min-width: 0;
 }
 .admin-main .admin-summary {
   gap: 14px;
@@ -43,7 +48,7 @@
   position: relative;
   z-index: 1;
   color: #c3ded5;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 650;
   letter-spacing: .02em;
 }
@@ -52,7 +57,7 @@
   z-index: 1;
   display: block;
   margin-top: 12px;
-  color: #fffefa;
+  color: var(--card);
   font-size: clamp(24px, 3vw, 32px);
   letter-spacing: -.04em;
   font-variant-numeric: tabular-nums;
@@ -70,7 +75,7 @@
   border-radius: 18px;
   background:
     radial-gradient(ellipse at 100% 0, rgba(11, 120, 111, .10), transparent 42%),
-    linear-gradient(145deg, #fffefa, #f3f8f4);
+    linear-gradient(145deg, var(--card), #f3f8f4);
   box-shadow: 0 16px 36px rgba(27, 73, 62, .08);
 }
 .admin-overview-heading {
@@ -88,7 +93,7 @@
 }
 .admin-card-kicker {
   color: #548076;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
@@ -99,7 +104,7 @@
   border-radius: 999px;
   color: #17685d;
   background: rgba(11, 120, 111, .07);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 750;
   white-space: nowrap;
 }
@@ -119,8 +124,8 @@
 .admin-status-chart-label {
   justify-content: space-between;
   gap: 12px;
-  color: #52675f;
-  font-size: 12px;
+  color: var(--muted);
+  font-size: 14px;
 }
 .admin-status-chart-label > span {
   gap: 8px;
@@ -153,7 +158,7 @@
 .admin-chart-empty {
   margin: 26px 0;
   color: #9eacc2;
-  font-size: 13px;
+  font-size: 14px;
 }
 .admin-live-indicator {
   display: inline-flex;
@@ -162,9 +167,9 @@
   padding: 6px 10px;
   border: 1px solid #d5e5de;
   border-radius: 999px;
-  color: #52675f;
+  color: var(--muted);
   background: rgba(255, 255, 255, .72);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 750;
   white-space: nowrap;
 }
@@ -199,8 +204,8 @@
   background: rgba(255, 255, 255, .72);
 }
 .admin-collector-metrics span {
-  color: #52675f;
-  font-size: 11px;
+  color: var(--muted);
+  font-size: 14px;
 }
 .admin-collector-metrics strong {
   color: var(--text);
@@ -208,30 +213,33 @@
   font-variant-numeric: tabular-nums;
 }
 .admin-collector-metrics small {
-  color: #52675f;
-  font-size: 13px;
+  color: var(--muted);
+  font-size: 14px;
 }
 .admin-overview-footnote {
   margin: 16px 0 0;
-  color: #52675f;
-  font-size: 11px;
+  color: var(--muted);
+  font-size: 14px;
   line-height: 1.5;
 }
 .admin-auto-run-note {
   align-self: center;
   color: #9eacc2;
-  font-size: 11px;
+  font-size: 14px;
 }
 .admin-main .admin-section-head {
   margin: 26px 0 14px;
+  min-width: 0;
 }
 .admin-main .source-table {
   overflow: hidden;
   border: 1px solid #d5e5de;
   border-radius: 18px;
+  min-width: 0;
 }
 .admin-main .source-row {
   padding: 16px 18px;
+  min-width: 0;
 }
 .admin-main .source-row:last-child {
   border-bottom: 0;
@@ -244,11 +252,13 @@
   padding: 7px 10px;
   border: 1px solid rgba(234, 183, 90, .22);
   border-radius: 999px;
-  color: #684900;
-  background: #fff3d6;
+  color: #795118;
+  background: rgba(234, 183, 90, .08);
+  font-size: 13px;
 }
 .admin-main .admin-status-note {
   line-height: 1.6;
+  font-size: 14px;
 }
 
 @media (max-width: 800px) {
@@ -282,16 +292,28 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 14px;
+  max-width: 100%;
 }
 .admin-main .admin-summary {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
 }
 .admin-main .admin-stat {
   min-width: 0;
+  overflow: hidden;
+  min-height: 100px;
+  padding: 16px;
+  border-radius: 14px;
 }
 .admin-main .admin-stat span {
   overflow-wrap: anywhere;
+  font-size: 13px;
+}
+.admin-main .admin-stat b {
+  margin-top: 8px;
+  font-size: clamp(20px, 2.5vw, 28px);
 }
 
 .admin-main .admin-tabs {
@@ -305,6 +327,7 @@
   background: rgba(255, 254, 250, .88);
   box-shadow: 0 8px 24px rgba(27, 73, 62, .06);
   scrollbar-width: thin;
+  min-width: 0;
 }
 .admin-main .admin-tab {
   flex: 0 0 auto;
@@ -314,7 +337,7 @@
   border-radius: 11px;
   color: var(--muted);
   background: transparent;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -331,10 +354,13 @@
   margin: 0 0 5px;
   color: var(--text);
   font-size: clamp(1.15rem, 2vw, 1.4rem);
+  min-width: 0;
 }
 .admin-main .admin-section-head p {
   margin: 0;
   color: var(--muted);
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .chat-reports {
@@ -361,7 +387,7 @@
 }
 .chat-report-stat span {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
 }
 .chat-report-stat strong {
@@ -377,29 +403,24 @@
   display: grid;
   grid-template-columns: minmax(220px, 1fr) auto auto;
   align-items: end;
-  gap: 12px;
-  padding: 16px;
+  gap: var(--space-12);
+  padding: var(--space-16);
   border: 1px solid var(--line);
   border-radius: 17px;
   background: rgba(255, 254, 250, .9);
 }
 .chat-report-toolbar > label {
   display: grid;
-  gap: 6px;
+  gap: var(--space-4);
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
 }
 .chat-report-toolbar input {
   width: 100%;
   min-width: 0;
-  min-height: 42px;
-  padding: 9px 12px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
   color: var(--text);
   background: #fff;
-  font: inherit;
 }
 .chat-report-filters {
   display: flex;
@@ -420,7 +441,7 @@
   border-radius: 8px;
   color: var(--muted);
   background: transparent;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -458,13 +479,13 @@
 }
 .chat-report-card-head time {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
 }
 .chat-report-reference {
   display: block;
   margin-top: 3px;
-  color: #53655e;
-  font-size: 10px;
+  color: var(--muted);
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 .chat-report-status {
@@ -472,7 +493,7 @@
   align-items: center;
   padding: 5px 10px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 800;
 }
 .chat-report-status.is-pending {
@@ -495,7 +516,7 @@
 }
 .chat-report-reason > span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 750;
 }
 .chat-report-reason p {
@@ -527,11 +548,11 @@
 }
 .chat-report-reporter small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 14px;
 }
 .chat-report-reporter strong {
   color: var(--text);
-  font-size: 13px;
+  font-size: 14px;
 }
 .chat-report-actions {
   display: flex;
@@ -571,7 +592,7 @@
 .chat-report-privacy {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
 }
 .chat-report-error p { margin-bottom: 12px; }
@@ -590,20 +611,25 @@
   align-items: center;
   gap: 18px;
   border-bottom: 1px solid var(--line);
+  min-width: 0;
 }
 .admin-main .listing-content {
   display: grid;
-  gap: 5px;
+  gap: 4px;
+  min-width: 0;
 }
 .admin-main .listing-content strong {
   color: var(--text);
   font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .admin-main .listing-content span,
 .admin-main .listing-content small {
   color: var(--muted);
-  font-size: 12px;
-  line-height: 1.55;
+  font-size: 13px;
+  line-height: 1.4;
   overflow-wrap: anywhere;
 }
 .admin-main .listing-actions {
@@ -611,7 +637,8 @@
   align-items: center;
   justify-content: flex-end;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 6px;
+  min-width: 0;
 }
 .admin-main .status-badge {
   display: inline-flex;
@@ -620,7 +647,7 @@
   border-radius: 999px;
   color: #80530c;
   background: #fff3d4;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -638,6 +665,40 @@
   background: var(--success);
   font-weight: 700;
 }
+.admin-main .batch-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-subtle);
+}
+.admin-main .batch-actions-bar .toggle-control {
+  margin: 0;
+}
+.admin-main .batch-actions-bar span {
+  font-size: 14px;
+  font-weight: 600;
+}
+.admin-main .listing-checkbox {
+  flex: 0 0 auto;
+  margin-right: 12px;
+}
+.admin-main .listing-checkbox input {
+  width: 18px;
+  height: 18px;
+}
+.admin-main .source-row.is-selected {
+  background: var(--brand-soft);
+  border-color: var(--brand);
+}
+.admin-main .status-select {
+  min-width: 120px;
+  padding: 6px 10px;
+  font-size: 13px;
+}
 
 @media (max-width: 850px) {
   .chat-report-toolbar {
@@ -645,6 +706,16 @@
   }
   .chat-report-toolbar > label {
     grid-column: 1 / -1;
+  }
+  .admin-main .admin-heading,
+  .admin-main .admin-section-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .admin-main .admin-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 }
 @media (max-width: 600px) {
@@ -654,6 +725,12 @@
   }
   .admin-main .admin-tabs {
     margin: 16px 0 20px;
+    gap: 4px;
+    padding: 5px;
+  }
+  .admin-main .admin-tab {
+    padding: 8px 10px;
+    font-size: 13px;
   }
   .chat-report-summary {
     grid-template-columns: minmax(0, 1fr);
@@ -669,7 +746,7 @@
   .chat-report-toolbar {
     grid-template-columns: minmax(0, 1fr);
     align-items: stretch;
-    padding: 12px;
+    padding: var(--space-12);
   }
   .chat-report-toolbar > label {
     grid-column: auto;
@@ -691,11 +768,28 @@
     gap: 12px;
     padding: 14px;
   }
+  .admin-main .listing-content {
+    gap: 3px;
+  }
+  .admin-main .listing-content strong {
+    font-size: 13px;
+  }
+  .admin-main .listing-content span,
+  .admin-main .listing-content small {
+    font-size: 12px;
+  }
   .admin-main .listing-actions {
     justify-content: flex-start;
+    gap: 4px;
   }
   .admin-main .listing-actions > * {
-    flex: 1 1 130px;
+    flex: 1 1 120px;
     justify-content: center;
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+  .admin-main .status-select {
+    min-width: 100px;
+    font-size: 12px;
   }
 }

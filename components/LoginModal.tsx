@@ -40,7 +40,6 @@ export default function LoginModal({
     setMode(defaultMode);
   }, [defaultMode]);
 
-  // Password strength calculation
   useEffect(() => {
     if (!password) {
       setPasswordStrength(0);
@@ -193,7 +192,6 @@ export default function LoginModal({
   function handleClose() {
     if (!loading) {
       onClose();
-      // Reset form
       setName("");
       setEmail("");
       setPassword("");

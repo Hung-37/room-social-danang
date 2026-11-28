@@ -78,12 +78,7 @@ if (
   await l.getByRole("status").filter({ hasText: "Đã lưu tin." }).waitFor();
   await l.goto("/quan-ly-phong");
   await l.getByRole("heading", { name: title }).waitFor();
-  await l
-    .locator(".management-room")
-    .filter({ hasText: title })
-    .getByTestId("listing-status-badge")
-    .filter({ hasText: "Chờ duyệt" })
-    .waitFor();
+  await l.getByRole("article").getByText("Chờ duyệt", { exact: true }).waitFor();
   await l.screenshot({
     path: join(screenshots, "landlord-mobile.png"),
     fullPage: true,

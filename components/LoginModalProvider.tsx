@@ -27,7 +27,6 @@ export function LoginModalProvider({ children }: { children: React.ReactNode }) 
     setIsOpen(false);
   }, []);
 
-  // Listen for custom event
   React.useEffect(() => {
     const handleOpenModal = (e: CustomEvent) => {
       const { mode: eventMode, returnPath: eventPath } = e.detail || {};

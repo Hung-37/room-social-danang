@@ -75,7 +75,7 @@ fs.mkdirSync(out, { recursive: true });
   await panel.getByRole('button', { name: 'Xác nhận lịch', exact: true }).click();
   await s
     .getByRole('region', { name: 'Xác nhận cập nhật lịch', exact: true })
-    .getByRole('button', { name: 'Đồng ý cập nhật', exact: true })
+    .getByRole('button', { name: 'Xác nhận lịch hẹn', exact: true })
     .click();
   await panel.getByText('Đã xác nhận', { exact: true }).waitFor();
   checks++;
@@ -170,7 +170,7 @@ fs.mkdirSync(out, { recursive: true });
   await p.getByRole('button', { name: 'Hủy lịch', exact: true }).click();
   await p
     .getByRole('region', { name: 'Xác nhận cập nhật lịch', exact: true })
-    .getByRole('button', { name: 'Đồng ý cập nhật', exact: true })
+    .getByRole('button', { name: 'Hủy lịch xem phòng', exact: true })
     .click();
   await p.getByText('Chưa có lịch xem phòng trong mục này.', { exact: true }).waitFor();
   checks++;
