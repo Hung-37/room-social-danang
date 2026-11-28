@@ -63,7 +63,7 @@ export default function AdminHeader() {
       }}
     >
       <div className="container admin-topbar-inner">
-        <Link href="/" className="brand" aria-label="RRoomĐàNẵngQuản trị">
+        <Link href="/" className="brand" aria-label="Room Đà Nẵng — Quản trị">
           <span className="brand-mark" aria-hidden="true">R</span>
           <span>
             Room<span>ĐàNẵng</span>

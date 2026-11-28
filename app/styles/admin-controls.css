@@ -193,6 +193,7 @@
   white-space: nowrap;
 }
 .admin-badge {
+  margin-inline-start: 4px;
   background: #a83d27;
   color: #fff;
 }
