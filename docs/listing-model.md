@@ -1,13 +1,19 @@
-# Mô hình thử nghiệm nhận diện tin gần trùng
+# Nhận diện tin gần trùng
 
-Chạy `node scripts/train-listing-model.mjs` từ thư mục gốc để tạo lại trọng số trong `lib/server/collector/listing-model.json`. Quá trình này chỉ đọc dữ liệu mẫu trong repo. Suy luận chạy bằng JavaScript trong ứng dụng.
+Chạy `node scripts/train-listing-model.mjs` để đánh giá và tạo lại `lib/server/collector/listing-model.json` hoàn toàn ngoại tuyến. Tập huấn luyện lưu mã tin đầy đủ, nhãn rà thủ công và vector đặc trưng quan sát được. 30 cặp là các gợi ý của bản 6288cb0 trong lượt rà production: 13 bài đăng lại, 9 báo nhầm và 8 chưa rõ. Tệp `uncertain-listing-pairs.json` giữ riêng mã của 8 cặp chưa rõ. Script huấn luyện chỉ đọc `reviewed-listing-pairs.json`.
 
-Mô hình hồi quy logistic dùng ba đặc trưng: mức trùng từ của tiêu đề, mô tả và địa chỉ sau khi chuẩn hóa tiếng Việt. Các cặp đạt điểm 0,70 trở lên được xếp hạng để quản trị viên xem xét. Cào thủ công trả gợi ý trong `meta.similarListings`; trang quản trị tin trùng so sánh các tin mới cập nhật. Quy tắc xử lý URL gốc chuẩn hóa vẫn phụ trách các bản sao cùng URL.
+Vector đặc trưng theo thứ tự gồm độ trùng từ của tiêu đề, mô tả, địa chỉ; mức gần và mức khác của ảnh bìa; số nhà cùng đường (+1 trùng, −1 khác); độ trùng địa chỉ chỉ ở cấp địa phương; độ trùng mô tả khi ít nhất một bên chỉ chứa ngày. Ba đặc trưng văn bản và hệ số chặn giữ trọng số từ mô hình cũ. Các hệ số bổ sung được học bằng hồi quy logistic có điều chuẩn. Ảnh bìa dùng dấu vân tay chênh lệch độ sáng 256 bit. Ảnh thiếu, gần như trống, ngoài danh sách host cho phép, quá giới hạn dung lượng hoặc thời gian tải cho tín hiệu trung tính. So khớp số nhà dùng phần địa chỉ đứng trước dấu phẩy.
 
-## Dữ liệu và đánh giá
+## Đánh giá trên tập đã rà
 
-Mười tin mẫu được tách theo tin gốc trước khi tạo cặp: bảy tin dùng để huấn luyện, ba tin giữ riêng để kiểm tra. Biến thể của cùng tin tạo nhãn dương; các tin mẫu khác nhau tạo nhãn âm, gồm cả ví dụ dùng chung tiêu đề hoặc địa chỉ. Đây là nhãn mô phỏng. Kết quả trên 18 cặp kiểm tra là 6 dương đúng, 3 bỏ sót, 9 âm đúng và 0 báo nhầm. Cần đánh giá riêng bằng cặp tin thật đã được quản trị viên xác nhận để biết hiệu quả ngoài thực tế. Điểm xếp hạng chưa được hiệu chuẩn thành xác suất.
+Giữ nguyên ngưỡng 0,70. Chia 22 cặp có nhãn thành 19 nhóm liên thông theo mã tin. Mỗi lượt huấn luyện bỏ toàn bộ nhóm đang chấm. Sau đánh giá, huấn luyện bản dùng trong ứng dụng trên cả 22 cặp. Kết quả theo thứ tự dương đúng / báo nhầm / âm đúng / bỏ sót:
 
-## Đánh giá trang chủ
+- Bản cũ: 13 / 9 / 0 / 0.
+- Bản mới: 12 / 1 / 8 / 1.
+- Bản mới khi thiếu toàn bộ ảnh lúc suy luận: 12 / 3 / 6 / 1.
 
-Trong trang quản trị tin trùng, nút kiểm tra trang chủ gửi GET cùng origin, bỏ thông tin đăng nhập và đánh giá năm dấu hiệu bảo vệ trình duyệt. Mỗi tiêu chí đạt đóng góp một điểm. Phép đo chỉ áp dụng cho phản hồi quan sát được. Độ uy tín của người đăng, tình trạng phòng và an toàn giao dịch cần bằng chứng độc lập.
+Bộ mẫu chỉ gồm các cặp do bản cũ đề xuất. Kết quả đo khả năng lọc lại danh sách đó. Cần tập tin độc lập và các cặp chưa từng được đề xuất để đo khả năng phát hiện trên toàn kho.
+
+Cào thủ công trả gợi ý trong `meta.similarListings`. Kiểm tra bằng giao diện Admin dùng cùng bộ chấm, tối đa 200 tin và 30 cặp. Các URL gốc trùng sau chuẩn hóa tiếp tục đi qua luồng đối chiếu URL. Điểm AI chỉ phục vụ rà thủ công.
+
+Nút kiểm tra bảo vệ trang chủ dùng những tiêu chí HTTP riêng biệt.

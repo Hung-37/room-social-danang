@@ -1,4 +1,4 @@
-import { findSimilarListings } from "@/lib/server/collector/similarity.js";
+import { scanSimilarListings } from "@/lib/server/collector/similarity.js";
 import { NextResponse } from "next/server";
 import { publicSources } from "@/lib/server/collector/parser.js";
 import { getAdminSessionFromRequest } from "@/lib/server/admin-auth";
@@ -158,8 +158,9 @@ async function run(request: Request, mode: "cron" | "manual") {
       ranAt: new Date().toISOString(),
       configured: result.enabledSources.length,
       collected: result.listings.length,
-      ...(mode === "manual" && { similarListings: findSimilarListings(result.listings.slice(0, 200).map(item => ({
+      ...(mode === "manual" && { similarListings: await scanSimilarListings(result.listings.slice(0, 200).map(item => ({
         id: item.externalId, title: item.title, summary: item.summary, address: item.address,
+        imageUrl: typeof item.imageUrl === "string" ? item.imageUrl : null,
         clusterId: item.clusterId, url: item.source.url,
       }))) }),
       duplicates: result.duplicates,

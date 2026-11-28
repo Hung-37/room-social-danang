@@ -1,0 +1,354 @@
+[
+  {
+    "pair": 1,
+    "left": "tromoi-da-nang:da2929eb02f6529cc15818cf3480dce7",
+    "right": "tromoi-da-nang:acc0bbfc5b905bdf7c76a46480ca46f3",
+    "label": 1,
+    "features": [
+      1,
+      1,
+      0.9090909090909091,
+      1,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 2,
+    "left": "phongtro123-da-nang:56c6d55adcba065416af5c5dcce34eaa",
+    "right": "User import:b9173439ecf819a3e97a918b07b90327",
+    "label": 1,
+    "features": [
+      1,
+      0.8363636363636363,
+      0.9565217391304348,
+      0.7291666666666667,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 3,
+    "left": "User import:f7516dc03038b8596b2b20bb7b12cb83",
+    "right": "User import:a34d198ea395e253c240a934d7ed98d5",
+    "label": 1,
+    "features": [
+      0.7692307692307693,
+      0.9444444444444444,
+      1,
+      1,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 4,
+    "left": "phongtro123-da-nang:1844d3b6b339261829c725713e451453",
+    "right": "User import:4074fbe4dc6c6e8c1368d9b1b4f1ee20",
+    "label": 1,
+    "features": [
+      1,
+      0.8275862068965517,
+      0.9565217391304348,
+      0.45833333333333337,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 5,
+    "left": "phongtro123-da-nang:2c9253b3a2d44b66080229e0db396215",
+    "right": "User import:0fe5155b34f2273ebb998ec34aad53b2",
+    "label": 1,
+    "features": [
+      1,
+      0.8235294117647058,
+      0.9565217391304348,
+      0.33333333333333337,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 6,
+    "left": "phongtro123-da-nang:367f004ff0617ae6b9fe0977d483ecab",
+    "right": "User import:4805d2866a20278f3359f5bef7279a39",
+    "label": 1,
+    "features": [
+      1,
+      0.8076923076923077,
+      0.9565217391304348,
+      0.5208333333333333,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 7,
+    "left": "phongtro123-da-nang:c4c81a2bbcbd7011b9e4f495abf5eff8",
+    "right": "User import:80f558a6779acb4eaa820a509d7a1b0e",
+    "label": 1,
+    "features": [
+      1,
+      0.8070175438596491,
+      0.9565217391304348,
+      0.6666666666666667,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 8,
+    "left": "phongtro123-da-nang:bd0fed581ac78b45ca2e6474cec8bd30",
+    "right": "User import:87a606e96256bfe38f0fd8a3682f82ec",
+    "label": 1,
+    "features": [
+      1,
+      0.8076923076923077,
+      0.9473684210526315,
+      0.625,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 10,
+    "left": "tromoi-da-nang:3f14f11ca5fcc5a0f590ce3a021e2451",
+    "right": "phongtro123-da-nang:d890a15aba951f85f72591a49efdec32",
+    "label": 1,
+    "features": [
+      1,
+      0.75,
+      1,
+      0.6875,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 11,
+    "left": "User import:7cb0b5f729e9211e6610fe4654f1e831",
+    "right": "User import:1459501f0109201b6c5b1d5fbfe2d4b3",
+    "label": 0,
+    "features": [
+      0.8571428571428571,
+      0.696969696969697,
+      1,
+      0,
+      0.85,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 12,
+    "left": "phongtro123-da-nang:450ee74d8cc86a0a0e2f6ca319219383",
+    "right": "User import:9b1f5e33fdf92e4db29e91dc09af9dec",
+    "label": 1,
+    "features": [
+      1,
+      0.5357142857142857,
+      0.9523809523809523,
+      0.625,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 13,
+    "left": "User import:dea0d590b3e2b0abaec9b3e791be54db",
+    "right": "User import:14c98608e44c9f84e64e5e3b11902736",
+    "label": 0,
+    "features": [
+      0.17391304347826086,
+      1,
+      1,
+      0,
+      0.9375,
+      0,
+      1,
+      1
+    ]
+  },
+  {
+    "pair": 14,
+    "left": "phongtro123-da-nang:fbdbda7b865f6d5606656be429275dbf",
+    "right": "User import:6299d9017458a37e4db94fab22e19db2",
+    "label": 1,
+    "features": [
+      1,
+      0.509090909090909,
+      0.967741935483871,
+      0.5833333333333333,
+      0,
+      1,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 15,
+    "left": "phongtro123-da-nang:89ad0a6e358ddadf18ba88b30280c43c",
+    "right": "User import:4b0b56c1d4859a948f390207100b2bec",
+    "label": 1,
+    "features": [
+      1,
+      0.4489795918367347,
+      0.9411764705882353,
+      0.5208333333333333,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  {
+    "pair": 16,
+    "left": "User import:b85cdeee8be896f517175f938cd14aa9",
+    "right": "User import:46ffd6ded3263bac7a68dd3a912b6922",
+    "label": 0,
+    "features": [
+      0.5,
+      0.6666666666666666,
+      1,
+      0,
+      0.975,
+      0,
+      1,
+      0.6666666666666666
+    ]
+  },
+  {
+    "pair": 17,
+    "left": "User import:4e06c340a1b5d1a61bec38ecdbc27602",
+    "right": "User import:149a9bd0f37c43d02fafa593fe3a633b",
+    "label": 1,
+    "features": [
+      1,
+      0.3333333333333333,
+      1,
+      1,
+      0,
+      0,
+      1,
+      0.3333333333333333
+    ]
+  },
+  {
+    "pair": 18,
+    "left": "User import:b8f85d5633807c88a3e603541903caef",
+    "right": "User import:473b8309a7acd1429187f1f4bb8a8332",
+    "label": 0,
+    "features": [
+      0.4444444444444444,
+      0.6666666666666666,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0.6666666666666666
+    ]
+  },
+  {
+    "pair": 19,
+    "left": "User import:869594712b61a224f2cbd4a41d20711f",
+    "right": "User import:857442e60b679fdf2ebdd7d0389f0826",
+    "label": 0,
+    "features": [
+      0.4444444444444444,
+      0.6666666666666666,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0.6666666666666666
+    ]
+  },
+  {
+    "pair": 23,
+    "left": "User import:869594712b61a224f2cbd4a41d20711f",
+    "right": "User import:07d8cd0262e68b44800d81bae596fe52",
+    "label": 0,
+    "features": [
+      0.3333333333333333,
+      0.6666666666666666,
+      1,
+      0,
+      1,
+      0,
+      1,
+      0.6666666666666666
+    ]
+  },
+  {
+    "pair": 24,
+    "left": "User import:b8f85d5633807c88a3e603541903caef",
+    "right": "User import:0391fbf10beccf27fbfbb82223516b30",
+    "label": 0,
+    "features": [
+      0.42105263157894735,
+      1,
+      0.5,
+      0,
+      1,
+      0,
+      0.5,
+      1
+    ]
+  },
+  {
+    "pair": 26,
+    "left": "User import:dea0d590b3e2b0abaec9b3e791be54db",
+    "right": "User import:65596b74664fc905185c2724fb0a4d4b",
+    "label": 0,
+    "features": [
+      0.30303030303030304,
+      0.6666666666666666,
+      1,
+      0,
+      0.9625,
+      0,
+      1,
+      0.6666666666666666
+    ]
+  },
+  {
+    "pair": 28,
+    "left": "User import:48aff9539d0b38d511944a126bab76cf",
+    "right": "User import:b68b8916c3780679b57f480af7cf0bf0",
+    "label": 0,
+    "features": [
+      0.36363636363636365,
+      0.5818181818181818,
+      1,
+      0,
+      0.975,
+      0,
+      0,
+      0
+    ]
+  }
+]

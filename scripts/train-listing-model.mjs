@@ -1,46 +1,58 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { listingFeatures, pairFeatures, predict } from "../lib/server/collector/pair-features.js";
+import { predict } from "../lib/server/collector/pair-features.js";
 
-const fixture = new URL("../data/fixtures/sample-data.json", import.meta.url);
-const rows = JSON.parse(readFileSync(fixture)).map(r => ({ ...r, summary: r.description }));
-// Split by original listing before constructing any augmented pairs.
-function examples(group) {
-  const result = [];
-  function add(a, b, label) {
-    result.push({ x: pairFeatures(listingFeatures(a), listingFeatures(b)), label });
+const data = JSON.parse(readFileSync(new URL("../data/fixtures/reviewed-listing-pairs.json", import.meta.url)));
+const baseline = {
+  weights: [2.7989266972734947, 4.5101366468060915, 3.527143495335126],
+  bias: -6.044009926994489, threshold: 0.7
+};
+// Freeze the shipped text weights and intercept. Learn regularized corrections
+// for photo and address evidence at the existing shortlist threshold.
+function fit(rows) {
+  const prior = [...baseline.weights, 0, 0, 0, 0, 0];
+  const model = { weights: [...prior], bias: baseline.bias, threshold: baseline.threshold };
+  const positives = rows.filter(r => r.label).length;
+  for (let epoch = 0; epoch < 1600; epoch++) {
+    const grad = prior.map(() => 0);
+
+    for (const { features, label } of rows) {
+      const error = (predict(features, model) - label) / (2 * (label ? positives : rows.length - positives));
+
+      features.forEach((v,i) => { grad[i] += error * v; });
+    }
+
+    model.weights = model.weights.map((w,i) => i < baseline.weights.length ? w : w - 0.25 * (grad[i] + 0.02 * (w - prior[i])));
   }
-  for (const [i, row] of group.entries()) {
-    add(row, { ...row, address: "", title: "Cho thuê " + row.title }, 1);
-    add(row, { ...row, title: "Tin mới", summary: row.summary.slice(0, 90) }, 1);
-    add(row, { ...row, summary: "", title: row.title + " Đà Nẵng" }, 1);
-    for (const other of group.slice(i + 1)) {
-      add(row, other, 0);
-      // Same district or boilerplate title alone is insufficient evidence.
-      add(row, { ...other, address: row.address }, 0);
-      add(row, { ...other, title: row.title }, 0);
+  return model;
+}
+// Hold out connected components so repeated listings cannot leak between folds.
+const remaining = new Set(data);
+const counts = () => ({ tp: 0, fp: 0, tn: 0, fn: 0 });
+const before = counts(), after = counts(), withoutImages = counts();
+let folds = 0;
+while (remaining.size) {
+  const first = remaining.values().next().value;
+  const ids = new Set([first.left, first.right]), group = [];
+  let changed;
+  do {
+    changed = false;
+    for (const row of remaining) {
+      if (!ids.has(row.left) && !ids.has(row.right)) continue;
+      remaining.delete(row);
+      group.push(row);
+      ids.add(row.left); ids.add(row.right);
+      changed = true;
+    }
+  } while (changed);
+  const m = fit(data.filter(r => !ids.has(r.left) && !ids.has(r.right)));
+  for (const { pair, label, features } of group) {
+    if (Number(predict(features, m) >= m.threshold) !== label) console.log({ pair, label, score: predict(features, m) });
+    const missing = [...features]; missing[3] = missing[4] = 0;
+    for (const [metrics, score] of [[before,predict(features.slice(0,3),baseline)], [after,predict(features,m)], [withoutImages,predict(missing,m)]]) {
+      metrics[label ? (score >= m.threshold ? "tp" : "fn") : (score >= m.threshold ? "fp" : "tn")]++;
     }
   }
-  return result;
+  folds++;
 }
-const train = examples(rows.slice(0, 7));
-const heldOut = examples(rows.slice(7));
-const model = { weights: [0, 0, 0], bias: 0, threshold: 0.70 };
-const positives = train.filter(e => e.label).length;
-for (let epoch = 0; epoch < 2400; epoch++) {
-  const gradient = [0, 0, 0];
-  let intercept = 0;
-  for (const { x, label } of train) {
-    const error = (predict(x, model) - label) / (2 * (label ? positives : train.length - positives));
-    intercept += error;
-    x.forEach((value, i) => { gradient[i] += error * value; });
-  }
-  model.bias -= 0.3 * intercept;
-  model.weights = model.weights.map((weight, i) => weight - 0.3 * (gradient[i] + 0.002 * weight));
-}
-const metrics = { tp: 0, fp: 0, tn: 0, fn: 0 };
-for (const { x, label } of heldOut) {
-  const hit = predict(x, model) >= model.threshold;
-  metrics[label ? (hit ? "tp" : "fn") : (hit ? "fp" : "tn")]++;
-}
-writeFileSync(new URL("../lib/server/collector/listing-model.json", import.meta.url), JSON.stringify(model, null, 2) + "\n");
-console.log({ trainingPairs: train.length, heldOutPairs: heldOut.length, ...metrics });
+console.log({ folds, before, after, withoutImages });
+writeFileSync(new URL("../lib/server/collector/listing-model.json", import.meta.url), JSON.stringify(fit(data), null, 2) + "\n");
