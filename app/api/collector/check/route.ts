@@ -24,7 +24,9 @@ function sourceEnableRestriction(source: CollectorSource) {
 export async function GET(r: Request) {
   if (!getAdminSessionFromRequest(r)) return apiError('Yêu cầu quyền Admin.', 401);
   try {
-    const sources = await getManagedSourcesAsync();
+    const sources = (await getManagedSourcesAsync()).filter(
+      (source) => sourceEnableRestriction(source) === null
+    );
     return apiData(
       sources.map((s) => {
         const enableRestriction = sourceEnableRestriction(s);

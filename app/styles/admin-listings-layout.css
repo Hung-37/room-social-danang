@@ -57,3 +57,90 @@
     max-width: none;
   }
 }
+
+.admin-main .admin-listing-row {
+  grid-template-columns: auto minmax(0, 1fr) clamp(112px, 14vw, 216px) minmax(140px, 174px);
+  align-items: start;
+  gap: var(--space-16);
+}
+
+.admin-listing-row .listing-checkbox {
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  min-height: 32px;
+  margin: 0;
+}
+
+.admin-main .admin-listing-row .listing-content strong {
+  font-size: 1rem;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.admin-listing-row .review-preview {
+  margin-top: var(--space-4);
+}
+
+.listing-cover {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-control);
+  background: var(--surface-subtle);
+  color: var(--muted);
+  text-align: center;
+  font-size: var(--font-sm);
+}
+
+.listing-cover a,
+.listing-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.listing-cover img {
+  object-fit: cover;
+}
+
+.listing-cover a:focus-visible {
+  outline-offset: -3px;
+}
+
+.admin-main .admin-listing-row .listing-actions {
+  display: grid;
+  justify-content: stretch;
+  justify-items: start;
+  gap: var(--space-8);
+}
+
+@media (max-width: 850px) {
+  .admin-main .admin-listing-row {
+    grid-template-columns: auto minmax(0, 1fr) clamp(84px, 24vw, 148px);
+    gap: var(--space-8);
+  }
+
+  .admin-main .admin-listing-row .listing-actions {
+    grid-column: 2 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .admin-main .admin-listing-row .listing-actions > * {
+    flex: 0 1 auto;
+  }
+
+  .admin-main .admin-listing-row .status-select {
+    width: auto;
+    max-width: 100%;
+  }
+
+  .listing-cover {
+    font-size: 0.75rem;
+  }
+}

@@ -2,6 +2,7 @@
 import ListingReviewPreview from "@/components/ListingReviewPreview";
 import DeleteRejectedListing from "@/components/DeleteRejectedListing";
 import FormField from "@/components/FormField";
+import { roomPhotos } from "@/lib/policies/room-photos.js";
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -16,7 +17,6 @@ type Source = {
   note: string;
   canEnable?: boolean;
   enableRestriction?: string | null;
-  listingSelectors?: Record<string, string>;
   result?: { ok?: boolean; status?: string; note?: string };
 };
 
@@ -96,8 +96,33 @@ type Listing = {
   verificationStatus: string;
   trustScore: number;
   sourceName: string;
+  imageUrl?: string | null;
   updatedAt: string;
 };
+
+function ListingCover({ url, title }: { url?: string | null; title: string }) {
+  const [failed, setFailed] = useState(false);
+  const [cover] = roomPhotos(url);
+
+  return (
+    <div className="listing-cover">
+      {cover && !failed ? (
+        <a href={cover} target="_blank" rel="noreferrer" aria-label={`Mở ảnh: ${title}`}>
+          <img
+            src={cover}
+            alt={`Ảnh phòng: ${title}`}
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
+            onError={() => setFailed(true)}
+          />
+        </a>
+      ) : (
+        <span>{failed ? "Không tải được ảnh" : "Chưa có ảnh"}</span>
+      )}
+    </div>
+  );
+}
 
 type DashboardStats = {
   listings: {
@@ -164,8 +189,7 @@ type AdminTab =
   | "listings"
   | "community"
   | "reports"
-  | "audit"
-  | "html";
+  | "audit";
 
 export default function AdminCollectorClient({
   initialTab = "collector",
@@ -753,31 +777,6 @@ export default function AdminCollectorClient({
 
   const visibleListings = listings;
 
-  async function createHtmlSource(sourceData: {
-    url: string;
-    name: string;
-    selectors: Record<string, string>;
-  }) {
-    try {
-      const response = await fetch("/api/collector/check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...sourceData, enabled: false }),
-      });
-      const payload = await response.json();
-      if (response.ok) {
-        setMessage(
-          "Đã lưu cấu hình nguồn vào MySQL. Bật nguồn sau khi kiểm tra URL.",
-        );
-        loadSources();
-      } else {
-        setMessage(payload.error || "Không thể tạo cấu hình.");
-      }
-    } catch {
-      setMessage("Lỗi khi tạo cấu hình HTML crawler.");
-    }
-  }
-
   useEffect(() => {
     loadSources();
     loadCommunityPosts();
@@ -1019,12 +1018,6 @@ export default function AdminCollectorClient({
           >
             Nhật ký kiểm duyệt ({auditLogs.length})
           </button>
-          <button
-            className={`admin-tab ${activeTab === "html" ? "is-active" : ""}`}
-            onClick={() => setActiveTab("html")}
-          >
-            Thu thập từ HTML
-          </button>
         </div>
 
         {activeTab === "collector" && (
@@ -1046,10 +1039,6 @@ export default function AdminCollectorClient({
                   <li>
                     Hoặc cấu hình <code>PUBLIC_FEED_URL</code> trong{" "}
                     <code>.env.local</code> cho nguồn JSON
-                  </li>
-                  <li>
-                    Hoặc cấu hình <code>HTML_CRAWLER_URL</code> trong{" "}
-                    <code>.env.local</code> cho nguồn HTML
                   </li>
                   <li>
                     Sau đó click <strong>"Chạy ngay"</strong> để thu thập dữ
@@ -1577,7 +1566,7 @@ export default function AdminCollectorClient({
                 <div className="source-table">
                   {visibleListings.map((listing) => (
                     <div
-                      className={`source-row ${selectedListings.has(listing.externalId) ? "is-selected" : ""}`}
+                      className={`source-row admin-listing-row ${selectedListings.has(listing.externalId) ? "is-selected" : ""}`}
                       key={listing.externalId}
                     >
                       <label className="listing-checkbox">
@@ -1602,6 +1591,7 @@ export default function AdminCollectorClient({
                         </small>
                         <ListingReviewPreview id={listing.externalId} />
                       </div>
+                      <ListingCover key={listing.imageUrl ?? ""} url={listing.imageUrl} title={listing.title} />
                       <div className="listing-actions">
                         <span
                           className={`status-badge ${listing.verificationStatus}`}
@@ -1897,135 +1887,6 @@ export default function AdminCollectorClient({
                 ))}
               </div>
             )}
-          </>
-        )}
-
-        {activeTab === "html" && (
-          <>
-            <div className="admin-notice">
-              <strong>Thu thập từ HTML:</strong> Chỉ sử dụng cho các nguồn đã
-              cho phép truy cập. Không tự động cào Nhà Tốt, Batdongsan.
-            </div>
-
-            <div className="import-panel">
-              <div className="admin-section-head">
-                <div>
-                  <h2>Thêm nguồn HTML mới</h2>
-                  <p>Cấu hình selectors cho website muốn thu thập.</p>
-                </div>
-              </div>
-              <form
-                className="form-grid html-source-form"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  const formData = new FormData(e.target as HTMLFormElement);
-                  createHtmlSource({
-                    url: formData.get("url") as string,
-                    name: formData.get("name") as string,
-                    selectors: {
-                      itemSelector: formData.get("itemSelector") as string,
-                      titleSelector: formData.get("titleSelector") as string,
-                      descriptionSelector: formData.get(
-                        "descriptionSelector",
-                      ) as string,
-                      priceSelector: formData.get("priceSelector") as string,
-                      areaSelector: formData.get("areaSelector") as string,
-                      addressSelector: formData.get(
-                        "addressSelector",
-                      ) as string,
-                    },
-                  });
-                }}
-              >
-                <FormField label="Tên nguồn">
-                  <input name="name" placeholder="Ví dụ: CafeLand" required />
-                </FormField>
-                <FormField label="URL">
-                  <input
-                    name="url"
-                    placeholder="https://example.com/listings"
-                    required
-                  />
-                </FormField>
-                <FormField label="Item Selector">
-                  <input
-                    name="itemSelector"
-                    placeholder="div.listing-item"
-                    defaultValue="div.listing-item"
-                  />
-                </FormField>
-                <FormField label="Title Selector">
-                  <input
-                    name="titleSelector"
-                    placeholder="h2.title"
-                    defaultValue="h2.title"
-                  />
-                </FormField>
-                <FormField label="Description Selector">
-                  <input
-                    name="descriptionSelector"
-                    placeholder="div.description"
-                    defaultValue="div.description"
-                  />
-                </FormField>
-                <FormField label="Price Selector">
-                  <input
-                    name="priceSelector"
-                    placeholder="span.price"
-                    defaultValue="span.price"
-                  />
-                </FormField>
-                <FormField label="Area Selector">
-                  <input
-                    name="areaSelector"
-                    placeholder="span.area"
-                    defaultValue="span.area"
-                  />
-                </FormField>
-                <FormField label="Address Selector">
-                  <input
-                    name="addressSelector"
-                    placeholder="div.address"
-                    defaultValue="div.address"
-                  />
-                </FormField>
-                <button type="submit" className="primary-btn">
-                  Tạo cấu hình
-                </button>
-              </form>
-            </div>
-
-            <div className="admin-section-head">
-              <div>
-                <h2>Nguồn HTML hiện tại</h2>
-                <p>Các nguồn đã cấu hình trong hệ thống.</p>
-              </div>
-            </div>
-            <div className="source-table">
-              {sources
-                .filter(
-                  (s) => s.type === "html" || s.permission === "public_html",
-                )
-                .map((source) => (
-                  <div className="source-row" key={source.id}>
-                    <div>
-                      <strong>{source.name}</strong>
-                      <span>{source.url}</span>
-                      {source.listingSelectors && (
-                        <small>
-                          Items: {source.listingSelectors.itemSelector}, Title:{" "}
-                          {source.listingSelectors.titleSelector}
-                        </small>
-                      )}
-                    </div>
-                    <span
-                      className={`source-status ${source.enabled ? "is-ready" : ""}`}
-                    >
-                      {source.enabled ? "Đã bật" : "Chưa bật"}
-                    </span>
-                  </div>
-                ))}
-            </div>
           </>
         )}
 

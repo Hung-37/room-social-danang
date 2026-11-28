@@ -51,12 +51,3 @@
   color: var(--muted);
   line-height: 1.4;
 }
-
-.html-source-form {
-  margin-top: var(--space-16);
-}
-
-.html-source-form > button[type="submit"] {
-  justify-self: start;
-  align-self: end;
-}

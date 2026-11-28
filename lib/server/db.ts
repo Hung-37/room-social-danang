@@ -150,7 +150,11 @@ export async function getListings(
   const [rows] = await getPool().query(
     `SELECT external_id AS externalId, title, summary, price, area_m2 AS area, address,
             cluster_id AS clusterId, source_name AS sourceName, source_url AS sourceUrl,
-            phone, owner_external_id AS ownerExternalId, image_url AS imageUrl, verification_status AS verificationStatus,
+            phone, owner_external_id AS ownerExternalId,
+            ${includePending ? `COALESCE(NULLIF(image_url, ''),
+              (SELECT CONCAT('/api/images/', li.id) FROM listing_images li
+               WHERE li.listing_id = listings.external_id ORDER BY li.position, li.id LIMIT 1))` : "image_url"} AS imageUrl,
+            verification_status AS verificationStatus,
             trust_score AS trustScore, updated_at AS updatedAt, ${includePending ? reviewRevisionSql : "NULL"} AS reviewRevision
      FROM listings
      WHERE (? = 1 OR verification_status = 'verified')

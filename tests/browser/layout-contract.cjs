@@ -12,13 +12,14 @@ async function runDynamicLayoutAudit({ contexts, api, width, height, out }) {
   await admin.setViewportSize({ width, height });
   await admin.goto("/admin?tab=listings", { waitUntil: "domcontentloaded" });
   await admin.locator(".admin-tabs").waitFor();
+  if (await admin.getByRole("button", { name: "Thu thập từ HTML", exact: true }).count())
+    throw new Error("Legacy HTML source tab is still present.");
   const tabs = [
     ["Thu thập tin", "collector"],
     ["Quản lý bài", "listings"],
     ["Cộng đồng", "community"],
     ["Báo cáo", "reports"],
     ["Nhật ký kiểm duyệt", "audit"],
-    ["Thu thập từ HTML", "html"],
   ];
 
   for (const [label, key] of tabs) {
@@ -132,6 +133,19 @@ async function runDynamicLayoutAudit({ contexts, api, width, height, out }) {
     if (key === "listings") {
 
       await admin.locator(".admin-listing-filters").waitFor();
+      const listingRow = admin.locator(".admin-listing-row").first();
+      await listingRow.waitFor();
+      const listingLayout = await listingRow.evaluate((row) => {
+        const information = row.querySelector(".listing-content").getBoundingClientRect();
+        const cover = row.querySelector(".listing-cover").getBoundingClientRect();
+        const actions = row.querySelector(".listing-actions").getBoundingClientRect();
+        return {
+          coverOnRight: information.right <= cover.left && cover.width > 0,
+          actionsFit: actions.right <= row.getBoundingClientRect().right,
+        };
+      });
+      if (!listingLayout.coverOnRight || !listingLayout.actionsFit)
+        record.issues.push("Listing information, cover and actions must fit in the row.");
       pushGeometryIssues(
         record,
         await admin.evaluate((viewportWidth) => {
@@ -203,50 +217,6 @@ async function runDynamicLayoutAudit({ contexts, api, width, height, out }) {
       await search.fill("__layout_no_match__");
       await admin.getByText("Không có bài đăng phù hợp bộ lọc.", { exact: true }).waitFor();
       await search.clear();
-    }
-    if (key === "html") {
-      const sourceForm = admin.locator(".html-source-form");
-      await sourceForm.waitFor();
-      pushGeometryIssues(
-        record,
-        await sourceForm.evaluate((form, viewportWidth) => {
-          const issues = [];
-          const fields = [...form.querySelectorAll(":scope > label")];
-          const sizes = fields.map((field) => {
-            const control = field.querySelector("input, select, textarea");
-            const firstText = [...field.childNodes].find(
-              (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim(),
-            );
-            const range = document.createRange();
-            if (firstText) range.selectNodeContents(firstText);
-            const labelBox = firstText
-              ? range.getBoundingClientRect()
-              : field.getBoundingClientRect();
-            const controlBox = control?.getBoundingClientRect();
-            if (!field.classList.contains("ui-field"))
-              issues.push("HTML source field must use the shared ui-field wrapper");
-            if (!control || labelBox.bottom > controlBox.top + 2)
-              issues.push("HTML source labels must sit above their inputs");
-            if (control && controlBox.width < 240)
-              issues.push(`HTML source input is too narrow: ${controlBox.width}`);
-            if (control && viewportWidth >= 768 && controlBox.width < 240)
-              issues.push(`HTML source field is narrower than 240px: ${controlBox.width}`);
-            return {
-              width: controlBox?.width,
-              height: controlBox?.height,
-            };
-          });
-          if (new Set(sizes.map((size) => size.height)).size !== 1)
-            issues.push("HTML source inputs need a common height");
-          return { issues, metrics: { fields: sizes } };
-        }, width),
-      );
-      if ([390, 768, 1366, 1920].includes(width))
-        await admin.screenshot({
-          path: path.join(out, `dynamic-${width}-admin-html-form.png`),
-          fullPage: true,
-          animations: "disabled",
-        });
     }
     records.push(record);
   }
